@@ -3,7 +3,7 @@ Two datasets are cleaned (**Coffee** and **Country**).
 - **Coffee** is cleaned and processing steps as following.
 - **Country** is already clean, with only absent values.
 
-##Processing Steps
+## Processing Steps
 - remove empty or invalid coffee rows
 - delete unwanted columns in data 
     (*'Farm.Name'*, *'Lot.Number'*, *'Mill'*, *'ICO.Number'*, *'Altitude'*, *'Number.of.Bags'*, *'Bag.Weight'*,
@@ -19,5 +19,5 @@ Two datasets are cleaned (**Coffee** and **Country**).
 - *Color*: change unknown color to NA
 - *Altitude (mean, high, low)*: change altitude info (ft and m -> m), round to integer, remove column *'unit_of_measurement'*
 
-##Special Treatment
+## Special Treatment
 - remove coffee with too low rating (at last row in original coffee file)
