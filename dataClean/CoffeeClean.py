@@ -18,8 +18,14 @@ Processing Steps:
 10. Color: change unknown color to NA
 11. Altitude (mean, high, low): change altitude info (ft and m -> m), round to integer, remove column "unit_of_measurement"
 
+Add-on:
+1. Processing.Method: change empty and "Other" to NA
+2. Region: change empty or with "?" or length < 2 (-) to NA
+3. Owner, Company, Producer, Owner.1: deal with capital issue
+
 Special Treatment:
 1. remove coffee with too low rating (at last row in original coffee file)
+2. code special treatment for producer
 """
 
 def is_english(s):
@@ -33,6 +39,9 @@ coffeeData = pd.DataFrame(pd.read_csv("Coffee.csv", encoding="utf-8"))
 
 # remove empty or invalid coffee row
 removeIndex = coffeeData["ID"].index[coffeeData["ID"].apply(lambda x: True if (pd.isna(x) or not x.isdigit()) else False)]
+for index in removeIndex:
+    coffeeData.drop(axis=0, index=index, inplace=True)
+removeIndex = coffeeData["Total.Cup.Points"].index[coffeeData["Total.Cup.Points"].apply(pd.isna)]
 for index in removeIndex:
     coffeeData.drop(axis=0, index=index, inplace=True)
 
@@ -56,12 +65,19 @@ coffeeData.drop(columns="unit_of_measurement", axis=1, inplace=True)
 coffeeData.fillna({"Color": "NA"}, inplace=True)
 coffeeData = coffeeData.replace({"Color": {"None", "NA"}})
 
+# remove
+removeIndex = coffeeData["ID"].index[coffeeData["ID"].apply(lambda x: True if (pd.isna(x) or not x.isdigit()) else False)]
+for index in removeIndex:
+    coffeeData.drop(axis=0, index=index, inplace=True)
+
+# change unknown "Processing.Method" to NA (including "other")
+coffeeData["Processing.Method"] = coffeeData["Processing.Method"].apply(lambda x: "NA" if pd.isna(x) or x == "Other" else x)
+
 # change unknown "Variety" to NA (including "other")
 coffeeData["Variety"] = coffeeData["Variety"].apply(lambda x: "NA" if pd.isna(x) or x == "Other" else x)
 
 # change unknown "Owner.1" and non-English to NA, remove "?"
 coffeeData["Owner.1"] = coffeeData["Owner.1"].apply(lambda x: "NA" if not (not pd.isna(x) and is_english(x)) else x)
-coffeeData["Owner.1"] = coffeeData["Owner.1"].apply(lambda x: x.replace("?", "").strip())
 
 # change unknown Harvest.Year and non-digit
 def deal_harvest_year(s):
@@ -80,16 +96,30 @@ def deal_harvest_year(s):
                 return s.split("/")[0].strip()
 coffeeData["Harvest.Year"] = coffeeData["Harvest.Year"].apply(deal_harvest_year)
 
-# change unknown "Producer" and non-English to NA, remove "?"
-coffeeData["Producer"] = coffeeData["Producer"].apply(lambda x: "NA" if not (not pd.isna(x) and is_english(x)) else x)
-coffeeData["Producer"] = coffeeData["Producer"].apply(lambda x: x.replace("?", "").strip())
+# change unknown "Producer" and non-English to NA
+def special_treat_producer(s):
+    if s == "Green Gold Ethiopia | Phone: 0114342032":
+        return "Green Gold Ethiopia"
+    if s == "Werclein Hernandez Serrano Id.-1506728641":
+        return "Werclein Hernandez Serrano"
+    if s == "Mariana Cabrera Pantoja; I.D.: 27 423 625":
+        return "Mariana Cabrera Pantoja"
+    if s == "Exporter Name | Muluneh Kaka | Phone: 0114390290":
+        return "Muluneh Kaka"
+    if s == "??? & ??? (Tseng Ju Feng & Kuo Jun Hong)":
+        return "Tseng Ju Feng & Kuo Jun Hong"
+    lowerS = s.lower()
+    if not lowerS.find("various") == -1 or not lowerS.find("varios"):
+        return "NA"
+    return s.replace("Contact name |", "").strip()
+coffeeData["Producer"] = coffeeData["Producer"].apply(lambda x: "NA" if (pd.isna(x) or not is_english(x) or len(x) < 2) else x)
+coffeeData["Producer"] = coffeeData["Producer"].apply(special_treat_producer)
 
-# change unkown region to NA
-coffeeData["Region"] = coffeeData["Region"].apply(lambda x: "NA" if pd.isna(x) else x)
+# change unkown region, non-English, -, with "?" to NA
+coffeeData["Region"] = coffeeData["Region"].apply(lambda x: "NA" if (pd.isna(x) or not is_english(x) or not x.find("?") == -1 or len(x) < 2) else x)
 
-# change unknown "Company" and non-English to NA, remove "?"
-coffeeData["Company"] = coffeeData["Company"].apply(lambda x: "NA" if not (not pd.isna(x) and is_english(x)) else x)
-coffeeData["Company"] = coffeeData["Company"].apply(lambda x: x.replace("?", "").strip())
+# change unknown "Company" and non-English to NA
+coffeeData["Company"] = coffeeData["Company"].apply(lambda x: "NA" if (pd.isna(x) or not is_english(x) or len(x) < 2) else x)
 
 # change remove bracket content
 def deal_origin_country(s):
@@ -105,8 +135,20 @@ def deal_origin_country(s):
     return s
 coffeeData["Country.of.Origin"] = coffeeData["Country.of.Origin"].apply(deal_origin_country)
 
-# change unknown "Company" and non-English to NA, remove "?"
+# change unknown "Owner" and non-English to NA
 coffeeData["Owner"] = coffeeData["Owner"].apply(lambda x: "NA" if not (not pd.isna(x) and is_english(x)) else x)
-coffeeData["Owner"] = coffeeData["Owner"].apply(lambda x: x.replace("?", "").strip())
+
+# deal with space issue for "Owner", "Company", "Producer", "Owner.1"
+def deal_space_issue(s):
+    s = s.replace("?", "").strip()
+    return "NA" if len(s) == 0 else s
+for column in ["Owner", "Company", "Region", "Producer", "Owner.1"]:
+    coffeeData[column] = coffeeData[column].apply(deal_space_issue)
+
+# deal with capital issue for "Owner", "Company", "Producer", "Owner.1"
+def deal_capital_issue(s):
+    return "NA" if s == "NA" else s.title()
+for column in ["Owner", "Company", "Region", "Producer", "Owner.1"]:
+    coffeeData[column] = coffeeData[column].apply(deal_capital_issue)
 
 coffeeData.to_csv("Coffee-clean.csv", index=False)
