@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 import pandas as pd
+import collections
 
 """
 Processing Steps:
@@ -38,6 +39,9 @@ def is_english(s):
 coffeeData = pd.DataFrame(pd.read_csv("Coffee.csv", encoding="utf-8"))
 
 # remove empty or invalid coffee row
+removeIndex = coffeeData["Country.of.Origin"].index[coffeeData["Country.of.Origin"].apply(pd.isna)]
+for index in removeIndex:
+    coffeeData.drop(axis=0, index=index, inplace=True)
 removeIndex = coffeeData["ID"].index[coffeeData["ID"].apply(lambda x: True if (pd.isna(x) or not x.isdigit()) else False)]
 for index in removeIndex:
     coffeeData.drop(axis=0, index=index, inplace=True)
@@ -64,11 +68,6 @@ coffeeData.drop(columns="unit_of_measurement", axis=1, inplace=True)
 # change unknown "Color" to NA
 coffeeData.fillna({"Color": "NA"}, inplace=True)
 coffeeData = coffeeData.replace({"Color": {"None", "NA"}})
-
-# remove
-removeIndex = coffeeData["ID"].index[coffeeData["ID"].apply(lambda x: True if (pd.isna(x) or not x.isdigit()) else False)]
-for index in removeIndex:
-    coffeeData.drop(axis=0, index=index, inplace=True)
 
 # change unknown "Processing.Method" to NA (including "other")
 coffeeData["Processing.Method"] = coffeeData["Processing.Method"].apply(lambda x: "NA" if pd.isna(x) or x == "Other" else x)
@@ -122,17 +121,19 @@ coffeeData["Region"] = coffeeData["Region"].apply(lambda x: "NA" if (pd.isna(x) 
 coffeeData["Company"] = coffeeData["Company"].apply(lambda x: "NA" if (pd.isna(x) or not is_english(x) or len(x) < 2) else x)
 
 # change remove bracket content
+handledict = collections.defaultdict(lambda: "")
+handledict["United States"] = "United States of America"
+handledict["United States (Hawaii)"] = "United States Minor Outlying Islands"
+handledict["Tanzania, United Republic Of"] = "United Republic of Tanzania"
+handledict["United States (Puerto Rico)"] = "Puerto Rico"
+handledict["Cote d?Ivoire"] = "Côte d’Ivoire"
+handledict["Vietnam"] = "Viet Nam"
+handledict["Laos"] = "Lao People's Democratic Republic"
+
 def deal_origin_country(s):
-    if pd.isna(s):
-        return "NA"
     s = s.strip()
-    if s == "United States (Hawaii)":
-        return "United States"
-    if s == "Tanzania, United Republic Of":
-        return "Tanzania"
-    if s == "United States (Puerto Rico)":
-        return "Puerto Rico"
-    return s
+    return handledict[s] if s in handledict.keys() else s
+
 coffeeData["Country.of.Origin"] = coffeeData["Country.of.Origin"].apply(deal_origin_country)
 
 # change unknown "Owner" and non-English to NA
