@@ -1,5 +1,6 @@
 ﻿# Data Clean
 - **Coffee** is cleaned and processing steps as following.
+- *Country.of.Origin* fixed according to [Country ISO3 Code](https://unstats.un.org/unsd/methodology/m49/), "Taiwan" -> TWN
 
 ## Processing Steps
 - Remove empty or invalid coffee rows
