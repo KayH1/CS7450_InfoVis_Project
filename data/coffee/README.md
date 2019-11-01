@@ -1,7 +1,5 @@
 ﻿# Data Clean
-Two datasets are cleaned (**Coffee** and **Country**).
 - **Coffee** is cleaned and processing steps as following.
-- **Country** is already clean, with only absent values.
 
 ## Processing Steps
 - Remove empty or invalid coffee rows
