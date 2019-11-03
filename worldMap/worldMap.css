@@ -1,0 +1,13 @@
+@font-face {
+  font-family: 'coffeeMapFont';
+  src: url('myfont.woff') format('woff'), /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+   url('coffeeMapFont.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3¡ª5 */
+} 
+
+#map svg text {
+	font-weight: 20px;
+	font-style: oblique;
+	font-size: 130px;
+	font-family: coffeeMapFont;
+	text-anchor: end;
+}

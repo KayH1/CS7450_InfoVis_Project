@@ -55,6 +55,12 @@ function worldMap(divId, maxZoom) {
 	this.tileLayer.addTo(this.map);
 	this.svgLayer.addTo(this.map);
 	this.labelLayer.addTo(this.map);
+
+	var svg = d3.select('#'+ this.divId).select('svg');
+	var svgSize = {width: svg.attr("width"), height: svg.attr("height")};
+	svg.append('text')
+		.attr("transform", "translate(" + svgSize.width/2 + ", 100)" )
+		.text("Coffee World");
 }
 
 /* for map style */
@@ -87,14 +93,15 @@ worldMap.prototype.showCountryGeo = function(countryGeoData, countryShowingSet) 
 			layer.on({
 				mouseover: highlightFeature,
 				mouseout: resetHighlight,
-				click: zoomToFeature
+				dblclick: zoomToFeature
 			});
 			layer.associatedMap = associatedMap;
 		},
 		pane: 'countryLayer'
 	})
 	this.countryLayer.addTo(this.map);
-	/* add coffee bean effect */
+	
+	/* use d3 to add coffee bean effect */
 
 }
 
