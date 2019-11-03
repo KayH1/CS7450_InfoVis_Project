@@ -165,7 +165,7 @@ worldMap.prototype.showCountryGeo = function(countryGeoData, countryShowingSet) 
 
 		countryNamePositions.forEach(function(d) {
 			var countryNameMarker = new L.marker([d.position.lat, d.position.lng], { opacity: 0.01 });
-			countryNameMarker.bindTooltip(countryCodeMap.get(d.ISO3).length <= 12 || d.ISO3 == "CIV" ? countryCodeMap.get(d.ISO3) : d.ISO3, {
+			countryNameMarker.bindTooltip(countryCodeNameMap.get(d.ISO3).length <= 12 || d.ISO3 == "CIV" ? countryCodeNameMap.get(d.ISO3) : d.ISO3, {
 				permanent: true, 
 				className: "countryNameLabel", 
 				offset: [0, 0], 

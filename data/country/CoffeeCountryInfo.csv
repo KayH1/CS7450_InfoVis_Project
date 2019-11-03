@@ -1,0 +1,41 @@
+Country,ISO3,ISO2,lat,lng
+Brazil,BRA,BR,-10.0,-55.0
+Burundi,BDI,BI,-3.5,30.0
+China,CHN,CN,35.0,105.0
+Colombia,COL,CO,4.0,-72.0
+Costa Rica,CRI,CR,10.0,-84.0
+Côte d’Ivoire,CIV,CI,8.0,-5.0
+Côte d’Ivoire,CIV,CI,8.0,-5.0
+Ecuador,ECU,EC,-2.0,-77.5
+El Salvador,SLV,SV,13.8333,-88.9167
+Ethiopia,ETH,ET,8.0,38.0
+Guatemala,GTM,GT,15.5,-90.25
+Haiti,HTI,HT,19.0,-72.4167
+Honduras,HND,HN,15.0,-86.5
+India,IND,IN,20.0,77.0
+Indonesia,IDN,ID,-5.0,120.0
+Japan,JPN,JP,36.0,138.0
+Kenya,KEN,KE,1.0,38.0
+Lao People's Democratic Republic,LAO,LA,18.0,105.0
+Malawi,MWI,MW,-13.5,34.0
+Mauritius,MUS,MU,-20.2833,57.55
+Mexico,MEX,MX,23.0,-102.0
+Myanmar,MMR,MM,22.0,98.0
+Myanmar,MMR,MM,22.0,98.0
+Nicaragua,NIC,NI,13.0,-85.0
+Panama,PAN,PA,9.0,-80.0
+Papua New Guinea,PNG,PG,-6.0,147.0
+Peru,PER,PE,-10.0,-76.0
+Philippines,PHL,PH,13.0,122.0
+Puerto Rico,PRI,PR,18.25,-66.5
+Rwanda,RWA,RW,-2.0,30.0
+Taiwan,TWN,TW,23.5,121.0
+Taiwan,TWN,TW,23.5,121.0
+United Republic of Tanzania,TZA,TZ,-6.0,35.0
+Thailand,THA,TH,15.0,100.0
+Uganda,UGA,UG,1.0,32.0
+United States of America,USA,US,38.0,-97.0
+United States Minor Outlying Islands,UMI,UM,19.2833,166.6
+Viet Nam,VNM,VN,16.0,106.0
+Viet Nam,VNM,VN,16.0,106.0
+Zambia,ZMB,ZM,-15.0,30.0
