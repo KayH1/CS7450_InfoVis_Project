@@ -24,6 +24,8 @@ Promise.all([
 		return countryCodeMap.has(d["properties"]["ISO_A3"])? true : false;
 	});
 
+	/* calculate the center of country and place in properties attribute */
+
 	/* initial showing all country with coffee */
 	countryCodeMap.keys().forEach(function(d) {
 		countryShowingSet.add(d)
