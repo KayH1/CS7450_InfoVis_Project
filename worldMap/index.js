@@ -1,7 +1,7 @@
 /* load data */
 dataPath = {
 	coffeePath: "../data/coffee/Coffee-clean.csv",
-	countryCodePath: "../data/country/CountryCode.csv",
+	countryCodePath: "../data/country/CoffeeCountryInfo.csv",
 	countryGeoPath: "./countries.geojson",
 	countryTempPath: "../data/country/temperature-2020_2039.csv",
 	countryPrPath: "../data/country/precipitation-2020_2039.csv"
