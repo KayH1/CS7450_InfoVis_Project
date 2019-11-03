@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Coffee - Comparisons</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div id="main">
+        <div select class="sidenav small" id="xScaleSelect">
+          <a href="#st_flavor" class="flavor active" onclick="onXScaleChanged('flavor')">Flavor</a>
+          <a href="#st_aroma" class="aroma" onclick="onXScaleChanged('aroma')">Aroma</a>
+          <a href="#st_aftertaste" class="aftertaste" onclick="onXScaleChanged('aftertaste')">Aftertaste</a>
+          <a href="#st_acidity" class="acidity" onclick="onXScaleChanged('acidity')">Acidity</a>
+          <a href="#st_body" class="body" onclick="onXScaleChanged('body')">Body</a>
+          <a href="#st_balance" class="balance" onclick="onXScaleChanged('balance')">Balance</a>
+          <a href="#st_uniformity" class="uniformity" onclick="onXScaleChanged('uniformity')">Uniformity</a>
+          <a href="#st_sweetness" class="sweetness" onclick="onXScaleChanged('sweetness')">Sweetness</a>
+          <a href="#st_cleanCup" class="cleanCup" onclick="onXScaleChanged('cleanCup')">Clean cup</a>
+          <a href="#st_cupperPoints" class="cupperPoints" onclick="onXScaleChanged('cupperPoints')">Cupper points</a>
+          <a href="#st_totalCupPoints" class="totalCupPoints" onclick="onXScaleChanged('totalCupPoints')">Total cup points</a>
+        </div>
+
+        <div style="margin-left: 35%;">
+            <svg class="freq-plot" width="800" height="750">
+            </svg>
+        </div>
+
+        <div class="scrollytelling-text">
+          <div class="empty" id="st_flavor"></div>
+          <div class="flavor">
+            <h2>Flavor</h2>
+            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+          </div>
+          <div class="empty"></div>
+          <div class="empty" id="st_aroma"></div>
+          <div class="aroma">
+            <h2>Aroma</h2>
+            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+          </div>
+          <div class="empty"></div>
+          <div class="empty" id="st_aftertaste"></div>
+          <div class="aftertaste">
+            <h2>Aftertaste</h2>
+            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+          </div>
+          <div class="empty"></div>
+          <div class="empty" id="st_acidity"></div>
+          <div class="acidity">
+            <h2>Acidity</h2>
+            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+          </div>
+          <div class="empty"></div>
+          <div class="empty" id="st_body"></div>
+          <div class="body">
+            <h2>Body</h2>
+            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+          </div>
+          <div class="empty"></div>
+          <div class="empty" id="st_balance"></div>
+          <div class="balance">
+            <h2>Balance</h2>
+            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+          </div>
+          <div class="empty"></div>
+          <div class="empty" id="st_uniformity"></div>
+          <div class="uniformity">
+            <h2>Uniformity</h2>
+            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+          </div>
+          <div class="empty"></div>
+          <div class="empty" id="st_sweetness"></div>
+          <div class="sweetness">
+            <h2>Sweetness</h2>
+            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+          </div>
+          <div class="empty"></div>
+          <div class="empty" id="st_cleanCup"></div>
+          <div class="cleanCup">
+            <h2>Clean cup</h2>
+            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+          </div>
+          <div class="empty"></div>
+          <div class="empty" id="st_cupperPoints"></div>
+          <div class="cupperPoints">
+            <h2>Cupper points</h2>
+            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+          </div>
+          <div class="empty"></div>
+          <div class="empty" id="st_totalCupPoints"></div>
+          <div class="totalCupPoints">
+            <h2>Total cup points</h2>
+            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+          </div>
+          <div class="empty"></div>
+          <div class="empty"></div>
+        </div>
+        
+
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="../d3/d3-tip.js"></script>
+<script src="./main.js"></script>
+</html>
