@@ -56,9 +56,11 @@ function worldMap(divId, maxZoom) {
 	this.svgLayer.addTo(this.map);
 	this.labelLayer.addTo(this.map);
 
+	/* add title of world map */
 	var svg = d3.select('#'+ this.divId).select('svg');
 	var svgSize = {width: svg.attr("width"), height: svg.attr("height")};
 	svg.append('text')
+		.attr("id", "coffeeMapTitle")
 		.attr("transform", "translate(" + svgSize.width/2 + ", 100)" )
 		.text("Coffee World");
 }
@@ -78,10 +80,57 @@ worldMap.prototype.countryGeoStyle = function(f) {
 /* end map style */
 
 /* for map function */
-worldMap.prototype.showCountryGeo = function(countryGeoData, countryShowingSet) {
-	if (this.countryLayer != undefined)
-		this.map.removeLayer(this.countryLayer);
 
+magicParameter = {
+	BRA: {direction: "right", latoffset: -9, lngoffset: -5},//
+	UMI: {direction: "right", latoffset: -2, lngoffset: 10},
+	MMR: {direction: "right", latoffset: -5, lngoffset: -5},//
+	CIV: {direction: "top", latoffset: -10, lngoffset: 0},//
+	THA: {direction: "left", latoffset: -7, lngoffset: 5},//
+	JPN: {direction: "right", latoffset: -5, lngoffset: -5},//
+	ECU: {direction: "right", latoffset: -10, lngoffset: 0},//
+	MWI: {direction: "right", latoffset: -10, lngoffset: -5},//
+	MUS: {direction: "right", latoffset: -12, lngoffset: -10},//
+	PAN: {direction: "right", latoffset: -8, lngoffset: -5},//
+	VNM: {direction: "bottom", latoffset: -5, lngoffset: 3},//
+	PER: {direction: "left", latoffset: -9, lngoffset: 3}, //
+	ZMB: {direction: "bottom", latoffset: -1, lngoffset: -1},//
+	IND: {direction: "left", latoffset: -10, lngoffset: 0},//
+	LAO: {direction: "right", latoffset: -9, lngoffset: -5},//
+	TWN: {direction: "right", latoffset: -9, lngoffset: -5},//
+	NIC: {direction: "left", latoffset: -11, lngoffset: 5},//
+	CHN: {direction: "right", latoffset: -11, lngoffset: 10},//
+	BDI: {direction: "top", latoffset: -5, lngoffset: -5},//
+	CRI: {direction: "right", latoffset: -10, lngoffset: 18},//
+	USA: {direction: "right", latoffset: -15, lngoffset: -60},//
+	IDN: {direction: "right", latoffset: -12, lngoffset: -10},//
+	UGA: {direction: "right", latoffset: -7, lngoffset: -10},//
+	MEX: {direction: "left", latoffset: -9, lngoffset: 8},//
+	GTM: {direction: "right", latoffset: -11, lngoffset: -3},//
+	COL: {direction: "left", latoffset: -9, lngoffset: 6},//
+	HTI: {direction: "right", latoffset: -9, lngoffset: 0},//
+	HND: {direction: "left", latoffset: -9, lngoffset: 3},//
+	ETH: {direction: "right", latoffset: -8, lngoffset: -5},//
+	KEN: {direction: "right", latoffset: -11, lngoffset: -5},//
+	TZA: {direction: "right", latoffset: -10, lngoffset: -5},//
+	PNG: {direction: "top", latoffset: -10, lngoffset: 0},//
+	RWA: {direction: "left", latoffset: -5, lngoffset: 5},//
+	SLV: {direction: "top", latoffset: -2, lngoffset: 5}, //
+	PRI: {direction: "right", latoffset: 0, lngoffset: -5},//
+	PHL: {direction: "right", latoffset: -9, lngoffset: -5},//
+}
+
+worldMap.prototype.showCountryGeo = function(countryGeoData, countryShowingSet) {
+	var whetherInitial = false;
+	if (this.countryLayer != undefined){
+		this.map.removeLayer(this.countryLayer);
+	} else {
+		/* first time to set up map, all country is in set */
+		whetherInitial = true;
+		this.countryNameMarkerMap = d3.map();
+	}
+
+	console.log(countryGeoData);
 
 	var associatedMap = this;
 	this.countryLayer = L.geoJson(countryGeoData, {
@@ -99,8 +148,42 @@ worldMap.prototype.showCountryGeo = function(countryGeoData, countryShowingSet) 
 		},
 		pane: 'countryLayer'
 	})
+
+	if (whetherInitial) {
+		var generateSeparateGeo = d3.map();
+		countryGeoData.features.forEach(function(countryGeoFeature) {
+			var extractedFeature = {type: "FeatureCollection", features: [countryGeoFeature]};
+			generateSeparateGeo.set(countryGeoFeature["properties"]["ISO_A3"], extractedFeature);
+		})
+
+		var countryNamePositions = new Array();
+		this.countryLayer.eachLayer(function(layer) {
+			let ISO3code = layer.feature["properties"]["ISO_A3"];
+			let centroid = turf.centerOfMass(generateSeparateGeo.get(ISO3code)).geometry.coordinates;
+  			countryNamePositions.push({position: new L.LatLng(centroid[1] + magicParameter[ISO3code]["latoffset"], centroid[0] + magicParameter[ISO3code]["lngoffset"]), ISO3: ISO3code});
+		});
+
+		countryNamePositions.forEach(function(d) {
+			var countryNameMarker = new L.marker([d.position.lat, d.position.lng], { opacity: 0.01 });
+			countryNameMarker.bindTooltip(countryCodeMap.get(d.ISO3).length <= 12 || d.ISO3 == "CIV" ? countryCodeMap.get(d.ISO3) : d.ISO3, {
+				permanent: true, 
+				className: "countryNameLabel", 
+				offset: [0, 0], 
+				direction: magicParameter[d.ISO3]["direction"]
+			});
+			associatedMap.countryNameMarkerMap.set(d.ISO3, countryNameMarker)
+		});
+	}
+
+	this.countryNameMarkerMap.keys().forEach(function(key) {
+		if (countryShowingSet.has(key)){
+			associatedMap.countryNameMarkerMap.get(key).addTo(associatedMap.map);
+		} else{
+			associatedMap.map.removeLayer(associatedMap.countryNameMarkerMap.get(key));
+		}
+	});
+
 	this.countryLayer.addTo(this.map);
-	
 	/* use d3 to add coffee bean effect */
 
 }
@@ -115,12 +198,16 @@ worldMap.prototype.updateCountryPin = function(countryData) {
 /* end map function */
 
 /* for map interaction */
+function addCountryName() {
+
+}
+
 function highlightFeature(e) {
 	var layer = e.target;
 
 	layer.setStyle({
 		weight: 5,
-		color: '#666',
+		color: '#fe9929',
 		dashArray: '',
 		fillOpacity: 0.7
 	});
@@ -130,6 +217,10 @@ function highlightFeature(e) {
 	}
 
 	/* generate tooltip */
+	//var svg = d3.select('#'+ this.divId).select('svg');
+	//svg.selectAll(l)
+	//	.attr("transform", "translate(" + svgSize.width/2 + ", 100)" )
+	//	.text("Coffee World");
 }
 
 function resetHighlight(e) {

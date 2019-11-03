@@ -7,7 +7,7 @@ dataPath = {
 	countryPrPath: "../data/country/precipitation-2020_2039.csv"
 }
 countryCodeMap = d3.map();
-countryShowingSet = new Set();
+countryShowingSet = d3.set();
 
 /* test for example map */
 worldMap = new worldMap("map", 19);
