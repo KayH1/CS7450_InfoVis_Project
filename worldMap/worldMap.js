@@ -99,7 +99,7 @@ magicParameter = {
 	LAO: {direction: "right", latoffset: -9, lngoffset: -5},//
 	TWN: {direction: "right", latoffset: -9, lngoffset: -5},//
 	NIC: {direction: "left", latoffset: -11, lngoffset: 5},//
-	CHN: {direction: "right", latoffset: -11, lngoffset: 10},//
+	CHN: {direction: "left", latoffset: -11, lngoffset: 10},//
 	BDI: {direction: "top", latoffset: -5, lngoffset: -5},//
 	CRI: {direction: "right", latoffset: -10, lngoffset: 18},//
 	USA: {direction: "right", latoffset: -15, lngoffset: -60},//
@@ -114,7 +114,7 @@ magicParameter = {
 	KEN: {direction: "right", latoffset: -11, lngoffset: -5},//
 	TZA: {direction: "right", latoffset: -10, lngoffset: -5},//
 	PNG: {direction: "top", latoffset: -10, lngoffset: 0},//
-	RWA: {direction: "left", latoffset: -5, lngoffset: 5},//
+	RWA: {direction: "left", latoffset: -3, lngoffset: 5},//
 	SLV: {direction: "top", latoffset: -2, lngoffset: 5}, //
 	PRI: {direction: "right", latoffset: 0, lngoffset: -5},//
 	PHL: {direction: "right", latoffset: -9, lngoffset: -5},//

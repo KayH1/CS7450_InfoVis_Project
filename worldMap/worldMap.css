@@ -1,7 +1,13 @@
 @font-face {
   font-family: 'coffeeMapFont';
-  src: url('coffeeMapFont.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3¡ª5 */
+  src: url('CoffeeMapFont.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3¡ª5 */
 }
+
+@font-face {
+  font-family: 'pirates';
+  src: url('PiratesWriters.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3¡ª5 */
+}
+
 
 #map svg #coffeeMapTitle {
 	font-family: coffeeMapFont;
@@ -17,7 +23,7 @@
   	border-radius:0px;
   	box-shadow: 0 0px 0px;
   	text-anchor: start;
-  	font-weight: 5px;
-  	font-family: Consolas;
-  	font-size: 14px;
+  	font-weight: 200;
+  	font-family: pirates;
+  	font-size: 15px;
 }
