@@ -1,6 +1,9 @@
-# Country Climate Data
+# Country Climate Data and Country Info
 
-Country climate data (month average precipitation and temperature) for countries in **Coffee-clean.csv**
+1. Country average coordinates, ISO3 code and ISO2 code in **CoffeeCountryInfo.csv"
+2. Country flag (16px, 32px, 64px) are added, referenced by ISO2 code in **CoffeeCountryInfo.csv**
+3. Country climate data (month average precipitation and temperature) for countries in **Coffee-clean.csv**
+
 
 - Precipitation and temperature data is from **World Bank**, using their [Climate Data API](https://datahelpdesk.worldbank.org/knowledgebase/articles/902061-climate-data-api). Each country is referenced by their *ISO3* code.
 - All the data in the Climate Data API are derived from 15 global circulation models (GCMs), the most comprehensive physically-based models of climate change available and used by the Intergovernmental Panel on Climate Change (IPCC) 4th Assessment Reports.
