@@ -139,9 +139,12 @@ worldMap.prototype.showCountryGeo = function() {
 	this.map.setZoom(this.map.getMinZoom());
 	/* use d3 to add coffee bean effect */
 
+	/* todo, not finish yet */
 
 	/* end coffee bean effect */
-	
+
+	/* for country compare function */
+
 	var whetherInitial = false;
 	if (this.countryLayer != undefined){
 		this.map.removeLayer(this.countryLayer);
@@ -227,14 +230,6 @@ worldMap.prototype.showCountryGeo = function() {
 	this.countryLayer.addTo(this.map);
 	this.countryLayer.associatedMap = this;
 }
-
-worldMap.prototype.addCountryTooltip = function(countryData) {
-	
-}
-
-worldMap.prototype.updateCountryPin = function(countryData) {
-
-}
 /* end map function */
 
 /* for map interaction */
@@ -300,7 +295,7 @@ function updateCountryInfo(e) {
 	if (this.clicked) {
 		// remove graph from country info compare
 	} else {
-		
+
 	}
 }
 
