@@ -96,6 +96,9 @@
     <code>d3.slider().scale(d3.scale.ordinal().domain(["Gecko", "Webkit", "Blink", "Trident"]).rangePoints([0, 1], 0.5)).axis( d3.svg.axis() ).snap(true).value("Gecko")</code>
     <div id="slider12"></div>
 
+    <h2>Slider with snapping to ticks - Decimal<span id="slider13text">0</span></h2>
+    <div id="slider13"></div>
+
   </div>
 
   <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -132,6 +135,10 @@
 
     essai = d3.slider().scale(d3.scale.ordinal().domain(["Gecko", "Webkit", "Blink", "Trident"]).rangePoints([0, 1], 0.5)).axis(d3.svg.axis()).snap(true).value("Gecko");
     d3.select('#slider12').call(essai);
+
+    d3.select('#slider13').call(d3.slider().axis(d3.svg.axis()).snap(true).on("slide", function(evt, value) {
+      d3.select('#slider13text').text(value);
+    }));
 
   </script>
  
