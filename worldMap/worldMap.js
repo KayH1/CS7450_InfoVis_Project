@@ -333,7 +333,10 @@ function updateCountryInfo(e) {
 	if (this.clicked) {
 		// remove graph from country info compare
 	} else {
+		// check the size of the selected set
 
+
+		// update the country info svg dashboard
 	}
 }
 

@@ -54,7 +54,6 @@ the Democratic Republic of the Congo, CD, COD, 180, 0, 25
 Cook Islands, CK, COK, 184, -21.2333, -159.7667
 Costa Rica, CR, CRI, 188, 10, -84
 Côte d'Ivoire, CI, CIV, 384, 8, -5
-Ivory Coast, CI, CIV, 384, 8, -5
 Croatia, HR, HRV, 191, 45.1667, 15.5
 Cuba, CU, CUB, 192, 21.5, -80
 Cyprus, CY, CYP, 196, 35, 33
@@ -154,7 +153,6 @@ Montserrat, MS, MSR, 500, 16.75, -62.2
 Morocco, MA, MAR, 504, 32, -5
 Mozambique, MZ, MOZ, 508, -18.25, 35
 Myanmar, MM, MMR, 104, 22, 98
-Burma, MM, MMR, 104, 22, 98
 Namibia, NA, NAM, 516, -22, 17
 Nauru, NR, NRU, 520, -0.5333, 166.9167
 Nepal, NP, NPL, 524, 28, 84
@@ -219,7 +217,6 @@ Swaziland, SZ, SWZ, 748, -26.5, 31.5
 Sweden, SE, SWE, 752, 62, 15
 Switzerland, CH, CHE, 756, 47, 8
 Syrian Arab Republic, SY, SYR, 760, 35, 38
-Province of China Taiwan, TW, TWN, 158, 23.5, 121
 Taiwan, TW, TWN, 158, 23.5, 121
 Tajikistan, TJ, TJK, 762, 39, 71
 United Republic of Tanzania, TZ, TZA, 834, -6, 35
@@ -247,7 +244,6 @@ Vanuatu, VU, VUT, 548, -16, 167
 Bolivarian Republic of Venezuela, VE, VEN, 862, 8, -66
 Venezuela, VE, VEN, 862, 8, -66
 Viet Nam, VN, VNM, 704, 16, 106
-Vietnam, VN, VNM, 704, 16, 106
 British Virgin Islands, VG, VGB, 92, 18.5, -64.5
 U.S. Virgin Islands, VI, VIR, 850, 18.3333, -64.8333
 Wallis and Futuna, WF, WLF, 876, -13.3, -176.2
