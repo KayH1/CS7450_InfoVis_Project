@@ -112,7 +112,7 @@ magicParameter = {
 	TWN: {direction: "right", latoffset: -9, lngoffset: -5},//
 	NIC: {direction: "left", latoffset: -11, lngoffset: 5},//
 	CHN: {direction: "left", latoffset: -11, lngoffset: 10},//
-	BDI: {direction: "top", latoffset: -5, lngoffset: -5},//
+	BDI: {direction: "top", latoffset: 0, lngoffset: 0},//
 	CRI: {direction: "right", latoffset: -10, lngoffset: 18},//
 	USA: {direction: "right", latoffset: -15, lngoffset: -60},//
 	IDN: {direction: "right", latoffset: -12, lngoffset: -10},//
