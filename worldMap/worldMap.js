@@ -53,8 +53,11 @@ function worldMap(divId, maxZoom) {
 	});
 	// default layer order: tile, GeoJSON, Marker shadows, Marker icons, Popups
 	this.tileLayer.addTo(this.map);
+	this.tileLayer.associatedMap = this;
 	this.svgLayer.addTo(this.map);
+	this.svgLayer.associatedMap = this;
 	this.labelLayer.addTo(this.map);
+	this.labelLayer.associatedMap = this;
 
 	/* add title of world map */
 	var svg = d3.select('#'+ this.divId).select('svg');
@@ -63,6 +66,9 @@ function worldMap(divId, maxZoom) {
 		.attr("id", "coffeeMapTitle")
 		.attr("transform", "translate(" + svgSize.width/2 + ", 100)" )
 		.text("Coffee World");
+
+	/* add set to record which country to show */
+	this.countryShowSet = d3.set()
 }
 
 /* for map style */
@@ -120,7 +126,7 @@ magicParameter = {
 	PHL: {direction: "right", latoffset: -9, lngoffset: -5},//
 }
 
-worldMap.prototype.showCountryGeo = function(countryGeoData, countryShowingSet) {
+worldMap.prototype.showCountryGeo = function() {
 	var whetherInitial = false;
 	if (this.countryLayer != undefined){
 		this.map.removeLayer(this.countryLayer);
@@ -130,13 +136,11 @@ worldMap.prototype.showCountryGeo = function(countryGeoData, countryShowingSet) 
 		this.countryNameMarkerMap = d3.map();
 	}
 
-	console.log(countryGeoData);
-
 	var associatedMap = this;
 	this.countryLayer = L.geoJson(countryGeoData, {
 		style: this.countryGeoStyle,
 		filter: function(feature) {
-			return countryShowingSet.has(feature["properties"]["ISO_A3"])? true : false;
+			return associatedMap.countryShowSet.has(feature["properties"]["ISO_A3"])? true : false;
 		},
 		onEachFeature: function(feature, layer) {
 			layer.on({
@@ -165,7 +169,7 @@ worldMap.prototype.showCountryGeo = function(countryGeoData, countryShowingSet) 
 
 		countryNamePositions.forEach(function(d) {
 			var countryNameMarker = new L.marker([d.position.lat, d.position.lng], { opacity: 0.01 });
-			countryNameMarker.bindTooltip(countryCodeNameMap.get(d.ISO3).length <= 12 || d.ISO3 == "CIV" ? countryCodeNameMap.get(d.ISO3) : d.ISO3, {
+			countryNameMarker.bindTooltip(countryInfoMap.get(d.ISO3)["Country"].length <= 12 || d.ISO3 == "CIV" ? countryInfoMap.get(d.ISO3)["Country"] : d.ISO3, {
 				permanent: true, 
 				className: "countryNameLabel", 
 				offset: [0, 0], 
@@ -176,7 +180,7 @@ worldMap.prototype.showCountryGeo = function(countryGeoData, countryShowingSet) 
 	}
 
 	this.countryNameMarkerMap.keys().forEach(function(key) {
-		if (countryShowingSet.has(key)){
+		if (associatedMap.countryShowSet.has(key)){
 			associatedMap.countryNameMarkerMap.get(key).addTo(associatedMap.map);
 		} else{
 			associatedMap.map.removeLayer(associatedMap.countryNameMarkerMap.get(key));
@@ -184,6 +188,7 @@ worldMap.prototype.showCountryGeo = function(countryGeoData, countryShowingSet) 
 	});
 
 	this.countryLayer.addTo(this.map);
+	this.countryLayer.associatedMap = this;
 	/* use d3 to add coffee bean effect */
 
 }
