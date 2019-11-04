@@ -3,9 +3,15 @@ This file is used to generate world map for specific div component
 in the html file, taking the component id as input for initialization
 */
 function worldMap(divId, maxZoom, title) {
+	/* add divId of world map */
 	this.divId = divId;
+	/* add title of world map */
+	this.mapTitle = title;
+	/* add set to record which country to show */
+	this.countryShowSet = d3.set()
+	
 	/* declare meta map attribute */
-	var minZoom = 1.5;
+	var minZoom = 2;
 	var maxBounds = L.latLngBounds(L.latLng(-60, -150), L.latLng(73, 130));
 
 	this.map = L.map(divId, {
@@ -13,19 +19,23 @@ function worldMap(divId, maxZoom, title) {
 		minZoom: minZoom,
 		maxZoom: maxZoom
 	}).setView(new L.LatLng(21, -5), minZoom);
+	this.map.associatedMap = this;
 	this.map.setMaxBounds(maxBounds);
+
+	// add listener for zoom end 
+	this.map.on('zoomend', updateCountryLabel);
 
 	// add pane to map for showing country name
 	this.map.createPane('labelLayer');
 	// set the stack position of added pane layer
-	this.map.getPane('labelLayer').style.zIndex = 550;
+	this.map.getPane('labelLayer').style.zIndex = 350;
 	// make the mouse event go through the event and reach below
 	this.map.getPane('labelLayer').style.pointerEvents = 'none';
 
 	// add pane to map for svg
 	this.map.createPane('svgLayer');
 	// set the stack position of added pane layer
-	this.map.getPane('svgLayer').style.zIndex = 300;
+	this.map.getPane('svgLayer').style.zIndex = 400;
 	// make the mouse event go through the event and reach below
 	this.map.getPane('svgLayer').style.pointerEvents = 'none';
 
@@ -51,7 +61,7 @@ function worldMap(divId, maxZoom, title) {
 	this.labelLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png', {
 		//attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
 		subdomains: 'abcd',
-		maxZoom: minZoom + 1,
+		maxZoom: maxZoom,
 		minZoom: minZoom,
 		pane: 'labelLayer'
 	});
@@ -65,16 +75,6 @@ function worldMap(divId, maxZoom, title) {
 	this.svgLayer.associatedMap = this;
 	this.labelLayer.addTo(this.map);
 	this.labelLayer.associatedMap = this;
-
-	/* add title of world map */
-	var svg = d3.select('#'+ this.divId).select('svg');
-	svg.append('text')
-		.attr("id", "coffeeMapTitle")
-		.attr("transform", "translate(" + (parseInt(d3.select("#" + divId).style("width"), 10)/2 - 20) + ", 100)" )
-		.text(title);
-
-	/* add set to record which country to show */
-	this.countryShowSet = d3.set()
 }
 
 /* for map style */
@@ -185,14 +185,7 @@ worldMap.prototype.showCountryGeo = function() {
 		});
 	}
 
-	this.countryNameMarkerMap.keys().forEach(function(key) {
-		if (associatedMap.countryShowSet.has(key)){
-			associatedMap.countryNameMarkerMap.get(key).addTo(associatedMap.map);
-		} else{
-			associatedMap.map.removeLayer(associatedMap.countryNameMarkerMap.get(key));
-		}
-	});
-
+	updateCountryLabel.call(this.map);
 	this.countryLayer.addTo(this.map);
 	this.countryLayer.associatedMap = this;
 	/* use d3 to add coffee bean effect */
@@ -209,10 +202,6 @@ worldMap.prototype.updateCountryPin = function(countryData) {
 /* end map function */
 
 /* for map interaction */
-function addCountryName() {
-
-}
-
 function highlightFeature(e) {
 	var layer = e.target;
 
@@ -226,20 +215,50 @@ function highlightFeature(e) {
 	if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
 		layer.bringToFront();
 	}
-
-	/* generate tooltip */
-	//var svg = d3.select('#'+ this.divId).select('svg');
-	//svg.selectAll(l)
-	//	.attr("transform", "translate(" + svgSize.width/2 + ", 100)" )
-	//	.text("Coffee World");
 }
 
 function resetHighlight(e) {
 	this.associatedMap.countryLayer.resetStyle(e.target);
-	/* tooltip disappear */
 }
 
 function zoomToFeature(e) {
 	this.associatedMap.map.fitBounds(e.target.getBounds());
 }
+
+function updateCountryLabel(e) {
+	let associatedMap = this.associatedMap;
+
+	let svg = d3.select('#'+ associatedMap.divId).select('svg');	
+	let mapTitle = svg.selectAll('#mapTitle')
+		.data([associatedMap.mapTitle])
+		
+	let addedTitle = mapTitle.enter()
+		.append("text")
+		.attr("id", "mapTitle")
+
+	console.log(associatedMap.mapTitle);
+
+	addedTitle.merge(mapTitle)
+		.attr("transform", "translate(" + (parseInt(d3.select("#" + associatedMap.divId).style("width"), 10)/2 - 20) + ", 100)" )
+		.text(d => d);
+
+	mapTitle.exit().remove();
+
+	if (this.getZoom() == this.getMinZoom()){
+		associatedMap.countryNameMarkerMap.keys().forEach(function(key) {
+			if (associatedMap.countryShowSet.has(key)){
+				associatedMap.countryNameMarkerMap.get(key).addTo(associatedMap.map);
+			} else {
+				if (associatedMap.map.hasLayer(associatedMap.countryNameMarkerMap.get(key)))
+					associatedMap.map.removeLayer(associatedMap.countryNameMarkerMap.get(key));
+			}
+		});
+	} else {
+		associatedMap.countryNameMarkerMap.keys().forEach(function(key) {
+			if (associatedMap.map.hasLayer(associatedMap.countryNameMarkerMap.get(key)))
+				associatedMap.map.removeLayer(associatedMap.countryNameMarkerMap.get(key));
+		});
+	}
+}
+
 /* end map interaction */

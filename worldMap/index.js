@@ -22,8 +22,8 @@ Promise.all([
 			lat: +d.lat,
 			lng: +d.lng
 		}
-	}), // load country code
-	d3.json(dataPath.countryGeoPath)  // load country geo
+	}), // load country info
+	d3.json(dataPath.countryGeoPath)  // load country geo data
 ]).then(function(data) {
 	let countryInfoData = d3.nest()
 		.key(function(d) { return d.ISO3; })
