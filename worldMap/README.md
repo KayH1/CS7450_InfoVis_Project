@@ -5,4 +5,7 @@
 - Add marker to country for user preference coffee
 - Add country compare dashboard for country compare
 
-![Program Screenshot](./screenshot.PNG?raw=true)
+- At first glance
+![Program Screenshot](./screenshot1.PNG?raw=true)
+- After zoom in
+![Program Screenshot](./screenshot2.PNG?raw=true)
