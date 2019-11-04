@@ -3,7 +3,13 @@ This file is used to generate world map for specific div component
 in the html file, taking the component id as input for initialization
 */
 function worldMap(divId, maxZoom, title) {
+	/* add divId of world map */
 	this.divId = divId;
+	/* add title of world map */
+	this.mapTitle = title;
+	/* add set to record which country to show */
+	this.countryShowSet = d3.set()
+	
 	/* declare meta map attribute */
 	var minZoom = 2;
 	var maxBounds = L.latLngBounds(L.latLng(-60, -150), L.latLng(73, 130));
@@ -17,7 +23,7 @@ function worldMap(divId, maxZoom, title) {
 	this.map.setMaxBounds(maxBounds);
 
 	// add listener for zoom end 
-	this.map.on('zoomend', updateCountryNameLabel);
+	this.map.on('zoomend', updateCountryLabel);
 
 	// add pane to map for showing country name
 	this.map.createPane('labelLayer');
@@ -69,11 +75,6 @@ function worldMap(divId, maxZoom, title) {
 	this.svgLayer.associatedMap = this;
 	this.labelLayer.addTo(this.map);
 	this.labelLayer.associatedMap = this;
-
-	/* add title of world map */
-	this.mapTitle = title;
-	/* add set to record which country to show */
-	this.countryShowSet = d3.set()
 }
 
 /* for map style */
@@ -184,7 +185,7 @@ worldMap.prototype.showCountryGeo = function() {
 		});
 	}
 
-	updateCountryNameLabel.call(this.map);
+	updateCountryLabel.call(this.map);
 	this.countryLayer.addTo(this.map);
 	this.countryLayer.associatedMap = this;
 	/* use d3 to add coffee bean effect */
@@ -201,10 +202,6 @@ worldMap.prototype.updateCountryPin = function(countryData) {
 /* end map function */
 
 /* for map interaction */
-function addCountryName() {
-
-}
-
 function highlightFeature(e) {
 	var layer = e.target;
 
@@ -228,7 +225,7 @@ function zoomToFeature(e) {
 	this.associatedMap.map.fitBounds(e.target.getBounds());
 }
 
-function updateCountryNameLabel(e) {
+function updateCountryLabel(e) {
 	let associatedMap = this.associatedMap;
 
 	let svg = d3.select('#'+ associatedMap.divId).select('svg');	
