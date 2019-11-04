@@ -2,7 +2,7 @@
 This file is used to generate world map for specific div component
 in the html file, taking the component id as input for initialization
 */
-function worldMap(divId, maxZoom) {
+function worldMap(divId, maxZoom, title) {
 	this.divId = divId;
 	/* declare meta map attribute */
 	var minZoom = 1.5;
@@ -28,6 +28,13 @@ function worldMap(divId, maxZoom) {
 	this.map.getPane('svgLayer').style.zIndex = 300;
 	// make the mouse event go through the event and reach below
 	this.map.getPane('svgLayer').style.pointerEvents = 'none';
+
+	// add pane to map for country name tooltip
+	this.map.createPane('nameTooltipLayer');
+	// set the stack position of added pane layer
+	this.map.getPane('nameTooltipLayer').style.zIndex = 575;
+	// make the mouse event go through the event and reach below
+	this.map.getPane('nameTooltipLayer').style.pointerEvents = 'none';
 
 	// add pane to map for country layer
 	this.map.createPane('countryLayer');
@@ -61,11 +68,10 @@ function worldMap(divId, maxZoom) {
 
 	/* add title of world map */
 	var svg = d3.select('#'+ this.divId).select('svg');
-	var svgSize = {width: svg.attr("width"), height: svg.attr("height")};
 	svg.append('text')
 		.attr("id", "coffeeMapTitle")
-		.attr("transform", "translate(" + svgSize.width/2 + ", 100)" )
-		.text("Coffee World");
+		.attr("transform", "translate(" + (parseInt(d3.select("#" + divId).style("width"), 10)/2 - 20) + ", 100)" )
+		.text(title);
 
 	/* add set to record which country to show */
 	this.countryShowSet = d3.set()
@@ -168,7 +174,7 @@ worldMap.prototype.showCountryGeo = function() {
 		});
 
 		countryNamePositions.forEach(function(d) {
-			var countryNameMarker = new L.marker([d.position.lat, d.position.lng], { opacity: 0.01 });
+			var countryNameMarker = new L.marker([d.position.lat, d.position.lng], { opacity: 0.01, pane: 'nameTooltipLayer' });
 			countryNameMarker.bindTooltip(countryInfoMap.get(d.ISO3)["Country"].length <= 12 || d.ISO3 == "CIV" ? countryInfoMap.get(d.ISO3)["Country"] : d.ISO3, {
 				permanent: true, 
 				className: "countryNameLabel", 

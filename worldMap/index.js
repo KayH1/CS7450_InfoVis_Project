@@ -11,7 +11,7 @@ var countryInfoMap = d3.map(); // ISO3 -> country info data (average coordinates
 var countryGeoData; // country geo data
 
 /* test for example map */
-worldMap = new worldMap("map", 19);
+worldMap = new worldMap("map", 4, "Coffee World Map");
 
 Promise.all([
 	d3.csv(dataPath.countryInfoPath, function(d) {
