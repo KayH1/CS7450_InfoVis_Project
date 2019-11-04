@@ -17,7 +17,7 @@
 	text-anchor: middle;
 }
 
-.countryNameLabel{
+.countryNameLabel {
 	background: rgba(255, 255, 255, 0.8);
   	padding: 0px 5px;
   	border:0;
@@ -27,4 +27,18 @@
   	font-weight: 200;
   	font-family: pirates;
   	font-size: 15px;
+}
+
+.countryInfoTooltip {
+    background: rgba(127,201,127, 0.8);
+    padding: 0px 10px 0px 10px;
+    border:3;
+    border-color: rgb(179,205,227);
+    border-radius:10px;
+    box-shadow: 1 0px 0px;
+    text-anchor: start;
+    font-weight: 200;
+    min-width: 135px;
+    font-family: pirates;
+    font-size: 15px;
 }

@@ -7,18 +7,24 @@ dataPath = {
 	countryPrPath: "../data/country/precipitation-2020_2039.csv"
 }
 
+/* map type */
+worldMapType = d3.map();
+worldMapType.set("UserPreference", 1);
+worldMapType.set("CoffeeCompare", 2);
+
 var countryInfoMap = d3.map(); // ISO3 -> country info data (average coordinates, iso codes, country name)
 var countryGeoData; // country geo data
 
-/* test for example map */
-worldMap = new worldMap("map", 4, "Coffee World Map");
+/* test for coffee compare map */
+worldMap = new worldMap("map", 4, "Coffee World Map", worldMapType.get("CoffeeCompare"));
+/* test for user preference map */
 
 Promise.all([
 	d3.csv(dataPath.countryInfoPath, function(d) {
 		return {
 			Country: d.Country,
 			ISO3: d.ISO3,
-			ISO2: d.ISO2,
+			ISO2: d.ISO2.toLowerCase(),
 			lat: +d.lat,
 			lng: +d.lng
 		}
@@ -35,10 +41,13 @@ Promise.all([
 	countryGeoData.features = countryGeoData.features.filter(function(d) {
 		return countryInfoMap.has(d["properties"]["ISO_A3"])? true : false;
 	});
+	initialCoffeeCompareMap();
+});
 
-	/* initial showing all country with coffee */
+function initialCoffeeCompareMap() {
+	/* initial coffee compare map */
 	countryInfoMap.keys().forEach(function(d) {
 		worldMap.countryShowSet.add(d)
 	});
 	worldMap.showCountryGeo();
-});
+}

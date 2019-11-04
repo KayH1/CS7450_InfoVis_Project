@@ -2,13 +2,15 @@
 This file is used to generate world map for specific div component
 in the html file, taking the component id as input for initialization
 */
-function worldMap(divId, maxZoom, title) {
+function worldMap(divId, maxZoom, title, mapType) {
 	/* add divId of world map */
 	this.divId = divId;
 	/* add title of world map */
 	this.mapTitle = title;
 	/* add set to record which country to show */
 	this.countryShowSet = d3.set()
+	/* add mapType of world map */
+	this.mapType = mapType;
 	
 	/* declare meta map attribute */
 	var minZoom = 2;
@@ -17,12 +19,13 @@ function worldMap(divId, maxZoom, title) {
 	this.map = L.map(divId, {
 		maxBounds: maxBounds,
 		minZoom: minZoom,
-		maxZoom: maxZoom
+		maxZoom: maxZoom,
+		zoomDelta: 0.5
 	}).setView(new L.LatLng(21, -5), minZoom);
 	this.map.associatedMap = this;
 	this.map.setMaxBounds(maxBounds);
 
-	// add listener for zoom end 
+	// add listener for zoom end
 	this.map.on('zoomend', updateCountryLabel);
 
 	// add pane to map for showing country name
@@ -87,6 +90,12 @@ worldMap.prototype.countryGeoStyle = function(f) {
         fillOpacity: 0.7,
         fillColor: '#654321'
     }
+}
+
+worldMap.prototype.countryToolTipStyle = function(f) {
+	return {
+		weight: 1
+	}
 }
 
 /* end map style */
@@ -154,8 +163,35 @@ worldMap.prototype.showCountryGeo = function() {
 				mouseout: resetHighlight,
 				dblclick: zoomToFeature
 			});
+			/* record the top object */
 			layer.associatedMap = associatedMap;
-		},
+			/* record whether the layer is cliced or not */
+			layer.clicked = false;
+			let countryInfo = countryInfoMap.get(layer.feature["properties"]["ISO_A3"]);
+			let offset = [20, -20];
+			if (countryInfo["ISO3"] == "JPN" || countryInfo["ISO3"] == "PNG")
+				offset = [-50, 50];
+			
+			let htmlContent = countryInfo["Country"] + "  \
+				<img src='../data/country/flags/64/" + countryInfo["ISO2"] + "_64.png' alt='Flag' style='width:48px;height:48px;float:right;'><br/>\
+				#Coffee:&nbsp;&nbsp;5<br/>\
+				Coffee AVG Rating:&nbsp;&nbsp;4.5<br/>\
+				World Ranking:&nbsp;&nbsp;-1";
+			
+			if (countryInfo["ISO3"] == "USA" || countryInfo["ISO3"] == "TZA" || countryInfo["ISO3"] == "PNG"){
+				htmlContent = countryInfo["Country"] + "<br/>\
+					#Coffee:&nbsp;&nbsp;5<img src='../data/country/flags/64/" + countryInfo["ISO2"] + "_64.png' alt='Flag' \
+					style='width:48px;height:48px;float:right;display:block;position:absolute;top:10px;right:10px;'><br/>\
+					Coffee AVG Rating:&nbsp;&nbsp;4.5<br/>\
+					World Ranking:&nbsp;&nbsp;-1";
+			}
+			
+			layer.bindTooltip(htmlContent, {
+					className: "countryInfoTooltip",
+					offset: offset,
+					direction: "top"
+				});
+			},
 		pane: 'countryLayer'
 	})
 
@@ -184,8 +220,10 @@ worldMap.prototype.showCountryGeo = function() {
 			associatedMap.countryNameMarkerMap.set(d.ISO3, countryNameMarker)
 		});
 	}
-
+	/* show country name label for country compare */
 	updateCountryLabel.call(this.map);
+	/* show coffee bean with label for user selected top coffee */
+
 	this.countryLayer.addTo(this.map);
 	this.countryLayer.associatedMap = this;
 	/* use d3 to add coffee bean effect */
@@ -236,10 +274,9 @@ function updateCountryLabel(e) {
 		.append("text")
 		.attr("id", "mapTitle")
 
-	console.log(associatedMap.mapTitle);
-
 	addedTitle.merge(mapTitle)
-		.attr("transform", "translate(" + (parseInt(d3.select("#" + associatedMap.divId).style("width"), 10)/2 - 20) + ", 100)" )
+		.attr("x", parseInt(d3.select("#" + associatedMap.divId).style("width"), 10)/2 - 20)
+		.attr("y", 100)
 		.text(d => d);
 
 	mapTitle.exit().remove();
@@ -258,6 +295,14 @@ function updateCountryLabel(e) {
 			if (associatedMap.map.hasLayer(associatedMap.countryNameMarkerMap.get(key)))
 				associatedMap.map.removeLayer(associatedMap.countryNameMarkerMap.get(key));
 		});
+	}
+}
+
+function updateCountryInfo(e) {
+	if (this.clicked) {
+		// remove graph from country info compare
+	} else {
+
 	}
 }
 
