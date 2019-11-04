@@ -78,6 +78,7 @@ function worldMap(divId, maxZoom, title, mapType) {
 	this.svgLayer.associatedMap = this;
 	this.labelLayer.addTo(this.map);
 	this.labelLayer.associatedMap = this;
+	d3.select("#" + this.divId).select("svg").attr("id", "geoSvg");
 }
 
 /* for map style */
@@ -91,13 +92,6 @@ worldMap.prototype.countryGeoStyle = function(f) {
         fillColor: '#654321'
     }
 }
-
-worldMap.prototype.countryToolTipStyle = function(f) {
-	return {
-		weight: 1
-	}
-}
-
 /* end map style */
 
 /* for map function */
@@ -266,7 +260,7 @@ function zoomToFeature(e) {
 function updateCountryLabel(e) {
 	let associatedMap = this.associatedMap;
 
-	let svg = d3.select('#'+ associatedMap.divId).select('svg');	
+	let svg = d3.select('#'+ associatedMap.divId).select("#geoSvg");
 	let mapTitle = svg.selectAll('#mapTitle')
 		.data([associatedMap.mapTitle])
 		
