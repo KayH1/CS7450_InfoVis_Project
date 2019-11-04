@@ -17,8 +17,9 @@ var countryClimateMap = d3.map();  // ISO3 -> country climate data {temp: [], pr
 var countryGeoData; // country geo data
 
 /* test for coffee compare map */
-worldMap = new worldMap("map", 4, "Coffee World Map", worldMapType.get("CoffeeCompare"));
+countryWorldMap = new worldMap("map1", 4, "Coffee World Map", worldMapType.get("CoffeeCompare"));
 /* test for user preference map */
+userPreferenceWorldMap = new worldMap("map2", 4, "Explore Coffee Choice", worldMapType.get("CoffeeCompare"));
 
 Promise.all([
 	d3.csv(dataPath.countryInfoPath, function(d) {
@@ -57,7 +58,8 @@ Promise.all([
 	data[3].forEach(function(d) {
 		countryClimateMap.get(countryNameCodeMap.get(d["Country"])).pr = d.climateData;
 	})
-	initialCoffeeCompareMap();
+	initialCoffeeCompareMap(countryWorldMap);
+	initialCoffeeCompareMap(userPreferenceWorldMap);
 });
 
 function processForClimateData(d) {
@@ -80,12 +82,12 @@ function processForClimateData(d) {
 	};
 }
 
-function initialCoffeeCompareMap() {
+function initialCoffeeCompareMap(MapToInitialization) {
 	/* initial coffee compare map */
 	countryInfoMap.keys().forEach(function(d) {
-		worldMap.countryShowSet.add(d)
+		MapToInitialization.countryShowSet.add(d)
 	});
-	worldMap.showCountryGeo();
+	MapToInitialization.showCountryGeo();
 }
 
 function initialUserPreferenceMap() {

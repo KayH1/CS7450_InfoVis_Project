@@ -14,6 +14,7 @@ function worldMap(divId, maxZoom, title, mapType) {
 	
 	/* declare meta map attribute */
 	var minZoom = 2;
+	this.mapInitialCenter = new L.LatLng(21, -5);
 	var maxBounds = L.latLngBounds(L.latLng(-60, -150), L.latLng(73, 130));
 
 	this.map = L.map(divId, {
@@ -21,12 +22,11 @@ function worldMap(divId, maxZoom, title, mapType) {
 		minZoom: minZoom,
 		maxZoom: maxZoom,
 		zoomDelta: 0.5
-	}).setView(new L.LatLng(21, -5), minZoom);
+	}).setView(this.mapInitialCenter, minZoom);
 	this.map.associatedMap = this;
 	this.map.setMaxBounds(maxBounds);
 
-	// add listener for zoom end
-	this.map.on('zoomend', updateCountryLabel);
+	this.mapInitialCenterPoint = this.map.latLngToLayerPoint(this.mapInitialCenter);
 
 	// add pane to map for showing country name
 	this.map.createPane('labelLayer');
@@ -71,6 +71,38 @@ function worldMap(divId, maxZoom, title, mapType) {
 	this.svgLayer = L.svg({
 		pane: 'svgLayer'
 	});
+
+	if (this.mapType == worldMapType.get("CoffeeCompare")){
+		this.countryClickedSet = d3.set()
+		this.countryCompareInfo = L.control();
+		this.countryCompareInfo.associatedMap = this;
+		this.countryCompareInfo.onAdd = function(map) {
+			this._div = L.DomUtil.create('div', 'countryCompareInfo');
+			return this._div;
+		}
+		this.countryCompareInfo.addTo(this.map);
+		let appenddiv = d3.select("#" + this.divId).select(".countryCompareInfo")
+			.attr("width", 200)
+			.attr("height", 30)
+			.style("z-index", 300);
+		appenddiv.append("h3")
+			.text("Country Comparison")
+		/*
+		appenddiv.append("svg")
+			.attr("id", "tempDash")
+			.attr("width", 195)
+			.attr("height", 0)
+			.style("margin", 0);
+		appenddiv.append("br");
+		appenddiv.append("svg")
+			.attr("id", "prDash")
+			.attr("width", 195)
+			.attr("height", 0)
+			.style("margin", 0);
+		*/
+		L.DomUtil.setPosition(this.countryCompareInfo._div, L.point(-782, 250));
+	}
+
 	// default layer order: tile, GeoJSON, Marker shadows, Marker icons, Popups
 	this.tileLayer.addTo(this.map);
 	this.tileLayer.associatedMap = this;
@@ -78,7 +110,11 @@ function worldMap(divId, maxZoom, title, mapType) {
 	this.svgLayer.associatedMap = this;
 	this.labelLayer.addTo(this.map);
 	this.labelLayer.associatedMap = this;
-	d3.select("#" + this.divId).select("svg").attr("id", "geoSvg");
+	d3.select("#" + this.divId).select("svg").attr("id", this.divId + "geoSvg");
+
+	// add listener for zoom end and move end
+	this.map.on('zoomend', updateCountryLabel);
+	this.map.on('moveend', updateMapTitle);
 }
 
 /* for map style */
@@ -199,13 +235,13 @@ worldMap.prototype.showCountryGeo = function() {
 	})
 
 	if (whetherInitial) {
-		var generateSeparateGeo = d3.map();
+		let generateSeparateGeo = d3.map();
 		countryGeoData.features.forEach(function(countryGeoFeature) {
-			var extractedFeature = {type: "FeatureCollection", features: [countryGeoFeature]};
+			let extractedFeature = {type: "FeatureCollection", features: [countryGeoFeature]};
 			generateSeparateGeo.set(countryGeoFeature["properties"]["ISO_A3"], extractedFeature);
 		})
 
-		var countryNamePositions = new Array();
+		let countryNamePositions = new Array();
 		this.countryLayer.eachLayer(function(layer) {
 			let ISO3code = layer.feature["properties"]["ISO_A3"];
 			let centroid = turf.centerOfMass(generateSeparateGeo.get(ISO3code)).geometry.coordinates;
@@ -213,7 +249,7 @@ worldMap.prototype.showCountryGeo = function() {
 		});
 
 		countryNamePositions.forEach(function(d) {
-			var countryNameMarker = new L.marker([d.position.lat, d.position.lng], { opacity: 0.01, pane: 'nameTooltipLayer' });
+			let countryNameMarker = new L.marker([d.position.lat, d.position.lng], { opacity: 0.01, pane: 'nameTooltipLayer' });
 			countryNameMarker.bindTooltip(countryInfoMap.get(d.ISO3)["Country"].length <= 12 || d.ISO3 == "CIV" ? countryInfoMap.get(d.ISO3)["Country"] : d.ISO3, {
 				permanent: true, 
 				className: "countryNameLabel", 
@@ -234,7 +270,7 @@ worldMap.prototype.showCountryGeo = function() {
 
 /* for map interaction */
 function highlightFeature(e) {
-	var layer = e.target;
+	let layer = e.target;
 
 	layer.setStyle({
 		weight: 5,
@@ -259,21 +295,6 @@ function zoomToFeature(e) {
 function updateCountryLabel(e) {
 	let associatedMap = this.associatedMap;
 
-	let svg = d3.select('#'+ associatedMap.divId).select("#geoSvg");
-	let mapTitle = svg.selectAll('#mapTitle')
-		.data([associatedMap.mapTitle])
-		
-	let addedTitle = mapTitle.enter()
-		.append("text")
-		.attr("id", "mapTitle")
-
-	addedTitle.merge(mapTitle)
-		.attr("x", parseInt(d3.select("#" + associatedMap.divId).style("width"), 10)/2 - 20)
-		.attr("y", 100)
-		.text(d => d);
-
-	mapTitle.exit().remove();
-
 	if (this.getZoom() == this.getMinZoom()){
 		associatedMap.countryNameMarkerMap.keys().forEach(function(key) {
 			if (associatedMap.countryShowSet.has(key)){
@@ -289,6 +310,23 @@ function updateCountryLabel(e) {
 				associatedMap.map.removeLayer(associatedMap.countryNameMarkerMap.get(key));
 		});
 	}
+}
+
+function updateMapTitle(e) {
+	let associatedMap = this.associatedMap;
+	let svg = d3.select('#'+ associatedMap.divId).select("#" + associatedMap.divId + "geoSvg");
+	let mapTitle = svg.select("#" + associatedMap.divId + "mapTitle");
+
+	if (mapTitle.empty()){
+		mapTitle = svg.append("text")
+			.attr("id", associatedMap.divId + "mapTitle")
+			.text(associatedMap.mapTitle);
+	}
+	let mapBound = associatedMap.map.getBounds();
+	let titlePosition = L.latLng({lat: mapBound["_southWest"].lat + (mapBound["_northEast"].lat - mapBound["_southWest"].lat) * 0.85, lng: 1.08 * (mapBound["_northEast"].lng + mapBound["_southWest"].lng)/2});
+	console.log(titlePosition);
+	mapTitle.attr("x", associatedMap.map.latLngToLayerPoint(titlePosition).x)
+		.attr("y", associatedMap.map.latLngToLayerPoint(titlePosition).y);
 }
 
 function updateCountryInfo(e) {
