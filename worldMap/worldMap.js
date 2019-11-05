@@ -396,7 +396,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 				.attr("height", 15)
 				.merge(presentClimateLegend)
 				.attr("x", function(d, i){
-					return 3 + i * 48;
+					return 3 + i * 45;
 				})
 				.attr("y", 90)
 				.attr("fill", function(d, i){
@@ -413,7 +413,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 				.attr("height", 15)
 				.merge(presentClimateLegendText)
 				.attr("x", function(d, i){
-					return 21 + i * 48;
+					return 21 + i * 45;
 				})
 				.attr("y", 102)
 				.text(d=>d.CountryCode)
