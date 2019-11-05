@@ -300,13 +300,22 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 					.attr("height", 90)
 					.style("margin", 0);
 				tempSVG.selectAll("#temptitle")
-					.data(["Temperature MAVG"])
+					.data(["Temperature MAVG (°C)"])
 					.enter().append("text")
 					.attr("id", "temptitle")
 					.text(d=>d)
 					.attr("transform", "translate(" + (tempSVG.attr("width")/2) + ", 10)")
 					.style("font-weight", "bold")
 					.style("font-size", 10)
+					.style("text-anchor", "middle");
+				tempSVG.selectAll("#tempsubtitle")
+					.data(["predicted"])
+					.enter().append("text")
+					.attr("id", "tempsubtitle")
+					.text(d=>d)
+					.attr("transform", "translate(" + (tempSVG.attr("width")/2) + ", 18)")
+					.style("font-weight", "bold")
+					.style("font-size", 8)
 					.style("text-anchor", "middle");
 			}
 			if (brGroup.empty()){
@@ -319,13 +328,22 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 					.attr("height", 105)
 					.style("margin", 0);
 				prSVG.selectAll("#prtitle")
-					.data(["Precipitation MAVG"])
+					.data(["Precipitation MAVG (mm)"])
 					.enter().append("text")
 					.attr("id", "prtitle")
 					.text(d=>d)
 					.attr("transform", "translate(" + (prSVG.attr("width")/2) + ", 10)")
 					.style("font-weight", "bold")
 					.style("font-size", 10)
+					.style("text-anchor", "middle");
+				prSVG.selectAll("#prsubtitle")
+					.data(["predicted"])
+					.enter().append("text")
+					.attr("id", "prsubtitle")
+					.text(d=>d)
+					.attr("transform", "translate(" + (tempSVG.attr("width")/2) + ", 18)")
+					.style("font-weight", "bold")
+					.style("font-size",8)
 					.style("text-anchor", "middle");
 			}
 			/* plot the svg line chart */
