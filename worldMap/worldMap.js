@@ -454,7 +454,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
         	let presentTempLine = tempSVG.selectAll(".linePlot").data(lineChartData);
 			presentTempLine.enter().append("path").attr("class", "linePlot")
 				.merge(presentTempLine)
-			    .attr('d', function(d){ console.log(tempLine(d.Climate.temp)); return tempLine(d.Climate.temp); })
+			    .attr('d', function(d){ return tempLine(d.Climate.temp); })
 			    .style('stroke', function(d, i) { return colorMap[i]; })
 			    .style('stroke-width', 2)
 			    .style("fill", "none");
@@ -462,7 +462,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
         	let presentPrLine = prSVG.selectAll(".linePlot").data(lineChartData);
 			presentPrLine.enter().append("path").attr("class", "linePlot")
 				.merge(presentPrLine)
-			    .attr('d', function(d){ console.log(prLine(d.Climate.pr)); return prLine(d.Climate.pr); })
+			    .attr('d', function(d){ return prLine(d.Climate.pr); })
 			    .style('stroke', function(d, i) { return colorMap[i]; })
 			    .style('stroke-width', 2)
 			    .style("fill", "none");
