@@ -83,10 +83,9 @@ function worldMap(divId, maxZoom, title, mapType) {
 		this.countryCompareInfo.addTo(this.map);
 		let appenddiv = d3.select("#" + this.divId).select(".countryCompareInfo")
 			.attr("width", 200)
-			.attr("height", 30)
-			.style("z-index", 300);
+			.attr("height", 30);
 		appenddiv.append("h3")
-			.text("Country Comparison")
+			.text("Country Comparison");
 		/*
 		appenddiv.append("svg")
 			.attr("id", "tempDash")
@@ -200,12 +199,11 @@ worldMap.prototype.showCountryGeo = function() {
 			layer.on({
 				mouseover: highlightFeature,
 				mouseout: resetHighlight,
-				dblclick: zoomToFeature
+				dblclick: zoomToFeature,
+				click: updateSelectedCountrySet
 			});
 			/* record the top object */
 			layer.associatedMap = associatedMap;
-			/* record whether the layer is cliced or not */
-			layer.clicked = false;
 			let countryInfo = countryInfoMap.get(layer.feature["properties"]["ISO_A3"]);
 			let offset = [20, -20];
 			if (countryInfo["ISO3"] == "JPN" || countryInfo["ISO3"] == "PNG")
@@ -259,12 +257,73 @@ worldMap.prototype.showCountryGeo = function() {
 			associatedMap.countryNameMarkerMap.set(d.ISO3, countryNameMarker)
 		});
 	}
+
+	if (this.mapType == worldMapType.get("CoffeeCompare")){
+		this.countryClickedSet.clear();
+		this.updateCountryInfoCompare();
+	}
+
+	if (this.mapType == worldMapType.get("UserPreference")){
+		/* we can get ISO3 - coffee map */
+		this.updateCoffeeMarker();
+	}
+
 	/* show country name label for country compare */
 	updateCountryLabel.call(this.map);
 	/* show coffee bean with label for user selected top coffee */
 
 	this.countryLayer.addTo(this.map);
 	this.countryLayer.associatedMap = this;
+}
+
+worldMap.prototype.updateCountryInfoCompare = function() {
+	if (this.mapType == worldMapType.get("CoffeeCompare")){
+		let appenddiv = d3.select("#" + this.divId).select(".countryCompareInfo");
+		let tempSVG = appenddiv.select("#" + this.divId + "tempDash");
+		let prSVG = appenddiv.select("#" + this.divId + "prDash");
+		let brGroup = appenddiv.selectAll("br");
+
+		if (this.countryClickedSet.size() == 0) {
+			if (!tempSVG.empty()){
+				tempSVG.remove();
+			}
+			if (!prSVG.empty()){
+				prSVG.remove();
+			}
+			if (!brGroup.empty()){
+				brGroup.remove();
+			}
+			appenddiv.attr("width", 200)
+				.attr("height", 30);
+		} else {
+			appenddiv.attr("width", 200)
+				.attr("height", 190);
+			if (tempSVG.empty()){
+				appenddiv.append("svg")
+					.attr("id", this.divId + "tempDash")
+					.attr("width", 160)
+					.attr("height", 87)
+					.style("margin", 5);
+			}
+			if (brGroup.empty()){
+				appenddiv.append("br")
+			}
+			if (prSVG.empty()){
+				appenddiv.append("svg")
+					.attr("id", this.divId + "prDash")
+					.attr("width", 160)
+					.attr("height", 87)
+					.style("margin", 5);
+			}
+			console.log("plot line chart");
+		}
+	}
+}
+
+worldMap.prototype.updateCoffeeMarker = function() {
+	if (this.mapType == worldMapType.get("UserPreference")){
+		console.log("Update based on the iso coffee map");
+	} 
 }
 /* end map function */
 
@@ -324,20 +383,24 @@ function updateMapTitle(e) {
 	}
 	let mapBound = associatedMap.map.getBounds();
 	let titlePosition = L.latLng({lat: mapBound["_southWest"].lat + (mapBound["_northEast"].lat - mapBound["_southWest"].lat) * 0.85, lng: 1.08 * (mapBound["_northEast"].lng + mapBound["_southWest"].lng)/2});
-	console.log(titlePosition);
 	mapTitle.attr("x", associatedMap.map.latLngToLayerPoint(titlePosition).x)
 		.attr("y", associatedMap.map.latLngToLayerPoint(titlePosition).y);
 }
 
-function updateCountryInfo(e) {
-	if (this.clicked) {
-		// remove graph from country info compare
-	} else {
-		// check the size of the selected set
-
-
-		// update the country info svg dashboard
+/* update selectedCountrySet when layer clicked */
+function updateSelectedCountrySet(e) {
+	let associatedMap = this.associatedMap;
+	let layer = e.target;
+	if (associatedMap.mapType == worldMapType.get("CoffeeCompare")){
+		if (associatedMap.countryClickedSet.has(layer.feature["properties"]["ISO_A3"])){
+			associatedMap.countryClickedSet.remove(layer.feature["properties"]["ISO_A3"]);
+			associatedMap.updateCountryInfoCompare();
+		} else {
+			if (associatedMap.countryClickedSet.size() <= 5) {
+				associatedMap.countryClickedSet.add(layer.feature["properties"]["ISO_A3"]);
+				associatedMap.updateCountryInfoCompare();
+			}
+		}
 	}
 }
-
 /* end map interaction */
