@@ -43,6 +43,36 @@
 
   	<p><a href="http://github.com/turban/d3.slider">http://github.com/turban/d3.slider</a></p>
 
+    <h2>Slider with snapping to ticks - Aroma: <span id="weight-aroma">0</span></h2>
+    <div id="slider-aroma"></div>
+
+    <h2>Slider with snapping to ticks - Flavor: <span id="weight-flavor">0</span></h2>
+    <div id="slider-flavor"></div>
+
+    <h2>Slider with snapping to ticks - Aftertaste: <span id="weight-aftertaste">0</span></h2>
+    <div id="slider-aftertaste"></div>
+
+    <h2>Slider with snapping to ticks - Acidity: <span id="weight-acidity">0</span></h2>
+    <div id="slider-acidity"></div>
+
+    <h2>Slider with snapping to ticks - Body: <span id="weight-body">0</span></h2>
+    <div id="slider-body"></div>
+
+    <h2>Slider with snapping to ticks - Balance: <span id="weight-balance">0</span></h2>
+    <div id="slider-balance"></div>
+
+    <h2>Slider with snapping to ticks - Uniformity: <span id="weight-uniformity">0</span></h2>
+    <div id="slider-uniformity"></div>
+
+    <h2>Slider with snapping to ticks - Sweetness: <span id="weight-sweetness">0</span></h2>
+    <div id="slider-sweetness"></div>
+
+    <h2>Slider with snapping to ticks - Clean cup: <span id="weight-cleancup">0</span></h2>
+    <div id="slider-cleancup"></div>
+
+    <h2>Slider with snapping to ticks - Cupper point: <span id="weight-cupperpoint">0</span></h2>
+    <div id="slider-cupperpoint"></div>
+    
     <h2>Default slider</h2>
     <code>d3.slider()</code>
     <div id="slider1"></div>
@@ -96,51 +126,11 @@
     <code>d3.slider().scale(d3.scale.ordinal().domain(["Gecko", "Webkit", "Blink", "Trident"]).rangePoints([0, 1], 0.5)).axis( d3.svg.axis() ).snap(true).value("Gecko")</code>
     <div id="slider12"></div>
 
-    <h2>Slider with snapping to ticks - Decimal<span id="slider13text">0</span></h2>
-    <div id="slider13"></div>
-
   </div>
 
   <script src="http://d3js.org/d3.v3.min.js"></script>
   <script src="d3.slider.js"></script>
-  <script>
-
-    d3.select('#slider1').call(d3.slider());
-
-    d3.select('#slider2').call(d3.slider().value( [ 10, 25 ] ));
-
-    d3.select('#slider3').call(d3.slider().axis(true).value( [ 10, 25 ] ).on("slide", function(evt, value) {
-      d3.select('#slider3textmin').text(value[ 0 ]);
-      d3.select('#slider3textmax').text(value[ 1 ]);
-    }));
-
-    d3.select('#slider4').call(d3.slider().on("slide", function(evt, value) {
-      d3.select('#slider4text').text(value);
-    }));
-
-    d3.select('#slider5').call(d3.slider().axis(true));
-
-    var axis = d3.svg.axis().orient("top").ticks(4);
-    d3.select('#slider6').call(d3.slider().axis(axis));
-
-    d3.select('#slider7').call(d3.slider().axis(true).min(2000).max(2100).step(5));
-
-    d3.select('#slider8').call(d3.slider().value(50).orientation("vertical"));
-
-    d3.select('#slider9').call(d3.slider().value( [10, 30] ).orientation("vertical"));
-
-    d3.select('#slider10').call(d3.slider().scale(d3.time.scale().domain([new Date(1984,1,1), new Date(2014,1,1)])).axis(d3.svg.axis()));
-
-    d3.select('#slider11').call(d3.slider().scale(d3.time.scale().domain([new Date(1984,1,1), new Date(2014,1,1)])).axis(d3.svg.axis()).snap(true).value(new Date(2000,1,1)));
-
-    essai = d3.slider().scale(d3.scale.ordinal().domain(["Gecko", "Webkit", "Blink", "Trident"]).rangePoints([0, 1], 0.5)).axis(d3.svg.axis()).snap(true).value("Gecko");
-    d3.select('#slider12').call(essai);
-
-    d3.select('#slider13').call(d3.slider().axis(d3.svg.axis()).snap(true).on("slide", function(evt, value) {
-      d3.select('#slider13text').text(value);
-    }));
-
-  </script>
+  <script src="main.js"></script>
  
 </body>
 </html>
