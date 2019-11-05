@@ -4,7 +4,7 @@ import json
 import pandas as pd
 import http.client
 
-countryCodeDF = pd.DataFrame(pd.read_csv("CountryCode.csv"))
+countryCodeDF = pd.DataFrame(pd.read_csv("CoffeeCountryInfo.csv"))
 countryCodeDict = dict()
 for row in range(countryCodeDF.shape[0]):
 	countryCodeDict[countryCodeDF["Country"][row]] = countryCodeDF["ISO3"][row]
@@ -12,17 +12,18 @@ for row in range(countryCodeDF.shape[0]):
 # https://datahelpdesk.worldbank.org/knowledgebase/articles/902061-climate-data-api
 httpConnectionHome = "climatedataapi.worldbank.org"
 httpConnection = http.client.HTTPConnection(httpConnectionHome)
-MEANWriteHeader = ["Country", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul" "Aug", "Sep", "Oct", "Nov", "Dec"]
-countryWriteHeader = ["GCM (circulation model)", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul" "Aug", "Sep", "Oct", "Nov", "Dec"]
+MEANWriteHeader = ["Country", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+countryWriteHeader = ["GCM (circulation model)", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 """ retrieve precipitation for country """
 prWriteDict = {header : list() for header in MEANWriteHeader}
-requestPrDict = {"rqtype": "mavg", "rqvar": "pr", "start": str(2020), "end": str(2039)}
+requestPrDict = {"rqtype": "mavg", "rqvar": "pr", "start": str(1980), "end": str(1999)}
 requestPrUrl = "http://climatedataapi.worldbank.org/climateweb/rest/v1/country/" + requestPrDict["rqtype"] + "/" + \
 	requestPrDict["rqvar"] + "/" + requestPrDict["start"] + "/" + requestPrDict["end"]
 
 for country in countryCodeDict.keys():
 	requestCountryUrl = requestPrUrl + "/" + countryCodeDict[country]
+	print(requestCountryUrl)
 	httpConnection.request(method="GET", url=requestCountryUrl)
 	countryPrInfo = json.loads(httpConnection.getresponse().read().decode("UTF-8"))
 	
@@ -44,7 +45,7 @@ pd.DataFrame(data=prWriteDict).to_csv("precipitation-" + requestPrDict["start"] 
 
 """ retrieve temperature for country """
 tempWriteDict = {header : list() for header in MEANWriteHeader}
-requesttempDict = {"rqtype": "mavg", "rqvar": "tas", "start": str(2020), "end": str(2039)}
+requesttempDict = {"rqtype": "mavg", "rqvar": "tas", "start": str(1980), "end": str(1999)}
 requesttempUrl = "http://climatedataapi.worldbank.org/climateweb/rest/v1/country/" + requesttempDict["rqtype"] + "/" + \
 	requesttempDict["rqvar"] + "/" + requesttempDict["start"] + "/" + requesttempDict["end"]
 

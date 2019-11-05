@@ -85,19 +85,10 @@ function worldMap(divId, maxZoom, title, mapType) {
 			.attr("height", 30);
 		appenddiv.append("h3")
 			.text("Country Comparison");
-		/*
-		appenddiv.append("svg")
-			.attr("id", "tempDash")
-			.attr("width", 195)
-			.attr("height", 0)
-			.style("margin", 0);
-		appenddiv.append("br");
-		appenddiv.append("svg")
-			.attr("id", "prDash")
-			.attr("width", 195)
-			.attr("height", 0)
-			.style("margin", 0);
-		*/
+		this.climateXscale = d3.scaleBand()
+			.domain(["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"])
+			.range([5, 165])
+			.padding(0.02);
 		L.DomUtil.setPosition(this.countryCompareInfo._div, L.point(-782, 250));
 	}
 
@@ -129,7 +120,6 @@ worldMap.prototype.countryGeoStyle = function(f) {
 /* end map style */
 
 /* for map function */
-
 magicParameter = {
 	BRA: {direction: "right", latoffset: -9, lngoffset: -5},//
 	UMI: {direction: "right", latoffset: -2, lngoffset: 10},
@@ -211,14 +201,16 @@ worldMap.prototype.showCountryGeo = function() {
 			let htmlContent = countryInfo["Country"] + "  \
 				<img src='../data/country/flags/64/" + countryInfo["ISO2"] + "_64.png' alt='Flag' style='width:48px;height:48px;float:right;'><br/>\
 				#Coffee:&nbsp;&nbsp;5<br/>\
-				Coffee AVG Rating:&nbsp;&nbsp;4.5<br/>\
+				AVG Rating:&nbsp;&nbsp;4.5<br/>\
+				Rating Range:&nbsp;[min, max]<br/>\
 				World Ranking:&nbsp;&nbsp;-1";
 			
 			if (countryInfo["ISO3"] == "USA" || countryInfo["ISO3"] == "TZA" || countryInfo["ISO3"] == "PNG"){
 				htmlContent = countryInfo["Country"] + "<br/>\
 					#Coffee:&nbsp;&nbsp;5<img src='../data/country/flags/64/" + countryInfo["ISO2"] + "_64.png' alt='Flag' \
 					style='width:48px;height:48px;float:right;display:block;position:absolute;top:10px;right:10px;'><br/>\
-					Coffee AVG Rating:&nbsp;&nbsp;4.5<br/>\
+					AVG Rating AVG:&nbsp;&nbsp;4.5<br/>\
+					Rating Range:&nbsp;[min, max]<br/>\
 					World Ranking:&nbsp;&nbsp;-1";
 			}
 
@@ -302,22 +294,55 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 			appenddiv.attr("width", 200)
 				.attr("height", 190);
 			if (tempSVG.empty()){
-				appenddiv.append("svg")
+				tempSVG = appenddiv.append("svg")
 					.attr("id", this.divId + "tempDash")
-					.attr("width", 160)
+					.attr("width", 170)
 					.attr("height", 87)
 					.style("margin", 5);
 			}
 			if (brGroup.empty()){
-				appenddiv.append("br")
+				brGroup = appenddiv.append("br");
 			}
 			if (prSVG.empty()){
-				appenddiv.append("svg")
+				prSVG = appenddiv.append("svg")
 					.attr("id", this.divId + "prDash")
-					.attr("width", 160)
+					.attr("width", 170)
 					.attr("height", 87)
 					.style("margin", 5);
 			}
+			/* plot the svg line chart */
+			let lineChartData = [];
+			this.countryClickedSet.each(function(countryCode) {
+				lineChartData.push({Country: countryInfoMap.get(countryCode)["Country"], Climate: countryClimateMap.get(countryCode)})
+			})
+			let tempRange = [
+				d3.min([d3.min(lineChartData, function(d) {
+					return d3.min(d.Climate.temp);
+				}), 0]),
+				d3.max([d3.max(lineChartData, function(d) {
+					return d3.max(d.Climate.temp);
+				}), 38])
+			];
+			let prRange = [
+				d3.min([d3.min(lineChartData, function(d) {
+					return d3.min(d.Climate.pr);
+				}), 50]),
+				d3.max([d3.max(lineChartData, function(d) {
+					return d3.max(d.Climate.pr);
+				}), 150])
+			];
+			console.log(lineChartData);
+
+			var tempScale = d3.scaleSqrt()
+        		.domain(deathRange)
+        		.range([5, 15]);
+
+        	var xScale = d3.scaleBand()
+				.domain(xdomain)
+				.range([5, 10])
+				.padding(0.02);
+
+
 			console.log("plot line chart");
 		}
 	}
@@ -326,7 +351,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 worldMap.prototype.updateCoffeeMarker = function() {
 	if (this.mapType == worldMapType.get("UserPreference")){
 		console.log("Update based on the iso coffee map");
-	} 
+	}
 }
 /* end map function */
 
