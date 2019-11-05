@@ -20,8 +20,7 @@ function worldMap(divId, maxZoom, title, mapType) {
 	this.map = L.map(divId, {
 		maxBounds: maxBounds,
 		minZoom: minZoom,
-		maxZoom: maxZoom,
-		zoomDelta: 0.5
+		maxZoom: maxZoom
 	}).setView(this.mapInitialCenter, minZoom);
 	this.map.associatedMap = this;
 	this.map.setMaxBounds(maxBounds);
