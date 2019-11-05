@@ -222,6 +222,10 @@ worldMap.prototype.showCountryGeo = function() {
 					Coffee AVG Rating:&nbsp;&nbsp;4.5<br/>\
 					World Ranking:&nbsp;&nbsp;-1";
 			}
+
+			if(associatedMap.mapType == worldMapType.get("CoffeeCompare")){
+				layer.selected = false;
+			}
 			
 			layer.bindTooltip(htmlContent, {
 					className: "countryInfoTooltip",
@@ -331,6 +335,9 @@ worldMap.prototype.updateCoffeeMarker = function() {
 function highlightFeature(e) {
 	let layer = e.target;
 
+	if(this.associatedMap.mapType == worldMapType.get("CoffeeCompare") && layer.selected)
+		return;
+
 	layer.setStyle({
 		weight: 5,
 		color: '#fe9929',
@@ -344,6 +351,9 @@ function highlightFeature(e) {
 }
 
 function resetHighlight(e) {
+	if(this.associatedMap.mapType == worldMapType.get("CoffeeCompare") && this.selected)
+		return;
+
 	this.associatedMap.countryLayer.resetStyle(e.target);
 }
 
@@ -387,17 +397,30 @@ function updateMapTitle(e) {
 		.attr("y", associatedMap.map.latLngToLayerPoint(titlePosition).y);
 }
 
-/* update selectedCountrySet when layer clicked */
+/* update selectedCountrySet when layer selected */
 function updateSelectedCountrySet(e) {
 	let associatedMap = this.associatedMap;
 	let layer = e.target;
 	if (associatedMap.mapType == worldMapType.get("CoffeeCompare")){
 		if (associatedMap.countryClickedSet.has(layer.feature["properties"]["ISO_A3"])){
 			associatedMap.countryClickedSet.remove(layer.feature["properties"]["ISO_A3"]);
+			layer.selected = false;
+			this.associatedMap.countryLayer.resetStyle(e.target);
 			associatedMap.updateCountryInfoCompare();
 		} else {
 			if (associatedMap.countryClickedSet.size() <= 5) {
+				layer.selected = true;
 				associatedMap.countryClickedSet.add(layer.feature["properties"]["ISO_A3"]);
+				
+				layer.setStyle({
+					weight: 8,
+					color: '#3182bd',
+					dashArray: '2',
+					fillOpacity: 0.7
+				});
+				if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+					layer.bringToFront();
+				}
 				associatedMap.updateCountryInfoCompare();
 			}
 		}
