@@ -87,7 +87,7 @@ function worldMap(divId, maxZoom, title, mapType) {
 			.text("Country Comparison");
 		this.climateXscale = d3.scaleBand()
 			.domain(["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"])
-			.range([5, 165])
+			.range([20, 175])
 			.padding(0.02);
 		L.DomUtil.setPosition(this.countryCompareInfo._div, L.point(-782, 250));
 	}
@@ -292,13 +292,22 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 				.attr("height", 30);
 		} else {
 			appenddiv.attr("width", 200)
-				.attr("height", 190);
+				.attr("height", 210);
 			if (tempSVG.empty()){
 				tempSVG = appenddiv.append("svg")
 					.attr("id", this.divId + "tempDash")
-					.attr("width", 170)
-					.attr("height", 87)
-					.style("margin", 5);
+					.attr("width", 180)
+					.attr("height", 90)
+					.style("margin", 0);
+				tempSVG.selectAll("#temptitle")
+					.data(["Temperature MAVG"])
+					.enter().append("text")
+					.attr("id", "temptitle")
+					.text(d=>d)
+					.attr("transform", "translate(" + (tempSVG.attr("width")/2) + ", 10)")
+					.style("font-weight", "bold")
+					.style("font-size", 10)
+					.style("text-anchor", "middle");
 			}
 			if (brGroup.empty()){
 				brGroup = appenddiv.append("br");
@@ -306,14 +315,23 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 			if (prSVG.empty()){
 				prSVG = appenddiv.append("svg")
 					.attr("id", this.divId + "prDash")
-					.attr("width", 170)
-					.attr("height", 87)
-					.style("margin", 5);
+					.attr("width", 180)
+					.attr("height", 105)
+					.style("margin", 0);
+				prSVG.selectAll("#prtitle")
+					.data(["Precipitation MAVG"])
+					.enter().append("text")
+					.attr("id", "prtitle")
+					.text(d=>d)
+					.attr("transform", "translate(" + (prSVG.attr("width")/2) + ", 10)")
+					.style("font-weight", "bold")
+					.style("font-size", 10)
+					.style("text-anchor", "middle");
 			}
 			/* plot the svg line chart */
 			let lineChartData = [];
 			this.countryClickedSet.each(function(countryCode) {
-				lineChartData.push({Country: countryInfoMap.get(countryCode)["Country"], Climate: countryClimateMap.get(countryCode)})
+				lineChartData.push({CountryCode: countryCode, Climate: countryClimateMap.get(countryCode)})
 			})
 			let tempRange = [
 				d3.min([d3.min(lineChartData, function(d) {
@@ -331,19 +349,105 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 					return d3.max(d.Climate.pr);
 				}), 150])
 			];
-			console.log(lineChartData);
 
-			var tempScale = d3.scaleSqrt()
-        		.domain(deathRange)
-        		.range([5, 15]);
+			var tempScale = d3.scaleLinear()
+        		.domain(tempRange)
+        		.range([75, 10]);
 
-        	var xScale = d3.scaleBand()
-				.domain(xdomain)
-				.range([5, 10])
-				.padding(0.02);
+        	var prScale = d3.scaleLinear()
+        		.domain(prRange)
+        		.range([75, 10]);
 
+        	let xAxisTemp = tempSVG.select(".x-axis");
+        	if (xAxisTemp.empty()){
+        		xAxisTemp = tempSVG.append("g").attr("class", "x-axis").attr("transform", "translate(0, 75)").call(d3.axisBottom(this.climateXscale).tickSize(0));
+        		xAxisTemp.selectAll("text").filter(function(d, i){
+        			return i%2 == 0? true : false; 
+        		}).remove();
+            }
+        	
+        	let yAxisTemp = tempSVG.select(".y-axis");
+        	if (yAxisTemp.empty())
+        		yAxisTemp = tempSVG.append("g").attr("class", "y-axis").attr("transform", "translate(20,0)");
+        	yAxisTemp.call(d3.axisLeft(tempScale).tickSize(0).ticks(6));
 
-			console.log("plot line chart");
+        	let xAxisPr = prSVG.select(".x-axis");
+        	if (xAxisPr.empty()){
+        		xAxisPr = prSVG.append("g").attr("class", "x-axis").attr("transform", "translate(0, 75)").call(d3.axisBottom(this.climateXscale).tickSize(0));
+        		xAxisPr.selectAll("text").filter(function(d, i){
+        			return i%2 == 0? true : false; 
+        		}).remove();
+        	}
+
+        	let yAxisPr = prSVG.select(".y-axis");
+        	if (yAxisPr.empty())
+        		yAxisPr = prSVG.append("g").attr("class", "y-axis").attr("transform", "translate(20,0)");
+        	yAxisPr.call(d3.axisLeft(prScale).tickSize(0).ticks(6));
+			
+			/* update country legend */
+			let colorMap = ["#1b9e77", "#d95f02", "#7570b3", "#e7298a"]
+			//let colorMap = ["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3"];
+			let presentClimateLegend = prSVG.selectAll(".countryLegend")
+				.data(lineChartData);
+			presentClimateLegend.enter()
+				.append("rect")
+				.attr("class", "countryLegend")
+				.attr("width", 15)
+				.attr("height", 15)
+				.merge(presentClimateLegend)
+				.attr("x", function(d, i){
+					return 3 + i * 48;
+				})
+				.attr("y", 90)
+				.attr("fill", function(d, i){
+					return colorMap[i];
+				});
+			presentClimateLegend.exit().remove();
+
+			let presentClimateLegendText = prSVG.selectAll(".countryLegendText")
+				.data(lineChartData);
+			presentClimateLegendText.enter()
+				.append("text")
+				.attr("class", "countryLegendText")
+				.attr("width", 15)
+				.attr("height", 15)
+				.merge(presentClimateLegendText)
+				.attr("x", function(d, i){
+					return 21 + i * 48;
+				})
+				.attr("y", 102)
+				.text(d=>d.CountryCode)
+				.style("font-size", 15)
+				.style("font-weight", "bold");
+			presentClimateLegendText.exit().remove();
+
+			/* plot line chart */
+			let climateXscale = this.climateXscale;
+			let climateMonth = this.climateXscale.domain();
+			var tempLine = d3.line().x(function(d, i) { return climateXscale(climateMonth[i]); })
+        		.y(function(d) { return tempScale(d); })
+        		.curve(d3.curveMonotoneX);
+
+			var prLine = d3.line()
+				.x(function(d, i) { return climateXscale(climateMonth[i]); })
+        		.y(function(d) { return prScale(d); })
+        		.curve(d3.curveMonotoneX);
+
+        	let presentTempLine = tempSVG.selectAll(".linePlot").data(lineChartData);
+			presentTempLine.enter().append("path").attr("class", "linePlot")
+				.merge(presentTempLine)
+			    .attr('d', function(d){ console.log(tempLine(d.Climate.temp)); return tempLine(d.Climate.temp); })
+			    .style('stroke', function(d, i) { return colorMap[i]; })
+			    .style('stroke-width', 2)
+			    .style("fill", "none");
+
+        	let presentPrLine = prSVG.selectAll(".linePlot").data(lineChartData);
+			presentPrLine.enter().append("path").attr("class", "linePlot")
+				.merge(presentPrLine)
+			    .attr('d', function(d){ console.log(prLine(d.Climate.pr)); return prLine(d.Climate.pr); })
+			    .style('stroke', function(d, i) { return colorMap[i]; })
+			    .style('stroke-width', 2)
+			    .style("fill", "none");
 		}
 	}
 }
@@ -432,7 +536,7 @@ function updateSelectedCountrySet(e) {
 			this.associatedMap.countryLayer.resetStyle(e.target);
 			associatedMap.updateCountryInfoCompare();
 		} else {
-			if (associatedMap.countryClickedSet.size() <= 5) {
+			if (associatedMap.countryClickedSet.size() < 4) {
 				layer.selected = true;
 				associatedMap.countryClickedSet.add(layer.feature["properties"]["ISO_A3"]);
 				
