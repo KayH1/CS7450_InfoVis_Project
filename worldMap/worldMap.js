@@ -209,7 +209,7 @@ worldMap.prototype.showCountryGeo = function() {
 				htmlContent = countryInfo["Country"] + "<br/>\
 					#Coffee:&nbsp;&nbsp;5<img src='../data/country/flags/64/" + countryInfo["ISO2"] + "_64.png' alt='Flag' \
 					style='width:48px;height:48px;float:right;display:block;position:absolute;top:10px;right:10px;'><br/>\
-					AVG Rating AVG:&nbsp;&nbsp;4.5<br/>\
+					AVG Rating:&nbsp;&nbsp;4.5<br/>\
 					Rating Range:&nbsp;[min, max]<br/>\
 					World Ranking:&nbsp;&nbsp;-1";
 			}
