@@ -1,4 +1,3 @@
-/* load data */
 dataPath = {
 	coffeePath: "../data/coffee/Coffee-clean.csv",
 	countryInfoPath: "../data/country/CoffeeCountryInfo.csv",

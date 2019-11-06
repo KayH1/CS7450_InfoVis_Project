@@ -1,7 +1,3 @@
-/*
-This file is used to generate world map for specific div component
-in the html file, taking the component id as input for initialization
-*/
 function worldMap(divId, maxZoom, title, mapType) {
 	/* add divId of world map */
 	this.divId = divId;
@@ -72,7 +68,8 @@ function worldMap(divId, maxZoom, title, mapType) {
 	});
 
 	if (this.mapType == worldMapType.get("CoffeeCompare")){
-		this.countryClickedSet = d3.set()
+		this.countryClickedMap = d3.map()
+		this.countryInfoColorMap = ["#1b9e77", "#d95f02", "#7570b3", "#e7298a"];
 		this.countryCompareInfo = L.control();
 		this.countryCompareInfo.associatedMap = this;
 		this.countryCompareInfo.onAdd = function(map) {
@@ -254,7 +251,7 @@ worldMap.prototype.showCountryGeo = function() {
 	}
 
 	if (this.mapType == worldMapType.get("CoffeeCompare")){
-		this.countryClickedSet.clear();
+		this.countryClickedMap.clear();
 		this.updateCountryInfoCompare();
 	}
 
@@ -273,12 +270,13 @@ worldMap.prototype.showCountryGeo = function() {
 
 worldMap.prototype.updateCountryInfoCompare = function() {
 	if (this.mapType == worldMapType.get("CoffeeCompare")){
+		let associatedMap = this;
 		let appenddiv = d3.select("#" + this.divId).select(".countryCompareInfo");
 		let tempSVG = appenddiv.select("#" + this.divId + "tempDash");
 		let prSVG = appenddiv.select("#" + this.divId + "prDash");
 		let brGroup = appenddiv.selectAll("br");
 
-		if (this.countryClickedSet.size() == 0) {
+		if (this.countryClickedMap.size() == 0) {
 			if (!tempSVG.empty()){
 				tempSVG.remove();
 			}
@@ -348,7 +346,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 			}
 			/* plot the svg line chart */
 			let lineChartData = [];
-			this.countryClickedSet.each(function(countryCode) {
+			this.countryClickedMap.keys().forEach(function(countryCode) {
 				lineChartData.push({CountryCode: countryCode, Climate: countryClimateMap.get(countryCode)})
 			})
 			let tempRange = [
@@ -402,9 +400,6 @@ worldMap.prototype.updateCountryInfoCompare = function() {
         		yAxisPr = prSVG.append("g").attr("class", "y-axis").attr("transform", "translate(20,0)");
         	yAxisPr.call(d3.axisLeft(prScale).tickSize(0).ticks(6));
 			
-			/* update country legend */
-			let colorMap = ["#1b9e77", "#d95f02", "#7570b3", "#e7298a"]
-			//let colorMap = ["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3"];
 			let presentClimateLegend = prSVG.selectAll(".countryLegend")
 				.data(lineChartData);
 			presentClimateLegend.enter()
@@ -418,7 +413,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 				})
 				.attr("y", 90)
 				.attr("fill", function(d, i){
-					return colorMap[i];
+					return associatedMap.countryInfoColorMap[associatedMap.countryClickedMap.get(d.CountryCode)];
 				});
 			presentClimateLegend.exit().remove();
 
@@ -455,17 +450,19 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 			presentTempLine.enter().append("path").attr("class", "linePlot")
 				.merge(presentTempLine)
 			    .attr('d', function(d){ return tempLine(d.Climate.temp); })
-			    .style('stroke', function(d, i) { return colorMap[i]; })
+			    .style('stroke', function(d, i) { return associatedMap.countryInfoColorMap[associatedMap.countryClickedMap.get(d.CountryCode)]; })
 			    .style('stroke-width', 2)
 			    .style("fill", "none");
+			presentTempLine.exit().remove();
 
         	let presentPrLine = prSVG.selectAll(".linePlot").data(lineChartData);
 			presentPrLine.enter().append("path").attr("class", "linePlot")
 				.merge(presentPrLine)
 			    .attr('d', function(d){ return prLine(d.Climate.pr); })
-			    .style('stroke', function(d, i) { return colorMap[i]; })
+			    .style('stroke', function(d, i) { return associatedMap.countryInfoColorMap[associatedMap.countryClickedMap.get(d.CountryCode)]; })
 			    .style('stroke-width', 2)
 			    .style("fill", "none");
+			presentPrLine.exit().remove();
 		}
 	}
 }
@@ -486,7 +483,7 @@ function highlightFeature(e) {
 
 	layer.setStyle({
 		weight: 5,
-		color: '#fe9929',
+		color: '#fb8072',
 		dashArray: '',
 		fillOpacity: 0.7
 	});
@@ -547,20 +544,27 @@ function updateMapTitle(e) {
 function updateSelectedCountrySet(e) {
 	let associatedMap = this.associatedMap;
 	let layer = e.target;
+
 	if (associatedMap.mapType == worldMapType.get("CoffeeCompare")){
-		if (associatedMap.countryClickedSet.has(layer.feature["properties"]["ISO_A3"])){
-			associatedMap.countryClickedSet.remove(layer.feature["properties"]["ISO_A3"]);
+		if (associatedMap.countryClickedMap.has(layer.feature["properties"]["ISO_A3"])){
+			associatedMap.countryClickedMap.remove(layer.feature["properties"]["ISO_A3"]);
 			layer.selected = false;
 			this.associatedMap.countryLayer.resetStyle(e.target);
 			associatedMap.updateCountryInfoCompare();
 		} else {
-			if (associatedMap.countryClickedSet.size() < 4) {
+			if (associatedMap.countryClickedMap.size() < associatedMap.countryInfoColorMap.length) {
 				layer.selected = true;
-				associatedMap.countryClickedSet.add(layer.feature["properties"]["ISO_A3"]);
+				let colorCandidate = [0, 1, 2, 3];
+				let colorAssigned = d3.set(associatedMap.countryClickedMap.values());
+				console.log(colorAssigned);
+				let colorToAssign = colorCandidate.filter(function(d) {
+					return colorAssigned.has(d)? false : true;
+				})[0]
+				associatedMap.countryClickedMap.set(layer.feature["properties"]["ISO_A3"], colorToAssign);
 				
 				layer.setStyle({
 					weight: 8,
-					color: '#3182bd',
+					color: associatedMap.countryInfoColorMap[colorToAssign],
 					dashArray: '2',
 					fillOpacity: 0.7
 				});
