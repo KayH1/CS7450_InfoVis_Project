@@ -86,7 +86,7 @@ function worldMap(divId, maxZoom, title, mapType) {
 			.domain(["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"])
 			.range([20, 175])
 			.padding(0.02);
-		L.DomUtil.setPosition(this.countryCompareInfo._div, L.point(-782, 460));
+		L.DomUtil.setPosition(this.countryCompareInfo._div, L.point(-782, 463));
 	}
 
 	// default layer order: tile, GeoJSON, Marker shadows, Marker icons, Popups
@@ -277,7 +277,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 		let brGroup = appenddiv.selectAll("br");
 
 		if (this.countryClickedMap.size() == 0) {
-			L.DomUtil.setPosition(this.countryCompareInfo._div, L.point(-782, 460));
+			L.DomUtil.setPosition(this.countryCompareInfo._div, L.point(-782, 463));
 			if (!tempSVG.empty()){
 				tempSVG.remove();
 			}
