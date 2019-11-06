@@ -5,8 +5,9 @@
 - Add marker to country for user preference coffee
 
 ---------------------------------------------------------
-
-- At first glance
+- Initial
 ![Program Screenshot](./screenshot1.PNG?raw=true)
-- After zoom in
+- At first glance
 ![Program Screenshot](./screenshot2.PNG?raw=true)
+- After zoom in
+![Program Screenshot](./screenshot3.PNG?raw=true)
