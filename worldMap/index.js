@@ -18,7 +18,7 @@ var countryGeoData; // country geo data
 /* test for coffee compare map */
 countryWorldMap = new worldMap("map1", 4, "Coffee World Map", worldMapType.get("CoffeeCompare"));
 /* test for user preference map */
-userPreferenceWorldMap = new worldMap("map2", 4, "Explore Coffee Choice", worldMapType.get("CoffeeCompare"));
+userPreferenceWorldMap = new worldMap("map2", 4, "Explore Coffee Choice", worldMapType.get("UserPreference"));
 
 Promise.all([
 	d3.csv(dataPath.countryInfoPath, function(d) {
@@ -57,8 +57,8 @@ Promise.all([
 	data[3].forEach(function(d) {
 		countryClimateMap.get(countryNameCodeMap.get(d["Country"])).pr = d.climateData;
 	})
-	initialCoffeeCompareMap(countryWorldMap);
-	initialCoffeeCompareMap(userPreferenceWorldMap);
+	initialMap(countryWorldMap);
+	initialMap(userPreferenceWorldMap);
 });
 
 function processForClimateData(d) {
@@ -81,15 +81,22 @@ function processForClimateData(d) {
 	};
 }
 
-function initialCoffeeCompareMap(MapToInitialization) {
-	/* initial coffee compare map */
-	countryInfoMap.keys().forEach(function(d) {
-		MapToInitialization.countryShowSet.add(d)
-	});
+function initialMap(MapToInitialization) {
+	/* initial map:
+		1. For coffee compare map, just add all country to its set;
+		2. For user preference map, take a country selection set and 
+		also a map for coffee for each country in country selection, 
+		using ISO3 code as key, a array of coffee as value
+	*/
+	if (MapToInitialization.mapType == worldMapType.get("CoffeeCompare")){
+		countryInfoMap.keys().forEach(function(d) {
+			MapToInitialization.countryShowSet.add(d)
+		});
+	} else if (MapToInitialization.mapType == worldMapType.get("UserPreference")){
+		/* still need to implement, just using same operation as placeholder */
+		countryInfoMap.keys().forEach(function(d) {
+			MapToInitialization.countryShowSet.add(d)
+		});
+	}
 	MapToInitialization.showCountryGeo();
-}
-
-function initialUserPreferenceMap() {
-	/* initial user preference map */
-
 }
