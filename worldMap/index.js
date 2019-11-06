@@ -15,6 +15,9 @@ var countryInfoMap = d3.map(); // ISO3 -> country info data (average coordinates
 var countryClimateMap = d3.map();  // ISO3 -> country climate data {temp: [], pr: []}
 var countryGeoData; // country geo data
 
+/* for coffee info, not implement yet */
+var countryCoffeeInfo; // ISO3 -> array for coffee, avg rating for coffee, range for coffee, world rank of country
+
 /* test for coffee compare map */
 countryWorldMap = new worldMap("map1", 4, "Coffee World Map", worldMapType.get("CoffeeCompare"));
 /* test for user preference map */
