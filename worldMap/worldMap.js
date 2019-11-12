@@ -529,17 +529,16 @@ function updateCountryLabel(e) {
 function updateMapTitle(e) {
 	let associatedMap = this.associatedMap;
 	let svg = d3.select('#'+ associatedMap.divId).select("#" + associatedMap.divId + "geoSvg");
-	let mapTitle = svg.select("#" + associatedMap.divId + "mapTitle");
+	let mapTitle = svg.select("#" + associatedMap.divId + "mapTitle").remove();
 
-	if (mapTitle.empty()){
-		mapTitle = svg.append("text")
-			.attr("id", associatedMap.divId + "mapTitle")
-			.text(associatedMap.mapTitle);
-	}
+	mapTitle = svg.append("text")
+		.attr("id", associatedMap.divId + "mapTitle")
+		.text(associatedMap.mapTitle);
 	let mapBound = associatedMap.map.getBounds();
 	let titlePosition = L.latLng({lat: mapBound["_southWest"].lat + (mapBound["_northEast"].lat - mapBound["_southWest"].lat) * 0.85, lng: 1.08 * (mapBound["_northEast"].lng + mapBound["_southWest"].lng)/2});
-	mapTitle.attr("x", associatedMap.map.latLngToLayerPoint(titlePosition).x)
-		.attr("y", associatedMap.map.latLngToLayerPoint(titlePosition).y);
+	mapTitle.transition()
+		.attr("transform", "translate(" + associatedMap.map.latLngToLayerPoint(titlePosition).x + "," + associatedMap.map.latLngToLayerPoint(titlePosition).y + ")")
+		.duration(500);
 }
 
 /* update selectedCountrySet when layer selected */
@@ -558,7 +557,6 @@ function updateSelectedCountrySet(e) {
 				layer.selected = true;
 				let colorCandidate = [0, 1, 2, 3];
 				let colorAssigned = d3.set(associatedMap.countryClickedMap.values());
-				console.log(colorAssigned);
 				let colorToAssign = colorCandidate.filter(function(d) {
 					return colorAssigned.has(d)? false : true;
 				})[0]
