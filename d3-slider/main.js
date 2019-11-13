@@ -75,17 +75,17 @@ d3.select('#slider-aroma').call(d3.slider().axis(d3.svg.axis()).snap(true).on("s
   essai = d3.slider().scale(d3.scale.ordinal().domain(["Gecko", "Webkit", "Blink", "Trident"]).rangePoints([0, 1], 0.5)).axis(d3.svg.axis()).snap(true).value("Gecko");
   d3.select('#slider12').call(essai);
 
-  var data;
-  d3.csv('../data/coffee/Coffee-clean.csv').then(function(dataset) {
-    data = dataset;
-  });
+d3.csv('../data/coffee/coffee-clean.csv', dataPreprocessorCoffee).then(function(dataset) {
+  console.log(dataset);
+  data = dataset;
+});
 
 function updateRanks() {
     data.pointCustomized = (+data.aroma * weightaroma);
     data.sort(function(a,b) { return +a.pointCustomized - +b.pointCustomized });
     topranked = data.filter(function(d,i){ return i<5 });
     coffeeNested = d3.nest()
-    .key(function(d) { return d.ISO3; })
+    .key(function(d) { return d.ISOofOrigin; })
     .rollup(function(leaves) {
         var pointCustomized = d3.sum(leaves, function(c){
             return c.pointCustomized;
@@ -97,3 +97,36 @@ function updateRanks() {
     console.log(coffeeNested);
 }
 
+//copied from Kaylin's /frequencyPlot/main.js, added ISO:
+function dataPreprocessorCoffee(row) {
+  //console.log(row);
+  return {
+
+      'id': +row['id'],
+      'species': row['species'],
+      'owner': row['owner'],
+      'countryOfOrigin': row['countryOfOrigin'],
+      'company': row['company'],
+      'region': row['region'],
+      'producer': row['producer'],
+      'harvestYear': row['harvestYear'],
+      'gradingDate': row['gradingDate'],
+      'owner1': row['owner1'],
+      'variety': row['variety'],
+      'processingMethod': row['processingMethod'],
+      'aroma': +row['aroma'],
+      'flavor': +row['flavor'],
+      'aftertaste': +row['aftertaste'],
+      'acidity': +row['acidity'],
+      'body': +row['body'],
+      'balance': +row['balance'],
+      'uniformity': +row['uniformity'],
+      'cleanCup': +row['cleanCup'],
+      'sweetness': +row['sweetness'],
+      'cupperPoints': +row['cupperPoints'],
+      'totalCupPoints': +row['totalCupPoints'],
+      'moisture': +row['moisture'],
+      'color': row['color'],
+      'ISOofOrigin': row['ISOofOrigin'],
+  };
+}
