@@ -1,0 +1,39 @@
+html {
+  scroll-behavior: smooth;
+}
+
+/*div svg {
+  border: 3px solid green;
+}*/
+
+path {
+  fill: none;
+  stroke: #663300;
+  opacity: 0.1;
+}
+
+/**********************
+Parallel coord y labels
+**********************/
+
+svg .y.label {
+    /*font-family: sans-serif;*/
+    font-size: 14px;
+    fill: black;
+    text-anchor: middle;
+}
+
+/**********************
+Body formating
+**********************/
+
+body {
+    font-family: sans-serif;
+    margin: 0;
+    background-color: #f5e6ce;
+}
+
+#main {
+    margin: 20px;
+    clear: left;
+}
