@@ -71,10 +71,59 @@ function worldMap(divId, maxZoom, title, mapType) {
 		pane: 'svgLayer'
 	});
 
+	/* add color legend for country show geo */
+		this.countryShowColorLegend = L.control();
+		this.countryShowColorLegend.associatedMap = this;
+		this.countryShowColorLegend.onAdd = function(map) {
+			this._div = L.DomUtil.create('div', 'countryShowColorLegend');
+			return this._div;
+		}
+		this.countryShowColorLegend.addTo(this.map);
+		let appenddiv = d3.select("#" + this.divId).select(".countryShowColorLegend")
+			.attr("width", "280px")
+			.attr("height", "40px");
+		
+		let countryShowColorLegendSVG = appenddiv.append("svg").attr("height", "35px").attr("width", "270px")
+			.style("padding", 0).style("margin", "2px");
+		
+		countryShowColorLegendSVG.selectAll("rect")
+			.data(["#654321", "#bdbdbd"])
+			.enter()
+			.append("rect")
+			.attr("class", "countryShowLegendRect")
+			.attr("height", "20px")
+			.attr("width", "45px")
+			.attr("x", function(d, i) {
+				if (i == 0) {
+					return 5;
+				} else if (i == 1) {
+					return 128;
+				}
+			})
+			.attr("y", 0)
+			.style("fill", d=>d);
+
+		countryShowColorLegendSVG.selectAll("text")
+			.data(["Selected", "Not Selected"])
+			.enter()
+			.append("text")
+			.attr("class", "countryShowLegendText")
+			.attr("transform", function(d, i) {
+				if (i == 0) {
+					return "translate(53,15)";
+				} else if (i == 1) {
+					return "translate(176,15)";
+				}
+			})
+			.text(d=>d);
+		L.DomUtil.setPosition(this.countryShowColorLegend._div, L.point(5, -3));
+	/* add color legend for country show geo */
+
+	/* add for country climate compare */
 	if (this.mapType == worldMapType.get("CoffeeCompare")){
 		this.countryClickedMap = d3.map()
 		this.countryInfoColorMap = ["#1b9e77", "#d95f02", "#7570b3", "#e7298a"];
-		this.countryCompareInfo = L.control();
+		this.countryCompareInfo = L.control({position: 'bottomleft'});
 		this.countryCompareInfo.associatedMap = this;
 		this.countryCompareInfo.onAdd = function(map) {
 			this._div = L.DomUtil.create('div', 'countryCompareInfo');
@@ -90,9 +139,7 @@ function worldMap(divId, maxZoom, title, mapType) {
 			.domain(["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"])
 			.range([20, 175])
 			.padding(0.02);
-		L.DomUtil.setPosition(this.countryCompareInfo._div, L.point(-782, 463));
-	} else if (this.mapType == worldMapType.get("UserPreference")){
-		/* add coffee bean */
+		L.DomUtil.setPosition(this.countryCompareInfo._div, L.point(-5, 5));
 	}
 
 	// default layer order: tile, GeoJSON, Marker shadows, Marker icons, Popups
@@ -296,7 +343,6 @@ worldMap.prototype.showCountryGeo = function() {
 
 	this.map.setZoom(this.map.getMinZoom());
 	this.countryLayer.eachLayer(function(layer) {
-		console.log(layer.feature["properties"]["ISO_A3"]);
 		if (associatedMap.countryShowSet.has(layer.feature["properties"]["ISO_A3"])) {
 			layer.setStyle(associatedMap.countryGeoShowStyle());
 		} else {
@@ -314,7 +360,6 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 		let brGroup = appenddiv.selectAll("br");
 
 		if (this.countryClickedMap.size() == 0) {
-			L.DomUtil.setPosition(this.countryCompareInfo._div, L.point(-782, 463));
 			if (!tempSVG.empty()){
 				tempSVG.remove();
 			}
@@ -327,7 +372,6 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 			appenddiv.attr("width", 200)
 				.attr("height", 30);
 		} else {
-			L.DomUtil.setPosition(this.countryCompareInfo._div, L.point(-782, 250));
 			appenddiv.attr("width", 200)
 				.attr("height", 210);
 			if (tempSVG.empty()){
