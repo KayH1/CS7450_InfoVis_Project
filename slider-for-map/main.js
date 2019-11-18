@@ -1,10 +1,7 @@
 var ticks = [0, 0.2, 0.4, 0.6, 0.8, 1];
 var defaultweight = 0.2;
-// weightaroma = defaultweight;
 var topranked;
 var coffeeNested;
-var sliderSteps = new Array();
-var gSteps = new Array();
 
 variableList = ['aroma', 'flavor', 'aftertaste', 'acidity', 'body', 'balance', 'uniformity', 'cleanCup', 'sweetness', 'cupperPoints'];
 
@@ -19,6 +16,7 @@ for (i in variableList) {
     );
 }
 
+var sliderHolder = []; 
 for (i in variableCatalogue) {
     var pWeight = document.createElement('p');
     pWeight.setAttribute('id', variableCatalogue[i]['weight-id']);
@@ -46,9 +44,8 @@ for (i in variableCatalogue) {
     divContainer.appendChild(divRow);
     document.body.appendChild(divContainer);
 
-    // console.log(variableCatalogue[i]);
     // Step
-    var sliderStep = d3
+    sliderHolder.push(d3
         .sliderBottom()
         .min(d3.min(ticks))
         .max(d3.max(ticks))
@@ -57,13 +54,12 @@ for (i in variableCatalogue) {
         .ticks(5)
         .step(0.2)
         .default(defaultweight)
-        .on('onchange', val => {
-            // console.log(variableCatalogue[i]);
-            variableCatalogue[i]['weight'] = val;
-            d3.select('p#' + variableCatalogue[i]['weight-id']).text(d3.format('.0%')(variableCatalogue[i]['weight']));
+        .on('onchange', function(d) {
+            variableCatalogue[this.id]['weight'] = d;
+            d3.select('p#' + variableCatalogue[this.id]['weight-id']).text(d3.format('.0%')(variableCatalogue[this.id]['weight']));
             updateRanks();
-        });
-    sliderSteps.push(sliderStep);
+        }));
+    sliderHolder[i].id = i;
 
     var gStep = d3
         .select('div#' + variableCatalogue[i]['slider-id'])
@@ -72,27 +68,21 @@ for (i in variableCatalogue) {
         .attr('height', 100)
         .append('g')
         .attr('transform', 'translate(30,30)');
-    gSteps.push(gStep);
 
-    // gSteps[i].call(sliderSteps[i]);
-    gStep.call(sliderStep);
+    gStep.call(sliderHolder[i]);
 
     d3.select('p#' + variableCatalogue[i]['weight-id']).text(d3.format('.0%')(variableCatalogue[i]['weight']));
 }
-
-
 
 d3.csv('../data/coffee/coffee-clean.csv', dataPreprocessorCoffee).then(function (dataset) {
     data = dataset;
 });
 
 function updateRanks() {
-    // console.log(variableCatalogue);
-    // data['pointCustomized'] = +data.aroma * weightaroma;
+    console.log(variableCatalogue);
     data.forEach(function(element, index, theData) {
         theData[index].pointCustomized = 0;
-        for (variable of variableCatalogue) { 
-            // console.log(theData[index][variable['weight']]);
+        for (variable of variableCatalogue) {
             theData[index].pointCustomized += theData[index][variable['variable-name']] * variable['weight'];
         }
     });
