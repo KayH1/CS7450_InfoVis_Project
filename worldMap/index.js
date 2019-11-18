@@ -83,32 +83,35 @@ var userPreferenceWorldMap = new mapVis.worldMap("map2", 4, "Explore Coffee Choi
 	}
 /* load data */
 
-// initial map when data is load
-function initialMap(Map) {
-	/* initial map:
-		1. For coffee compare map, just add all country to its set;
-		2. For user preference map, take a country selection set and 
-		also a map for coffee for each country in country selection, 
-		using ISO3 code as key, a array of coffee as value
-	*/
-	Map.data = {countryInfoMap: countryInfoMap, countryClimateMap: countryClimateMap, countryGeoData: countryGeoData, countryCoffeeInfoMap: countryCoffeeInfoMap};
-	var countryShowSet = d3.set();
-	countryInfoMap.keys().forEach(function(d) {
-		countryShowSet.add(d)
-	});
-	Map.updateCountryShowSet(countryShowSet);
-}
+
+/* initialize vis components when data is ready */
+	function initialMap(Map) {
+		/* initial map:
+			1. For coffee compare map, just add all country to its set;
+			2. For user preference map, take a country selection set and 
+			also a map for coffee for each country in country selection, 
+			using ISO3 code as key, a array of coffee as value
+		*/
+		Map.data = {countryInfoMap: countryInfoMap, countryClimateMap: countryClimateMap, countryGeoData: countryGeoData, countryCoffeeInfoMap: countryCoffeeInfoMap};
+		var countryShowSet = d3.set();
+		countryInfoMap.keys().forEach(function(d) {
+			countryShowSet.add(d)
+		});
+		Map.updateCountryShowSet(countryShowSet);
+	}
+/* initialize vis components */
 
 
-/* function from different vis */
-function mapCall() {
-	/* update parallel and cluster view */
-}
+/* function call from different vis */
+	function mapCall() {
+		/* update parallel and cluster view */
+	}
 
-function paralleCall() {
-	/* update map and cluster view */
-}
+	function paralleCall() {
+		/* update map and cluster view */
+	}
 
-function clusterCall() {
-	/* update parallel and map view */
-}
+	function clusterCall() {
+		/* update parallel and map view */
+	}
+/* function call from different vis */
