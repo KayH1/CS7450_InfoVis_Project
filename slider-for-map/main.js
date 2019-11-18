@@ -79,7 +79,6 @@ d3.csv('../data/coffee/coffee-clean.csv', dataPreprocessorCoffee).then(function 
 });
 
 function updateRanks() {
-    console.log(variableCatalogue);
     data.forEach(function(element, index, theData) {
         theData[index].pointCustomized = 0;
         for (variable of variableCatalogue) {
@@ -87,18 +86,30 @@ function updateRanks() {
         }
     });
     data.sort(function (a, b) { return +a.pointCustomized - +b.pointCustomized }).reverse();
-    topranked = data.filter(function (d, i) { return i < 5 });
+    topCoffee = data.filter(function (d, i) { return i < 5 });
     coffeeNested = d3.nest()
         .key(function (d) { return d.ISOofOrigin; })
         .rollup(function (leaves) {
             var pointCustomized = d3.mean(leaves, function (c) {
                 return c.pointCustomized;
             });
-            return { average: pointCustomized, countries: leaves };
+            var totalCupPoints = d3.mean(leaves, function(c) {
+                return c.totalCupPoints;
+            })
+            var minCupPoints = d3.min(leaves, function(c) {
+                return c.totalCupPoints;
+            })
+            var maxCupPoints = d3.max(leaves, function(c) {
+                return c.totalCupPoints;
+            })
+            return { pointCustomized: pointCustomized, totalCupPoints: totalCupPoints, minCupPoints: minCupPoints, maxCupPoints: maxCupPoints, countries: leaves };
         })
         .entries(data);
-    console.log(topranked);
-    console.log(coffeeNested);
+    coffeeNested.sort(function (a, b) { return +a.value.totalCupPoints - +b.value.totalCupPoints }).reverse();
+    topCountries = coffeeNested.filter(function (d, i) { return i < 5});
+    console.log(variableCatalogue);
+    console.log(topCoffee);
+    console.log(topCountries);
 }
 
 //copied from Kaylin's /frequencyPlot/main.js, added ISO:
