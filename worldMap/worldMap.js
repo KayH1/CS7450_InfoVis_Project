@@ -160,7 +160,7 @@ worldMap.prototype.updateCoffeeSelectedSet = function(coffeeShowSet) {
 	/* update map show coffee */
 	this.coffeeShowSet = coffeeShowSet
 	this.showCoffeeGeo();
-	/* extract coffee country from coffeeShowSet */
+	/* extract coffee country from coffeeShowSet, call updateCountryShowSet */
 }
 
 /* ---------------------follow will not be used external, only called within worldMap-------------------------------- */
