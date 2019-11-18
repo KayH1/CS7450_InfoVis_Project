@@ -113,7 +113,7 @@ function worldMap(divId, maxZoom, title, mapType) {
 	this.map.on('moveend', updateMapTitle);
 }
 
-worldMap.prototype.updateCoffeeSelectedSet = function(coffeeSelectedSet) {
+worldMap.prototype.updateCoffeeSelectedSet = function(coffeeShowSet) {
 	/* update map show coffee */
 	this.coffeeShowSet = coffeeShowSet
 	this.showCoffeeGeo();
@@ -128,7 +128,15 @@ worldMap.prototype.updateCountryShowSet = function(countryShowSet) {
 
 /* ---------------------follow will not be used external-------------------------------- */
 
-/* for map style */
+worldMap.prototype.showCoffeeBeanEffect = function() {
+	/* use d3 to add coffee bean effect, disappear after effect */
+}
+
+worldMap.prototype.showCoffeeGeo = function() {
+
+}
+
+/* for geo map style */
 worldMap.prototype.countryGeoStyle = function(f) {
     return {
         weight: 1,
@@ -287,13 +295,6 @@ worldMap.prototype.showCountryGeo = function() {
 	this.countryLayer.associatedMap = this;
 }
 
-worldMap.prototype.showCoffeeGeo = function() {
-
-}
-
-worldMap.prototype.showCoffeeBeanEffect = function() {
-	/* use d3 to add coffee bean effect, disappear after effect */
-}
 
 worldMap.prototype.updateCountryInfoCompare = function() {
 	if (this.mapType == worldMapType.get("CoffeeCompare")){

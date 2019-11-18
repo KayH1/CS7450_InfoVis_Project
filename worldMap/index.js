@@ -93,6 +93,8 @@ var userPreferenceWorldMap = new mapVis.worldMap("map2", 4, "Explore Coffee Choi
 			using ISO3 code as key, a array of coffee as value
 		*/
 		Map.data = {countryInfoMap: countryInfoMap, countryClimateMap: countryClimateMap, countryGeoData: countryGeoData, countryCoffeeInfoMap: countryCoffeeInfoMap};
+		
+		/* change to coffee select when coffee data is ready */
 		var countryShowSet = d3.set();
 		countryInfoMap.keys().forEach(function(d) {
 			countryShowSet.add(d)
