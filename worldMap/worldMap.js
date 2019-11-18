@@ -1,13 +1,21 @@
+var worldMapType = d3.map();
+worldMapType.set("UserPreference", 1);
+worldMapType.set("CoffeeCompare", 2);
+
 function worldMap(divId, maxZoom, title, mapType) {
+	/* add data as place holder */
+	this.data = {};
 	/* add divId of world map */
 	this.divId = divId;
 	/* add title of world map */
 	this.mapTitle = title;
 	/* add set to record which country to show */
 	this.countryShowSet = d3.set()
+	/* add set to record coffee to show */
+	this.coffeeShowSet = d3.set()
 	/* add mapType of world map */
-	this.mapType = mapType;
-	
+	this.mapType = worldMapType.get(mapType);
+
 	/* declare meta map attribute */
 	var minZoom = 2;
 	this.mapInitialCenter = new L.LatLng(21, -5);
@@ -105,6 +113,21 @@ function worldMap(divId, maxZoom, title, mapType) {
 	this.map.on('moveend', updateMapTitle);
 }
 
+worldMap.prototype.updateCoffeeSelectedSet = function(coffeeSelectedSet) {
+	/* update map show coffee */
+	this.coffeeShowSet = coffeeShowSet
+	this.showCoffeeGeo();
+}
+
+worldMap.prototype.updateCountryShowSet = function(countryShowSet) {
+	/* update map show geo */
+	this.countryShowSet = countryShowSet;
+	this.showCountryGeo();
+}
+
+
+/* ---------------------follow will not be used external-------------------------------- */
+
 /* for map style */
 worldMap.prototype.countryGeoStyle = function(f) {
     return {
@@ -118,8 +141,8 @@ worldMap.prototype.countryGeoStyle = function(f) {
 }
 /* end map style */
 
-/* for map function */
-magicParameter = {
+/* for map tooltip float when min zoom */
+var magicParameter = {
 	BRA: {direction: "right", latoffset: -9, lngoffset: -5},//
 	UMI: {direction: "right", latoffset: -2, lngoffset: 10},
 	MMR: {direction: "right", latoffset: -5, lngoffset: -5},//
@@ -160,14 +183,8 @@ magicParameter = {
 
 worldMap.prototype.showCountryGeo = function() {
 	this.map.setZoom(this.map.getMinZoom());
-	/* use d3 to add coffee bean effect */
-
-	/* todo, not finish yet */
-
-	/* end coffee bean effect */
 
 	/* for country compare function */
-
 	var whetherInitial = false;
 	if (this.countryLayer != undefined){
 		this.map.removeLayer(this.countryLayer);
@@ -178,7 +195,7 @@ worldMap.prototype.showCountryGeo = function() {
 	}
 
 	var associatedMap = this;
-	this.countryLayer = L.geoJson(countryGeoData, {
+	this.countryLayer = L.geoJson(this.data.countryGeoData, {
 		style: this.countryGeoStyle,
 		filter: function(feature) {
 			return associatedMap.countryShowSet.has(feature["properties"]["ISO_A3"])? true : false;
@@ -192,26 +209,27 @@ worldMap.prototype.showCountryGeo = function() {
 			});
 			/* record the top object */
 			layer.associatedMap = associatedMap;
-			let countryInfo = countryInfoMap.get(layer.feature["properties"]["ISO_A3"]);
+			let countryInfo = associatedMap.data.countryInfoMap.get(layer.feature["properties"]["ISO_A3"]);
+			// let countryCoffeeInfo = countryCoffeeInfoMap.get(layer.feature["properties"]["ISO_A3"]);
+			
 			let offset = [20, -20];
 			if (countryInfo["ISO3"] == "JPN" || countryInfo["ISO3"] == "PNG")
 				offset = [-50, 50];
 			
-			let htmlContent = countryInfo["Country"] + "  \
-				<img src='../data/country/flags/64/" + countryInfo["ISO2"] + "_64.png' alt='Flag' style='width:48px;height:48px;float:right;'><br/>\
-				#Coffee:&nbsp;&nbsp;5<br/>\
-				AVG Rating:&nbsp;&nbsp;4.5<br/>\
-				Rating Range:&nbsp;[min, max]<br/>\
-				World Ranking:&nbsp;&nbsp;-1";
-			
-			if (countryInfo["ISO3"] == "USA" || countryInfo["ISO3"] == "TZA" || countryInfo["ISO3"] == "PNG"){
-				htmlContent = countryInfo["Country"] + "<br/>\
-					#Coffee:&nbsp;&nbsp;5<img src='../data/country/flags/64/" + countryInfo["ISO2"] + "_64.png' alt='Flag' \
-					style='width:48px;height:48px;float:right;display:block;position:absolute;top:10px;right:10px;'><br/>\
-					AVG Rating:&nbsp;&nbsp;4.5<br/>\
-					Rating Range:&nbsp;[min, max]<br/>\
-					World Ranking:&nbsp;&nbsp;-1";
-			}
+			/* tooltip content */
+				let htmlContent = countryInfo["Country"] + "  \
+					<img src='../data/country/flags/64/" + countryInfo["ISO2"] + "_64.png' alt='Flag' style='width:48px;height:48px;float:right;'><br/>\
+					#Coffee:&nbsp;&nbsp;5<br/>"
+				
+				if (countryInfo["ISO3"] == "USA" || countryInfo["ISO3"] == "TZA" || countryInfo["ISO3"] == "PNG"){
+					htmlContent = countryInfo["Country"] + "<br/>\
+						#Coffee:&nbsp;&nbsp;5<img src='../data/country/flags/64/" + countryInfo["ISO2"] + "_64.png' alt='Flag' \
+						style='width:48px;height:48px;float:right;display:block;position:absolute;top:10px;right:10px;'><br/>"
+				}
+
+				htmlContent += "AVG Rating:&nbsp;&nbsp;4.5<br/>Rating Range:&nbsp;[min, max]<br/>World Ranking:&nbsp;&nbsp;-1";
+				//htmlContent = htmlContent + "AVG Rating:&nbsp;&nbsp;" + countryCoffeeInfo["avg"] + "<br/>Rating Range:&nbsp;[" + countryCoffeeInfo["min"] + ", " + countryCoffeeInfo["max"] + "<br/>World Ranking:&nbsp;&nbsp;" + countryCoffeeInfo["world_rank"];
+			/* tooltip cointent */
 
 			if(associatedMap.mapType == worldMapType.get("CoffeeCompare")){
 				layer.selected = false;
@@ -229,7 +247,7 @@ worldMap.prototype.showCountryGeo = function() {
 	if (this.mapType == worldMapType.get("CoffeeCompare")) {
 		if (whetherInitial && this.mapType) {
 			let generateSeparateGeo = d3.map();
-			countryGeoData.features.forEach(function(countryGeoFeature) {
+			this.data.countryGeoData.features.forEach(function(countryGeoFeature) {
 				let extractedFeature = {type: "FeatureCollection", features: [countryGeoFeature]};
 				generateSeparateGeo.set(countryGeoFeature["properties"]["ISO_A3"], extractedFeature);
 			})
@@ -243,7 +261,7 @@ worldMap.prototype.showCountryGeo = function() {
 
 			countryNamePositions.forEach(function(d) {
 				let countryNameMarker = new L.marker([d.position.lat, d.position.lng], { opacity: 0.01, pane: 'nameTooltipLayer' });
-				countryNameMarker.bindTooltip(countryInfoMap.get(d.ISO3)["Country"].length <= 12 || d.ISO3 == "CIV" ? countryInfoMap.get(d.ISO3)["Country"] : d.ISO3, {
+				countryNameMarker.bindTooltip(associatedMap.data.countryInfoMap.get(d.ISO3)["Country"].length <= 12 || d.ISO3 == "CIV" ? associatedMap.data.countryInfoMap.get(d.ISO3)["Country"] : d.ISO3, {
 					permanent: true, 
 					className: "countryNameLabel", 
 					offset: [0, 0], 
@@ -267,6 +285,14 @@ worldMap.prototype.showCountryGeo = function() {
 
 	this.countryLayer.addTo(this.map);
 	this.countryLayer.associatedMap = this;
+}
+
+worldMap.prototype.showCoffeeGeo = function() {
+
+}
+
+worldMap.prototype.showCoffeeBeanEffect = function() {
+	/* use d3 to add coffee bean effect, disappear after effect */
 }
 
 worldMap.prototype.updateCountryInfoCompare = function() {
@@ -350,7 +376,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 			/* plot the svg line chart */
 			let lineChartData = [];
 			this.countryClickedMap.keys().forEach(function(countryCode) {
-				lineChartData.push({CountryCode: countryCode, Climate: countryClimateMap.get(countryCode)})
+				lineChartData.push({CountryCode: countryCode, Climate: associatedMap.data.countryClimateMap.get(countryCode)})
 			})
 			let tempRange = [
 				d3.min([d3.min(lineChartData, function(d) {
@@ -580,3 +606,7 @@ function updateSelectedCountrySet(e) {
 	}
 }
 /* end map interaction */
+
+/* ---------------------above will not be used external-------------------------------- */
+
+export { worldMap };
