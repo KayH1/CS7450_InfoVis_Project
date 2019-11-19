@@ -38,8 +38,6 @@ function worldMap(divId, maxZoom, title, mapType) {
 	this.map.createPane('svgLayer');
 	// set the stack position of added pane layer
 	this.map.getPane('svgLayer').style.zIndex = 400;
-	// make the mouse event go through the event and reach below
-	this.map.getPane('svgLayer').style.pointerEvents = 'none';
 
 	// add pane to map for country name tooltip
 	this.map.createPane('nameTooltipLayer');
@@ -67,9 +65,21 @@ function worldMap(divId, maxZoom, title, mapType) {
 		minZoom: minZoom,
 		pane: 'labelLayer'
 	});
-	this.svgLayer = L.svg({
-		pane: 'svgLayer'
-	});
+	this.svgLayer = L.svg({'pane': 'svgLayer'});
+
+	// default layer order: tile, GeoJSON, Marker shadows, Marker icons, Popups
+	this.tileLayer.addTo(this.map);
+	this.tileLayer.associatedMap = this;
+	this.svgLayer.addTo(this.map);
+	this.svgLayer.associatedMap = this;
+	this.labelLayer.addTo(this.map);
+	this.labelLayer.associatedMap = this;
+	// enable mouse event for svg components
+	d3.select("#" + this.divId).select("svg").attr("id", this.divId + "geoSvg").attr("pointer-events", "visible");
+
+	// add listener for zoom end and move end
+	this.map.on('zoomend', updateMapZoom);
+	this.map.on('moveend', updateMapTitle);
 
 	/* add color legend for country show geo */
 		this.countryShowColorLegend = L.control();
@@ -141,25 +151,14 @@ function worldMap(divId, maxZoom, title, mapType) {
 			.padding(0.02);
 		L.DomUtil.setPosition(this.countryCompareInfo._div, L.point(-5, 5));
 	}
-
-	// default layer order: tile, GeoJSON, Marker shadows, Marker icons, Popups
-	this.tileLayer.addTo(this.map);
-	this.tileLayer.associatedMap = this;
-	this.svgLayer.addTo(this.map);
-	this.svgLayer.associatedMap = this;
-	this.labelLayer.addTo(this.map);
-	this.labelLayer.associatedMap = this;
-	d3.select("#" + this.divId).select("svg").attr("id", this.divId + "geoSvg");
-
-	// add listener for zoom end and move end
-	this.map.on('zoomend', updateCountryLabel);
-	this.map.on('moveend', updateMapTitle);
 }
 
 worldMap.prototype.updateCoffeeSelectedSet = function(coffeeShowSet) {
 	/* update map show coffee */
-	this.coffeeShowSet = coffeeShowSet
-	this.showCoffeeGeo();
+	this.coffeeShowSet = coffeeShowSet;
+	if (this.mapType == worldMapType.get("UserPreference")){
+		this.showCoffeeGeo();
+	}
 	/* extract coffee country from coffeeShowSet, call updateCountryShowSet */
 }
 
@@ -216,8 +215,57 @@ worldMap.prototype.updateCountryShowSet = function(countryShowSet) {
 }
 
 worldMap.prototype.showCoffeeGeo = function() {
-	// use china for test
-
+	var countryCoffeeInfoMap = {
+		"CHN": [{country: "CHN", id:"coffee1", rating: 10}, {country: "CHN", id:"coffee2", rating:4}], 
+		"USA": [{country: "USA", id:"coffeeUSA", rating:8}]
+	}; // fake data for testing
+	var countryCoffeeInfoHolder = [
+		{key: "CHN", values: [{country: "CHN", id:"coffee1", rating: 10}, {country: "CHN", id:"coffee2", rating:4}]}, 
+		{key: "USA", values: [{country: "USA", id:"coffeeUSA", rating:8}]}
+	]; // fake data for testing
+	
+	let associatedMap = this;
+	let svg = d3.select("#" + this.divId).select("svg").attr("id", this.divId + "geoSvg");
+	svg.selectAll(".coffeeIconGroup").remove();
+	
+	let coffeeIconGroup = svg.selectAll(".coffeeIconGroup")
+		.data(countryCoffeeInfoHolder).enter()
+		.append("g").attr("class", "coffeeIconGroup")
+		.attr("transform", function(d) {
+			let countryInfo = associatedMap.data.countryInfoMap.get(d.key);
+			let iconPosition = associatedMap.map.latLngToLayerPoint(new L.LatLng(countryInfo["lat"], countryInfo["lng"]));
+			return "translate(" + (iconPosition.x-18) + "," + (iconPosition.y-18) + ")";
+		}).selectAll("coffeeIcon").data(d=>d.values)
+		.enter().append("image").attr("class", "coffeeIcon")
+		.attr("href", "./icons/cup2.png")
+		.style("height", "40px")
+		.style("width", "24px")
+		.attr("transform", function(d, i) {
+			/* check length of coffee data */
+			let transformText = "translate(" + i*30 + ",0)";
+			if (countryCoffeeInfoMap[d.country].length > 1) {
+				let step = 30/(countryCoffeeInfoMap[d.country].length - 1);
+				transformText += " rotate(" + (-15 + step*i) + ",12,20)"
+			}
+			return transformText;
+		})
+		.on("mouseenter", function(e) {
+			/* add highlight for coffee icon */
+			let coffeeInfo = d3.select(this).datum();
+			console.log(coffeeInfo.id + " " + coffeeInfo.rating);
+			d3.select(this).transition()
+				.style("height", "80px")
+				.style("width", "48px")
+				.duration(300);
+		})
+		.on("mouseout", function(e) {
+			/* remove highlight for coffee icon */
+			console.log("mouse out");
+			d3.select(this).transition()
+				.style("height", "40px")
+				.style("width", "24px")
+				.duration(300);
+		});
 }
 
 /* for geo map style */
@@ -334,7 +382,7 @@ worldMap.prototype.showCountryGeo = function() {
 	let associatedMap = this;
 	if (this.mapType == worldMapType.get("CoffeeCompare")) {
 		/* show country name label for country compare */
-		updateCountryLabel.call(this.map);
+		updateMapZoom.call(this.map);
 		
 		/* clear selected country set */
 		this.countryClickedMap.clear();
@@ -588,7 +636,7 @@ function zoomToFeature(e) {
 	this.associatedMap.map.fitBounds(e.target.getBounds());
 }
 
-function updateCountryLabel(e) {
+function updateMapZoom(e) {
 	let associatedMap = this.associatedMap;
 
 	if (associatedMap.mapType == worldMapType.get("CoffeeCompare")){
@@ -607,6 +655,17 @@ function updateCountryLabel(e) {
 						associatedMap.map.removeLayer(associatedMap.countryNameMarkerMap.get(key));
 				});
 			}
+	}
+
+	if (associatedMap.mapType == worldMapType.get("UserPreference")){
+		d3.select("#" + associatedMap.divId).select("#" + associatedMap.divId + "geoSvg")
+			.selectAll(".coffeeIconGroup")
+			.attr("transform", function(d) {
+				console.log("tyest");
+				let countryInfo = associatedMap.data.countryInfoMap.get(d.key);
+				let iconPosition = associatedMap.map.latLngToLayerPoint(new L.LatLng(countryInfo["lat"], countryInfo["lng"]));
+				return "translate(" + (iconPosition.x-20) + "," + (iconPosition.y - 12) + ")";
+			});
 	}
 }
 

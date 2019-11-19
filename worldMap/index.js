@@ -99,10 +99,13 @@ var userPreferenceWorldMap = new mapVis.worldMap("map2", 4, "Explore Coffee Choi
 			countryShowSet.add(d)
 		});
 		countryShowSet.remove("USA");
+		Map.updateCoffeeSelectedSet("placeHolder");
 		Map.updateCountryShowSet(countryShowSet);
-
+		/*
 		countryShowSet.remove("BRA");
+		Map.updateCoffeeSelectedSet("placeHolder");
 		Map.updateCountryShowSet(countryShowSet);
+		*/
 	}
 /* initialize vis components */
 
