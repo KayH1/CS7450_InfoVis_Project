@@ -75,7 +75,7 @@ function worldMap(divId, maxZoom, title, mapType) {
 	this.labelLayer.addTo(this.map);
 	this.labelLayer.associatedMap = this;
 	// enable mouse event for svg components
-	d3.select("#" + this.divId).select("svg").attr("id", this.divId + "geoSvg").attr("pointer-events", "visible");
+	d3.select("#" + this.divId).select("svg").attr("id", this.divId + "geoSvg");
 
 	// add listener for zoom end and move end
 	this.map.on('zoomend', updateMapZoom);
@@ -237,6 +237,7 @@ worldMap.prototype.showCoffeeGeo = function() {
 			return "translate(" + (iconPosition.x-18) + "," + (iconPosition.y-18) + ")";
 		}).selectAll("coffeeIcon").data(d=>d.values)
 		.enter().append("image").attr("class", "coffeeIcon")
+		.attr("pointer-events", "visible")
 		.attr("href", "./icons/cup2.png")
 		.style("height", "40px")
 		.style("width", "24px")
@@ -256,7 +257,7 @@ worldMap.prototype.showCoffeeGeo = function() {
 			d3.select(this).transition()
 				.style("height", "80px")
 				.style("width", "48px")
-				.duration(300);
+				.duration(400);
 		})
 		.on("mouseout", function(e) {
 			/* remove highlight for coffee icon */
@@ -264,7 +265,7 @@ worldMap.prototype.showCoffeeGeo = function() {
 			d3.select(this).transition()
 				.style("height", "40px")
 				.style("width", "24px")
-				.duration(300);
+				.duration(400);
 		});
 }
 
