@@ -23,7 +23,7 @@ import matplotlib.pyplot as plt
 
 
 # specify whether to use PCA (pca), TSNE (tsne), or MDS (mds)
-mode = "pca"
+mode = "tsne"
 
 # set the seed so results are reproducible
 sd = np.random.randint(0,9999999)
@@ -85,7 +85,7 @@ def main():
     k_means_tuning.fit(results)
     y_pred = k_means_tuning.predict(results)
     plt.scatter(results[:,0], results[:,1], c=y_pred)
-    plt.savefig(mode + '-std-cluster-original-add_attribute.png', dpi=300)
+    plt.savefig(mode + '-std-cluster-project-add_attribute.png', dpi=300)
     plt.axis('off')
     plt.show()
 
@@ -95,7 +95,7 @@ def main():
     k_means_tuning.fit(x_data_std)
     y_pred = k_means_tuning.predict(x_data_std)
     plt.scatter(results[:,0], results[:,1], c=y_pred)
-    plt.savefig(mode + '-std-cluster-project-add_attribute.png', dpi=300)
+    plt.savefig(mode + '-std-cluster-original-add_attribute.png', dpi=300)
     plt.axis('off')
     plt.show()
 
