@@ -8,6 +8,7 @@
 </head>
 <body>
     <div id="main">
+
         <div select class="sidenav small" id="xScaleSelect">
           <a href="#st_flavor" class="flavor active">Flavor</a>
           <a href="#st_aroma" class="aroma">Aroma</a>
@@ -21,12 +22,12 @@
           <a href="#st_cupperPoints" class="cupperPoints">Cupper points</a>
           <a href="#st_totalCupPoints" class="totalCupPoints">Total cup points</a>
         </div>
-
-        <div style="margin-left: 35%;">
-            <svg class="freq-plot" width="800" height="750">
+        <div style="margin-left: 40%;">
+            <svg class="freq-plot" width="850" height="750">
             </svg>
+            <button type="button" id="countryLabelsToggle">Toggle country labels</button>
+            <button type="button" id="reset">Reset selections</button>
         </div>
-
         <div class="scrollytelling-text">
           <div class="empty" id="st_flavor"></div>
           <div class="flavor">

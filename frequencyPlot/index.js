@@ -3,7 +3,8 @@ import * as freqVis from "./frequencyPlot.js"
 /**********************
  Create frequencyPlot object
 **********************/
-var frequencyPlot = new freqVis.frequencyPlot("flavor",3000,false);
+// selection, transition_time, useYAxis, dotRadius, dotColor, dotOpacity, dotColorSelected, dotOpacitySelected
+var frequencyPlot = new freqVis.frequencyPlot("flavor",2000,false, 4, '#663300', 0.1, 'red', 1);
 
 /**********************
  Data preprocessing
@@ -53,19 +54,29 @@ var dataPath = {
 d3.csv(dataPath.coffeePath, dataPreprocessorCoffee).then(function(dataset) {
     console.log("Loading coffee");
     
-    // Create global object called coffee to store dataset
-    var domainMap = {};
-
-    dataset.columns.forEach(function(column) {
-        domainMap[column] = d3.extent(dataset, function(data_element){
-            return data_element[column];
-        });
+    // add an attribute to each datacase, specifying whether or not it is selected
+    // all datacases are not selected, by default
+    dataset.forEach(function(d) {
+      d.selected = false;
     });
+
+    frequencyPlot.bins = d3.map(dataset, function(d){return d.countryOfOrigin;}).keys();
     
+    // bin the data
+    dataset.forEach(function(d) {
+        var idx = frequencyPlot.bins.indexOf(d.countryOfOrigin);
+        //console.log(frequencyPlot.binned);
+        if (frequencyPlot.binned[idx] !== undefined) {
+            frequencyPlot.binned[idx].push(d);
+        }
+        else { frequencyPlot.binned[idx] = [d]; }
+    });
+
     dataset = frequencyPlot.updateY(dataset);
     //console.log("ChartScale");
-    //console.log(dataset);
-
+    console.log(dataset);
+    //console.log(frequencyPlot.bins);
+    //console.log("Binned: ",frequencyPlot.binned);
     frequencyPlot.updateChart(dataset);
 
     /**********************
