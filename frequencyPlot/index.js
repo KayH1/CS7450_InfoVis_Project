@@ -1,0 +1,131 @@
+import * as freqVis from "./frequencyPlot.js"
+
+/**********************
+ Create frequencyPlot object
+**********************/
+var frequencyPlot = new freqVis.frequencyPlot("flavor",3000,false);
+
+/**********************
+ Data preprocessing
+**********************/
+function dataPreprocessorCoffee(row) {
+    //console.log("preprocessing data");
+    //console.log(row);
+    return {
+        'id': +row['id'],
+        'species': row['species'],
+        'owner': row['owner'],
+        'countryOfOrigin': row['countryOfOrigin'],
+        'company': row['company'],
+        'region': row['region'],
+        'producer': row['producer'],
+        'harvestYear': row['harvestYear'],
+        'gradingDate': row['gradingDate'],
+        'owner1': row['owner1'],
+        'variety': row['variety'],
+        'processingMethod': row['processingMethod'],
+        'aroma': +row['aroma'],
+        'flavor': +row['flavor'],
+        'aftertaste': +row['aftertaste'],
+        'acidity': +row['acidity'],
+        'body': +row['body'],
+        'balance': +row['balance'],
+        'uniformity': +row['uniformity'],
+        'cleanCup': +row['cleanCup'],
+        'sweetness': +row['sweetness'],
+        'cupperPoints': +row['cupperPoints'],
+        'totalCupPoints': +row['totalCupPoints'],
+        'moisture': +row['moisture'],
+        'color': row['color'],
+        //'altitudeLowMeters': row[altitudeLowMeters],
+        //'altitudeHighMeters': row[altitudeHighMeters],
+        //'altitudeMeanMeters': row[altitudeMeanMeters]
+    };
+}
+
+/**********************
+ Load the data
+**********************/
+var dataPath = {
+    coffeePath: "../data/coffee/Coffee-clean.csv"
+};
+
+d3.csv(dataPath.coffeePath, dataPreprocessorCoffee).then(function(dataset) {
+    console.log("Loading coffee");
+    
+    // Create global object called coffee to store dataset
+    var domainMap = {};
+
+    dataset.columns.forEach(function(column) {
+        domainMap[column] = d3.extent(dataset, function(data_element){
+            return data_element[column];
+        });
+    });
+    
+    dataset = frequencyPlot.updateY(dataset);
+    //console.log("ChartScale");
+    //console.log(dataset);
+
+    frequencyPlot.updateChart(dataset);
+
+    /**********************
+     Scrollytelling part
+    **********************/
+    // check whether different DOM components are within view to determine which
+    // version of the frequencyPlot viz should be shown
+    window.addEventListener('scroll', function(e) {
+      var curr_selected = null;
+      if (isInViewport(flavor)) { curr_selected = "flavor"; }
+      else if (isInViewport(aroma)) { curr_selected = "aroma"; }
+      else if (isInViewport(aftertaste)) { curr_selected = "aftertaste"; }
+      else if (isInViewport(acidity)) { curr_selected = "acidity"; }
+      else if (isInViewport(body)) { curr_selected = "body"; }
+      else if (isInViewport(balance)) { curr_selected = "balance"; }
+      else if (isInViewport(uniformity)) { curr_selected = "uniformity"; }
+      else if (isInViewport(sweetness)) { curr_selected = "sweetness"; }
+      else if (isInViewport(cleanCup)) { curr_selected = "cleanCup"; }
+      else if (isInViewport(cupperPoints)) { curr_selected = "cupperPoints"; }
+      else if (isInViewport(totalCupPoints)) { curr_selected = "totalCupPoints"; }
+
+      if (frequencyPlot.selection !== curr_selected && curr_selected !== null) {
+        frequencyPlot.selection = curr_selected;
+        frequencyPlot.onXScaleChanged(dataset);
+      }
+    });
+});
+
+
+/*
+isInViewport function from https://gomakethings.com/how-to-test-if-an-element-is-in-the-viewport-with-vanilla-javascript/
+*/
+var isInViewport = function (elem) {
+    if (elem !== null) {
+      var bounding = elem.getBoundingClientRect();
+      return (
+          bounding.top >= 0 &&
+          bounding.left >= 0 &&
+          bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+          bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+      );
+    }
+    return false;
+};
+
+// select different coffee attribute components from DOM
+var flavor = document.querySelector('.scrollytelling-text .flavor');
+var aroma = document.querySelector('.scrollytelling-text .aroma');
+var aftertaste = document.querySelector('.scrollytelling-text .aftertaste');
+var acidity = document.querySelector('.scrollytelling-text .acidity');
+var body = document.querySelector('.scrollytelling-text .body');
+var balance = document.querySelector('.scrollytelling-text .balance');
+var uniformity = document.querySelector('.scrollytelling-text .uniformity');
+var sweetness = document.querySelector('.scrollytelling-text .sweetness');
+var cleanCup = document.querySelector('.scrollytelling-text .cleanCup');
+var cupperPoints = document.querySelector('.scrollytelling-text .cupperPoints');
+var totalCupPoints = document.querySelector('.scrollytelling-text .totalCupPoints');
+
+
+// move to the top of the page if the page is refreshed/reloaded
+window.onload = function () {
+    $('html,body').scrollTop(0);
+}
