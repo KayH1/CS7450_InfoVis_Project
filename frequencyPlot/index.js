@@ -4,7 +4,8 @@ import * as freqVis from "./frequencyPlot.js"
  Create frequencyPlot object
 **********************/
 // selection, transition_time, useYAxis, dotRadius, dotColor, dotOpacity, dotColorSelected, dotOpacitySelected
-var frequencyPlot = new freqVis.frequencyPlot("flavor",2000,false, 4, '#663300', 0.1, 'red', 1);
+//var frequencyPlot = new freqVis.frequencyPlot("flavor",2000,false, 8, '#663300', 0.05, 'red', 1);
+var frequencyPlot = new freqVis.frequencyPlot("flavor",2000,false, 4.5, '#663300', 0.1, 'red', 1);
 
 /**********************
  Data preprocessing

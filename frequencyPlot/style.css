@@ -33,6 +33,12 @@ button#reset {
     left: 87%;
 }
 
+button#switchMode {
+    position: fixed;
+    top: 10%;
+    left: 87%;
+}
+
 
 /**********************
 Freq plot fixed sidebar
@@ -83,7 +89,6 @@ Lab 6
 **********************/
 .dot circle {
     fill: #663300;
-    opacity: 0.1;
 }
 
 .dot text {
@@ -91,11 +96,20 @@ Lab 6
     font-size: 10px;
     pointer-events: none;
     fill: #555;
-    opacity: 0.5;/*0;*/
+    opacity: 0.5;
 }
 
 .dot:hover text {
     opacity: 1;
+}
+
+/**********************
+Box-and-whisker formating
+**********************/
+
+svg .bnw {
+  fill: #663300;
+  stroke: #663300;
 }
 
 /**********************
@@ -179,8 +193,6 @@ svg .y.axisLabel {
     font-size: 20px;
     fill: #663300;
 }
-
-
 
 
 /**********************
