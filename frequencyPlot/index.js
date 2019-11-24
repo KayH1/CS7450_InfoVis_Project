@@ -1,5 +1,5 @@
 import * as freqVis from "./frequencyPlot.js"
-import * as embeddingVis from "./embedding.js"
+// import * as complexVis from "./complexVis.js"
 
 /**********************
  Create frequencyPlot object
