@@ -59,20 +59,15 @@ div.sticky {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-
+  padding: 100px;
+  
   }
-
-div .sticky #buttons { 
-
-  /*border: 3px solid green;*/
-}
 
 div #freq-plot-sticky {
   /*border: 3px solid green;*/
   padding: 50px 0px 0px 0px;
 
 }
-
 
 button#countryLabelsToggle {
 
@@ -287,6 +282,18 @@ svg .y.axisLabel {
     fill: #663300;
 }
 
+svg .x.label {
+  /*font-family: sans-serif;*/
+  font-size: 14px;
+  fill: black;
+  text-anchor: middle;
+}
+
+svg .y.label {
+  /*font-family: sans-serif;*/
+  font-size: 14px;
+}
+
 
 /**********************
 Body formating
@@ -303,4 +310,50 @@ body {
     clear: left;
 }
 
+/**********************
+Complex Vis General
+**********************/
 
+div svg.embeddings {
+  border: 1px solid black;
+}
+
+path {
+  fill: none;
+  stroke: #663300;
+  opacity: 0.1;
+}
+
+/**********************
+Parallel coord y labels
+**********************/
+
+svg .y.label {
+  /*font-family: sans-serif;*/
+  font-size: 14px;
+  fill: black;
+  text-anchor: middle;
+}
+
+/**********************
+Embeddings dot formating
+
+Credit:
+Lab 6
+**********************/
+.embeddings .dot circle {
+  fill: #663300;
+  opacity: 0.3; /*0.1;*/
+}
+
+.embeddings .dot text {
+  text-anchor: middle;
+  font-size: 10px;
+  pointer-events: none;
+  fill: #555;
+  opacity: 0.5;/*0;*/
+}
+
+.embeddings .dot:hover text {
+  opacity: 1;
+}
