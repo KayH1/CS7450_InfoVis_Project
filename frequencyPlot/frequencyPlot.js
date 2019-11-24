@@ -128,8 +128,8 @@ function frequencyPlot(selection, transition_time, useYAxis, dotRadius, dotColor
         .text(this.selection+" rating");
     this.yAxisLabel = this.chartG.append('text')
         .attr('class', 'y axisLabel')
-        .attr('transform', 'translate('+(-2*this.padding.l/3)+','+(this.chartHeight/2)+') rotate(-90)')
-        .text('countries of origin');
+        .attr('transform', 'translate('+((this.chartWidth-this.padding.x_r)/2)+',-25)')
+        .text('Rating Distribution by Country');
 }
 
 // called when selected elements changed

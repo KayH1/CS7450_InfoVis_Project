@@ -32,7 +32,7 @@ h2 { color: #5b0000 /*, 8e2921, 5b0000, 7B3A30*/; font-family: 'Helvetica Neue',
 
 .photo img {
   width: 100%;
-  display: block;
+/*  display: block;*/
 }
 
 
@@ -53,8 +53,32 @@ h2 { color: #5b0000 /*, 8e2921, 5b0000, 7B3A30*/; font-family: 'Helvetica Neue',
 }
 
 svg {
-    position: fixed;
+    position: sticky;
 }
+div.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  padding: 100px;
+  
+  }
+
+div .sticky #countryLabelsToggle { 
+
+  border: 3px solid green;
+}
+div .sticky #reset { 
+
+  border: 3px solid green;
+}
+div .sticky #switchMode { 
+
+  border: 3px solid green;
+  padding: 0px;
+
+
+}
+
 
 button#countryLabelsToggle {
 
@@ -68,8 +92,8 @@ display:       inline-block;
 /*font:          normal bold 24px/1 'Helvetica Neue', sans-serif;*/
 text-align:    center;
 
-    position: fixed;
-    top: 5%;
+    position: sticky;
+    top: 10%;
     left: 87%;
 }
 
@@ -85,9 +109,9 @@ display:       inline-block;
 text-align:    center;
 
 
-    position: fixed;
+    position: sticky;
     top: 90%;
-    left: 87%;
+    left: 0%;
 }
 
 button#switchMode {
@@ -101,9 +125,9 @@ display:       inline-block;
 /*font:          normal bold 24px/1 'Helvetica Neue', sans-serif;*/
 text-align:    center;
 
-    position: fixed;
+    position: sticky;
     top: 10%;
-    left: 87%;
+    left: 300%;
 }
 
 .button4 {
@@ -125,13 +149,13 @@ https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp
 .sidenav {
   height: 40%; /* Full-height: remove this if you want "auto" height */
   width: 160px; /* Set the width of the sidebar */
-  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  position: sticky; /* Fixed Sidebar (stay in place on scroll) */
   z-index: 1; /* Stay on top */
   top: 25%; /* Stay at the top */
   left: 90%;
   background-color: white; /*f5e6ce;*/
   /*overflow-x: hidden; /* Disable horizontal scroll */
-  overflow-y: scroll;
+  overflow-y: hidden;
   padding-top: 10px;
 }
 
@@ -143,6 +167,7 @@ https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp
   font-size: 17px;
   color: #8e2921/*663300*/;
   display: block;
+
 }
 
 /* When you mouse over the navigation links, change their color */
