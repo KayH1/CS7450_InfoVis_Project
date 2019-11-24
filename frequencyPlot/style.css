@@ -62,7 +62,7 @@ div.sticky {
   padding: 100px;
   
   }
-
+/*
 div .sticky #countryLabelsToggle { 
 
   border: 3px solid green;
@@ -74,11 +74,11 @@ div .sticky #reset {
 div .sticky #switchMode { 
 
   border: 3px solid green;
-  padding: 0px;
+  padding: 10px 20px 20px 100px;
+  
 
-
-}
-
+}*/
+/* top, right, bottom, left */
 
 button#countryLabelsToggle {
 
