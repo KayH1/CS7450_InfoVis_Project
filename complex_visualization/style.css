@@ -1,0 +1,134 @@
+html {
+  scroll-behavior: smooth;
+}
+
+div svg.embeddings {
+  border: 1px solid black;
+}
+
+path {
+  fill: none;
+  stroke: #663300;
+  opacity: 0.1;
+}
+
+/**********************
+Parallel coord y labels
+**********************/
+
+svg .y.label {
+    /*font-family: sans-serif;*/
+    font-size: 14px;
+    fill: black;
+    text-anchor: middle;
+}
+
+
+/**********************
+Embeddings dot formating
+
+Credit:
+Lab 6
+**********************/
+.embeddings .dot circle {
+    fill: #663300;
+    opacity: 0.3; /*0.1;*/
+}
+
+.embeddings .dot text {
+    text-anchor: middle;
+    font-size: 10px;
+    pointer-events: none;
+    fill: #555;
+    opacity: 0.5;/*0;*/
+}
+
+.embeddings .dot:hover text {
+    opacity: 1;
+}
+
+/**********************
+Tooltip
+
+Credit: Layb 7
+**********************/
+
+.d3-tip {
+  line-height: 1;
+  padding: 6px;
+  background: #b8a77b;
+  color: #333;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: #b8a77b;
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips specifically */
+.d3-tip.n:after {
+  margin: -2px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+
+.d3-tip h5{
+  font-size: 13px;
+  font-weight: 600;
+  margin: 2px 10px 4px 2px;
+}
+
+.d3-tip thead td {
+  border-bottom: 1px solid #ccc;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.d3-tip td {
+  padding: 2px 10px 2px 2px;
+}
+
+.d3-tip thead tr {
+  padding-top: 10px;
+}
+
+/**********************
+Freq plot x & y labels
+**********************/
+
+svg .x.label {
+    /*font-family: sans-serif;*/
+    font-size: 14px;
+    fill: black;
+    text-anchor: middle;
+}
+
+svg .y.label {
+    /*font-family: sans-serif;*/
+    font-size: 14px;
+}
+
+/**********************
+Body formating
+**********************/
+
+body {
+    font-family: sans-serif;
+    margin: 0;
+    background-color: #f5e6ce;
+}
+
+#main {
+    margin: 20px;
+    clear: left;
+}
