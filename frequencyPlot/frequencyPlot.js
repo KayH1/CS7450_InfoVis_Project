@@ -16,7 +16,7 @@ function frequencyPlot(selection, transition_time, useYAxis, dotRadius, dotColor
     this.dotOpacitySelected = dotOpacitySelected;
 
     this.mode = 'd'; // either bnw (box&whisker) or d (density) - default
-    this.labelOpacity = 0;
+    this.labelOpacity = 1;
 
     // specifies all the bins in which to place the datapoints
     this.bins = [];

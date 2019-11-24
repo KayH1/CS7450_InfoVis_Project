@@ -283,13 +283,15 @@ svg .y.axisLabel {
 svg .x.label {
   /*font-family: sans-serif;*/
   font-size: 14px;
-  fill: black;
+  fill: #663300;
   text-anchor: middle;
 }
 
-svg .y.label {
+svg .countries.y.label {
   /*font-family: sans-serif;*/
-  font-size: 14px;
+  font-size: 10px;
+  fill: #663300;
+  text-anchor: left;
 }
 
 
@@ -326,7 +328,7 @@ path {
 Parallel coord y labels
 **********************/
 
-svg .y.label {
+svg .parallel-coords.y.label {
   /*font-family: sans-serif;*/
   font-size: 14px;
   fill: black;
