@@ -5,9 +5,26 @@
     <title>Coffee - Comparisons</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <link rel="stylesheet" href="./style.css">
+
+    
+    <!--   <div class='section header'>
+  <div class='photo'>
+    <img src='coffee3.jpg'
+         sizes='(min-width: 960px) 960px,
+                100vw'/>
+                <div class="centered"><strong></strong><h1 style="font-size:600%;">
+                "You can’t buy happiness, but you can buy coffee, and that’s pretty close"
+                </h1></strong></div>
+             </div>
+</div>
+<!-- <p style="page-break-after: always;">&nbsp;</p>  Potentailly can add the page break here -->
+
+ -->
 </head>
+
+
 <body>
-    <div id="main">
+      <div id="main">
 
         <div select class="sidenav small" id="xScaleSelect">
           <a href="#st_flavor" class="flavor active">Flavor</a>
@@ -26,6 +43,7 @@
             <svg class="freq-plot" width="850" height="750">
             </svg>
             <button type="button" id="countryLabelsToggle">Toggle country labels</button>
+
             <button type="button" id="reset">Reset selections</button>
             <button type="button" id="switchMode">Switch mode</button>
         </div>
@@ -33,67 +51,161 @@
           <div class="empty" id="st_flavor"></div>
           <div class="flavor">
             <h2>Flavor</h2>
-            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+            <p class="para"> 
+
+              Coffee’s taste distinguished from its acidity, aroma, and body, or the quality that remains after those qualities are considered. <br></br>
+
+            <p class="para2"> 
+
+              People prefer different types of flavors  within coffee. 
+            For example, fruity flavor within coffee is one of the highest sought after qualities in the best coffees and can be found in African coffees. <br></br>
+
+              Which country produces coffee with a chocolate flavor within their coffee? Click to find out! <br></br>
+            
+             <button class="button button4"  onclick="myFunction()" >ANSWER</button> 
+
+           <p id="demo" class="question"></p>
+
+              <script>
+              function myFunction() {
+                document.getElementById("demo").innerHTML = "Brazil & Colombia, who also lead the cocoa production.";
+              }
+              </script>
+    
+             </p>
+             </p>
           </div>
+
+
           <div class="empty"></div>
           <div class="empty" id="st_aroma"></div>
           <div class="aroma">
             <h2>Aroma</h2>
-            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+            <p class="para"> 
+
+              Aroma is the smell of coffee
+
+              <p class="para2">A coffee's aroma is one of the main categories used by professional coffee tasters to judge the quality of a coffee.
+
+              Depending on the roast of the coffee, it can range anywhere from light and fruity to burnt. Most coffee will smell lightly caramelized and almost nutty. A stale coffee will smell musty and cardboard-like.
+              <br></br> For example, a Yemen Mocha Mattari is known for its dark chocolate aroma. If this is something you're interested in, click here to buy it!
+
+               <form action="https://www.martinezfinecoffees.com/yemen-mocha-mattari-private-reserve.html" method="get" target="_blank">
+          <button class="button button4">YEMEN MOCHA MATTARI</button> 
+      </form>
+         
+             </p>
           </div>
           <div class="empty"></div>
           <div class="empty" id="st_aftertaste"></div>
           <div class="aftertaste">
             <h2>Aftertaste</h2>
-            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+            <p class = "para"> 
+               The taste that remains in the mouth subsequent to swallowing a sip of brewed coffee. 
+
+             <p class="para2"> A coffee's aftertaste is created by vapors and gases - volatile organic compounds - from the ground and brewed coffee beans. These vapors that create the aftertaste are released from the residue that remains in the mouth after swallowing the coffee.
+              Aftertastes range from chocolaty to carbony, turpeny to spicy, possibly with hints of caramel, fruitiness, smokiness, roastiness, and other flavors.   
+              </p>
+
+          </p>
           </div>
           <div class="empty"></div>
           <div class="empty" id="st_acidity"></div>
           <div class="acidity">
             <h2>Acidity</h2>
-            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+            <p class="para"> 
+
+              Acidity is generally considered a positive for coffee, providing brightness to the flavor and enhancing other qualities.
+
+            <p class="para2">
+               The organic acids in coffee contain powerful antioxidant properties that contribute some of the health benefits to coffee, but there’s a trade-off for some people. (A coffee a day may NOT keep the doctor away) 
+               Coffees grown at low altitudes have a tendency to develop less acids during the growing process, and are therefore the least acidic coffees. Just so you know, coffee with high acidity  has nothing to do with amount of acid, or pH.
+                Coffees with low acidity are generally looked down upon by coffee snobs(we know you are shaking your head), but since coffee is a personal experience, only your own opinion should matter. </p>
+                      
+             </p>
           </div>
           <div class="empty"></div>
           <div class="empty" id="st_body"></div>
           <div class="body">
             <h2>Body</h2>
-            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+            <p class="para"> 
+              The physical mouth feel and texture of a coffee.
+
+            <p class="para2"> A coffee’s body is largely created by the coffee beans’ oils and organic acids which are extracted during the brewing process.
+              A coffee’s body may be described as light (or thin), medium, or full. A coffee with a full body will have a buttery or even syrupy quality. Fuller-bodied coffees also retain more of their flavor when they are diluted.
+              Sumatra coffee, for example, are known to have a heavy body, while Yemen Mocha coffees tend to be either heavy or medium bodied. Mexican coffees generally have a lighter body. </p> 
+
+             </p>
           </div>
           <div class="empty"></div>
           <div class="empty" id="st_balance"></div>
           <div class="balance">
             <h2>Balance</h2>
-            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+            <p class="para"> 
+             A well balanced coffee has flavors that can be sensed evenly across the tongue. 
+
+            <p class="para2"> Blending several different coffees together, if done correctly, can create a flavorful and balanced coffee. A balanced coffee may be complex, but does not have any overwhelming flavor or aroma characteristics. For example, Yemen Mocha is typically bold and flavorful, but is also well balanced. In contrast, Kenya AA, generally has a dominating wine-like fruity flavor. 
+
+            Balance, however, is not necessarily a positive taste attribute, since some people prefer coffees with particularly strong flavor distinctions. This is totally a personal preference </p> 
+                
+            </p>
           </div>
           <div class="empty"></div>
           <div class="empty" id="st_uniformity"></div>
           <div class="uniformity">
             <h2>Uniformity</h2>
-            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+            <p class="para">   Uniformity refers to how similarly sized the ground coffee particles are..
+
+              <p class="para2">This is a rather new field of exploration and it’s not entirely clear whether more uniformity is more desirable in all cases. Having more ground beans would extract more flavor and aroma, and this is loosely tied to those attributes. </p>
+               </p>
           </div>
           <div class="empty"></div>
           <div class="empty" id="st_sweetness"></div>
           <div class="sweetness">
             <h2>Sweetness</h2>
-            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+
+             <p class="para">   Generally, lighter roasts will have more of a fruity sweetness.
+
+              <p class="para2">Roasting a coffee to darker levels continues the caramelizing process, transforming the flavor to more of a caramelly, chocolatey sweetness. </p>
+               </p>
+
+          
           </div>
           <div class="empty"></div>
           <div class="empty" id="st_cleanCup"></div>
           <div class="cleanCup">
             <h2>Clean cup</h2>
-            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+
+           <p class="para">   This means no flavor defects are present
+
+              <p class="para2"> Clean Cup refers to a lack of interfering negative impressions from first ingestion to final aftertaste, a "transparency" of cup. Any non-coffee like tastes or aromas will disqualify an individual cup. It means flavorful, but without any pungent or unusual flavors.   </p>
+               </p>
+
+
+
           </div>
           <div class="empty"></div>
           <div class="empty" id="st_cupperPoints"></div>
           <div class="cupperPoints">
             <h2>Cupper points</h2>
-            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+
+            <p class="para">   Generally, lighter roasts will have more of a fruity sweetness.
+
+              <p class="para2">Roasting a coffee to darker levels continues the caramelizing process, transforming the flavor to more of a caramelly, chocolatey sweetness. </p>
+               </p>
+
+
           </div>
           <div class="empty"></div>
           <div class="empty" id="st_totalCupPoints"></div>
           <div class="totalCupPoints">
             <h2>Total cup points</h2>
-            <p> flavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavorflavor flavorflavorflavorflavorflavorflavorflavorflavorflavor </p>
+            <p class="para"> The coffee with the highest total wins! 
+
+              <p class="para2">
+               This basically adds up all the above aatributes and the grand total (out of 100) shows the best coffees, with the highest numbers corresponding to the best coffees. 
+              </p>
+               </p>
           </div>
           <div class="empty"></div>
           <div class="empty"></div>

@@ -2,6 +2,41 @@ html {
   scroll-behavior: smooth;
 }
 
+.header {
+  height: auto;
+  justify-content: inherit;
+  align-items: inherit;
+  position: relative;
+  text-align: center;
+  color: white;
+}
+h2 { color: #5b0000 /*, 8e2921, 5b0000, 7B3A30*/; font-family: 'Helvetica Neue', sans-serif; font-size: 70px; font-weight: bold; letter-spacing: -1px; line-height: 1; text-align: left; }
+
+.para2 { color: #362e28; font-family: 'Helvetica Neue', sans-serif; font-size: 18px; font-weight: 100; line-height: 32px; margin: 0 0 72px; text-align: left; }
+
+.question{ color: #362e28; font-family: 'Helvetica Neue', sans-serif; font-size: 18px; font-weight: bold; line-height: 32px; margin: 0 0 72px; text-align: left; }
+
+.para{
+ /* {"color":"#c7821c",
+"name":"brown",
+"textColor":"black"},*/
+
+ color: #bc8644 /*#c7821c#7c795d*/; font-family: 'Trocchi', serif; font-size: 30px; font-weight: normal; line-height: 48px; margin: 0; 
+}
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.photo img {
+  width: 100%;
+  display: block;
+}
+
+
+
 .empty {
   height: 300px;
   width: 400px;
@@ -22,21 +57,60 @@ svg {
 }
 
 button#countryLabelsToggle {
+
+background:    #ffffff;
+background:    linear-gradient(#ffffff, #f3f3f3);
+ background-color: white;
+border-radius: 5px;
+padding:       8px 20px;
+color:         #741b47;
+display:       inline-block;
+/*font:          normal bold 24px/1 'Helvetica Neue', sans-serif;*/
+text-align:    center;
+
     position: fixed;
     top: 5%;
     left: 87%;
 }
 
 button#reset {
+  background:    #ffffff;
+background:    linear-gradient(#ffffff, #f3f3f3);
+ background-color: white;
+border-radius: 5px;
+padding:       8px 20px;
+color:         #741b47;
+display:       inline-block;
+/*font:          normal bold 24px/1 'Helvetica Neue', sans-serif;*/
+text-align:    center;
+
+
     position: fixed;
     top: 90%;
     left: 87%;
 }
 
 button#switchMode {
+  background:    #ffffff;
+background:    linear-gradient(#ffffff, #f3f3f3);
+ background-color: white;
+border-radius: 5px;
+padding:       8px 20px;
+color:         #741b47;
+display:       inline-block;
+/*font:          normal bold 24px/1 'Helvetica Neue', sans-serif;*/
+text-align:    center;
+
     position: fixed;
     top: 10%;
     left: 87%;
+}
+
+.button4 {
+  background-color: #ffecc3;
+  color: black;
+  border: 2px solid #e7e7e7;
+
 }
 
 
@@ -55,7 +129,7 @@ https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp
   z-index: 1; /* Stay on top */
   top: 25%; /* Stay at the top */
   left: 90%;
-  background-color: #f5e6ce;
+  background-color: white; /*f5e6ce;*/
   /*overflow-x: hidden; /* Disable horizontal scroll */
   overflow-y: scroll;
   padding-top: 10px;
@@ -67,7 +141,7 @@ https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp
   padding: 0px 8px 3px 16px;
   text-decoration: none;
   font-size: 17px;
-  color: #663300;
+  color: #8e2921/*663300*/;
   display: block;
 }
 
@@ -202,10 +276,12 @@ Body formating
 body {
     font-family: sans-serif;
     margin: 0;
-    background-color: #f5e6ce;
+    background-color: white; /*f5e6ce;*/
 }
 
 #main {
     margin: 20px;
     clear: left;
 }
+
+
