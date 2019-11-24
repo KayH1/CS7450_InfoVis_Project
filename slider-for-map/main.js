@@ -45,6 +45,7 @@ for (i in variableCatalogue) {
     document.body.appendChild(divContainer);
 
     // Step
+
     sliderHolder.push(d3
         .sliderBottom()
         .min(d3.min(ticks))
