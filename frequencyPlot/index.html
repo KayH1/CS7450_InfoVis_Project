@@ -45,33 +45,50 @@
       <div id="main">
         <br></br><br></br>
 
-        <div select class="sidenav small" id="xScaleSelect">
-          <a href="#st_flavor" class="flavor active">Flavor</a>
-          <a href="#st_aroma" class="aroma">Aroma</a>
-          <a href="#st_aftertaste" class="aftertaste">Aftertaste</a>
-          <a href="#st_acidity" class="acidity">Acidity</a>
-          <a href="#st_body" class="body">Body</a>
-          <a href="#st_balance" class="balance">Balance</a>
-          <a href="#st_uniformity" class="uniformity">Uniformity</a>
-          <a href="#st_sweetness" class="sweetness">Sweetness</a>
-          <a href="#st_cleanCup" class="cleanCup">Clean cup</a>
-          <a href="#st_cupperPoints" class="cupperPoints">Cupper points</a>
-          <a href="#st_totalCupPoints" class="totalCupPoints">Total cup points</a>
-        </div>
+        
 
         <div class = "sticky"  style="margin-left: 40%;">
           
-          
-          <div id="freq-plot-sticky">
-            <svg class="freq-plot" width="850" height="750">
-            </svg>  
-          </div>
-          <div class="sticky" id="buttons">
-            <button type="button" id="countryLabelsToggle">Toggle country labels</button>
-            <button type="button" id="switchMode">Switch mode</button>
-            <button type="button" id="reset">Reset selections</button>
-          </div>
+          <table style="border:0">
+            <tr>
+              <td>
+                <div id="freq-plot-sticky">
+                  <svg class="freq-plot" width="850" height="750">
+                  </svg>  
+                </div>
+              </td>
+              <td>
+                <div select class="sidenav small" id="xScaleSelect">
+                  <a href="#st_flavor" class="flavor active">Flavor</a>
+                  <a href="#st_aroma" class="aroma">Aroma</a>
+                  <a href="#st_aftertaste" class="aftertaste">Aftertaste</a>
+                  <a href="#st_acidity" class="acidity">Acidity</a>
+                  <a href="#st_body" class="body">Body</a>
+                  <a href="#st_balance" class="balance">Balance</a>
+                  <a href="#st_uniformity" class="uniformity">Uniformity</a>
+                  <a href="#st_sweetness" class="sweetness">Sweetness</a>
+                  <a href="#st_cleanCup" class="cleanCup">Clean cup</a>
+                  <a href="#st_cupperPoints" class="cupperPoints">Cupper points</a>
+                  <a href="#st_totalCupPoints" class="totalCupPoints">Total cup points</a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div id="buttons">
+                  <button type="button" id="countryLabelsToggle">Toggle country labels</button>
+                  <button type="button" id="switchMode">Switch mode</button>
+                  <button type="button" id="reset">Reset selections</button>
+                </div>
+              </td>
+            </tr>
+
+
+          </table>
         </div>
+
+
+
         <div class="scrollytelling-text">
           <!-- <div class="empty" id="st_flavor"></div> -->
           <div class="flavor">
