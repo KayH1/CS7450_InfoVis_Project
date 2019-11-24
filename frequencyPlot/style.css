@@ -59,23 +59,17 @@ div.sticky {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  padding: 100px;
-  
+
   }
 
-div .sticky #countryLabelsToggle { 
+div .sticky #buttons { 
 
-  border: 3px solid green;
+  /*border: 3px solid green;*/
 }
-div .sticky #reset { 
 
-  border: 3px solid green;
-}
-div .sticky #switchMode { 
-
-  border: 3px solid green;
-  padding: 0px;
-
+div #freq-plot-sticky {
+  /*border: 3px solid green;*/
+  padding: 50px 0px 0px 0px;
 
 }
 
@@ -94,7 +88,7 @@ text-align:    center;
 
     position: sticky;
     top: 10%;
-    left: 87%;
+    left: 0%;
 }
 
 button#reset {
@@ -111,7 +105,7 @@ text-align:    center;
 
     position: sticky;
     top: 90%;
-    left: 0%;
+    left: 80%;
 }
 
 button#switchMode {
@@ -127,7 +121,7 @@ text-align:    center;
 
     position: sticky;
     top: 10%;
-    left: 300%;
+    left: 20%;
 }
 
 .button4 {

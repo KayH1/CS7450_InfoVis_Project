@@ -41,15 +41,21 @@
           <a href="#st_totalCupPoints" class="totalCupPoints">Total cup points</a>
         </div>
 
-        <div class = "sticky" style="margin-left: 40%;">
-            <!-- <svg class="freq-plot" width="850" height="750">
-            </svg> -->
-            <div class="sticky"><button type="button" id="countryLabelsToggle">Toggle country labels</button></div>
-           <div class="sticky"> <button type="button" id="reset">Reset selections</button></div>
-           <div class="sticky"> <button type="button" id="switchMode">Switch mode</button></div>
+        <div class = "sticky"  style="margin-left: 40%;">
+          
+          
+          <div id="freq-plot-sticky">
+            <svg class="freq-plot" width="850" height="750">
+            </svg>  
+          </div>
+          <div class="sticky" id="buttons">
+            <button type="button" id="countryLabelsToggle">Toggle country labels</button>
+            <button type="button" id="switchMode">Switch mode</button>
+            <button type="button" id="reset">Reset selections</button>
+          </div>
         </div>
         <div class="scrollytelling-text">
-          <div class="empty" id="st_flavor"></div>
+          <!-- <div class="empty" id="st_flavor"></div> -->
           <div class="flavor">
             <h2>Flavor</h2>
             <p class="para"> 
