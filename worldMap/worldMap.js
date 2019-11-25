@@ -411,7 +411,6 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 	if (this.mapType == worldMapType.get("CoffeeCompare")){
 		let associatedMap = this;
 		let appenddiv = d3.select("#" + this.divId).select(".countryCompareInfo");
-		console.log(appenddiv.attr("height"));
 		let tempSVG = appenddiv.select("#" + this.divId + "tempDash");
 		let prSVG = appenddiv.select("#" + this.divId + "prDash");
 		let brGroup = appenddiv.selectAll("br");

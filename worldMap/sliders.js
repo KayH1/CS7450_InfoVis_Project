@@ -1,28 +1,21 @@
 var ticks = [0, 0.2, 0.4, 0.6, 0.8, 1];
 var defaultweight = 0.2;
-var topCoffee;
-var coffeeNested;
-var data;
 
-var variableList = ['aroma', 'flavor', 'aftertaste', 'acidity', 'body', 'balance', 'uniformity', 'cleanCup', 'sweetness', 'cupperPoints'];
-
-function sliders(numberAttributes, divId, CoffeeData, associateMap){
-    data = CoffeeData;
-    this.associateMap = associateMap;
-    let associatedSlider = this;
+function sliders(divId, selectedAttributes, assoPreferenceVis){
+    this.assoPreferenceVis = assoPreferenceVis;
     this.divId = divId;
-    this.numberAttributes = numberAttributes;
     this.variableCatalogue = new Array();
-    for (let i = 0; i < this.numberAttributes; i++) {
+    for (let i = 0; i < selectedAttributes.length; i++) {
         this.variableCatalogue.push(
-            {'variable-name': variableList[i],
-            'slider-id': 'slider-' + variableList[i],
-            'weight-id': 'weight-' + variableList[i],
+            {'variable-name': selectedAttributes[i],
+            'slider-id': 'slider-' + selectedAttributes[i],
+            'weight-id': 'weight-' + selectedAttributes[i],
             'weight': defaultweight,
             }
         );
     }
 
+    let associatedSlider = this;
     this.sliderHolder = []; 
     for (let i in this.variableCatalogue) {
         var divContainer = d3.select("#" + this.divId).append('div');
@@ -56,8 +49,8 @@ function sliders(numberAttributes, divId, CoffeeData, associateMap){
             .step(0.2)
             .on('onchange', function(d) {
                 associatedSlider.variableCatalogue[this.id]['weight'] = d;
-                d3.select('p#' + associatedSlider.variableCatalogue[this.id]['weight-id']).text(d3.format('.0%')(associatedSlider.variableCatalogue[this.id]['weight']));
-                updateRanks(this.associatedSlider);
+                d3.select(this.associatedSlider.divId).select('p#' + associatedSlider.variableCatalogue[this.id]['weight-id']).text(d3.format('.0%')(associatedSlider.variableCatalogue[this.id]['weight']));
+                this.associatedSlider.updateRanks();
             }));
         this.sliderHolder[i].id = i;
         this.sliderHolder[i].associatedSlider = this;
@@ -73,20 +66,22 @@ function sliders(numberAttributes, divId, CoffeeData, associateMap){
         gStep.call(this.sliderHolder[i]);
         d3.select('p#' + this.variableCatalogue[i]['weight-id']).text(d3.format('.0%')(this.variableCatalogue[i]['weight']));
     }
-    updateRanks.call(this);
 }
 
-
-function updateRanks(sliders) {
-    data.forEach(function(element, index, theData) {
+sliders.prototype.updateRanks = function() {
+    let associatedSlider = this;
+    associatedSlider.assoPreferenceVis.data.forEach(function(element, index, theData) {
         theData[index].pointCustomized = 0;
-        for (let variable of sliders.variableCatalogue) {
+        for (let variable in associatedSlider.variableCatalogue) {
             theData[index].pointCustomized += theData[index][variable['variable-name']] * variable['weight'];
         }
     });
-    data.sort(function (a, b) { return +a.pointCustomized - +b.pointCustomized }).reverse();
-    topCoffee = data.filter(function (d, i) { return i < 5 });
-    coffeeNested = d3.nest()
+    /* get top coffee */
+    associatedSlider.assoPreferenceVis.data.sort(function (a, b) { return +a.pointCustomized - +b.pointCustomized }).reverse();
+    associatedSlider.topCoffee = associatedSlider.assoPreferenceVis.data.filter(function (d, i) { return i < 5 });
+    
+    /* get country Info */
+    associatedSlider.coffeeNested = d3.nest()
         .key(function (d) { return d.ISOofOrigin; })
         .rollup(function (leaves) {
             var pointCustomized = d3.mean(leaves, function (c) {
@@ -103,9 +98,9 @@ function updateRanks(sliders) {
             })
             return { pointCustomized: pointCustomized, totalCupPoints: totalCupPoints, minCupPoints: minCupPoints, maxCupPoints: maxCupPoints, countries: leaves };
         })
-        .entries(data);
-    coffeeNested.sort(function (a, b) { return +a.value.totalCupPoints - +b.value.totalCupPoints }).reverse();
-    sliders.associateMap.updateCoffeeSelectedSet(topCoffee);
+        .entries(associatedSlider.assoPreferenceVis.data);
+    associatedSlider.coffeeNested.sort(function (a, b) { return +a.value.totalCupPoints - +b.value.totalCupPoints }).reverse();
+    associatedSlider.assoPreferenceVis.updateVis();
 }
 
 export { sliders };

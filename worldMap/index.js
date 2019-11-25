@@ -1,11 +1,11 @@
 import * as mapVis from "./worldMap.js"
-import * as slider from "./sliders.js"
-/* test for adding slider*/
-var sliders;
-/* test for coffee compare map */
-var countryWorldMap = new mapVis.worldMap("map1", 4, "Coffee World Map", "CoffeeCompare");
+import * as preferenceVis from "./preferenceVis.js"
+
 /* test for user preference map */
-var userPreferenceWorldMap = new mapVis.worldMap("map2", 4, "Explore Coffee Choice", "UserPreference");
+var preferenceVisCombine = new preferenceVis.preferenceCombine("preferenceVis");
+/* test for coffee compare map */
+var countryWorldMap = new mapVis.worldMap("countryWorldMap", 4, "Coffee World Map", "CoffeeCompare");
+
 
 /* load data */
 	var dataPath = {
@@ -24,6 +24,7 @@ var userPreferenceWorldMap = new mapVis.worldMap("map2", 4, "Explore Coffee Choi
 	var countryCoffeeInfoMap = d3.map(); // ISO3 -> array for coffee, avg rating for coffee, range for coffee, world rank of country
 
 	Promise.all([
+		d3.csv('../data/coffee/coffee-clean.csv', dataPreprocessorCoffee),
 		d3.csv(dataPath.countryInfoPath, function(d) {
 			return {
 				Country: d.Country,
@@ -36,21 +37,18 @@ var userPreferenceWorldMap = new mapVis.worldMap("map2", 4, "Explore Coffee Choi
 		d3.json(dataPath.countryGeoPath),  // load country geo data
 		d3.csv(dataPath.countryTempPath, processForClimateData),
 		d3.csv(dataPath.countryPrPath, processForClimateData),
-		d3.csv('../data/coffee/coffee-clean.csv', dataPreprocessorCoffee)
 	]).then(function(data) {
 		/* add slider */
-		sliders = new slider.sliders(5, "sliders", data[4], userPreferenceWorldMap);
-
 		let countryInfoData = d3.nest()
 			.key(function(d) { return d.ISO3; })
-			.object(data[0]);
+			.object(data[1]);
 		let countryNameCodeMap = d3.map();
 		
-		data[0].forEach(function(d) {
+		data[1].forEach(function(d) {
 			countryNameCodeMap.set(d["Country"], d["ISO3"]);
 			countryInfoMap.set(d["ISO3"], countryInfoData[d["ISO3"]][0]);
 		})
-		countryGeoData = data[1];
+		countryGeoData = data[2];
 		countryGeoData.features = countryGeoData.features.filter(function(d) {
 			return countryInfoMap.has(d["properties"]["ISO_A3"])? true : false;
 		});
@@ -58,14 +56,17 @@ var userPreferenceWorldMap = new mapVis.worldMap("map2", 4, "Explore Coffee Choi
 		countryNameCodeMap.keys().forEach(function(d) {
 			countryClimateMap.set(countryNameCodeMap.get(d), {});
 		})
-		data[2].forEach(function(d) {
+		data[3].forEach(function(d) {
 			countryClimateMap.get(countryNameCodeMap.get(d["Country"])).temp = d.climateData;
 		})
-		data[3].forEach(function(d) {
+		data[4].forEach(function(d) {
 			countryClimateMap.get(countryNameCodeMap.get(d["Country"])).pr = d.climateData;
 		})
+		
+		preferenceVisCombine.loadData(data[0])
+		initialMap(preferenceVisCombine.worldMap);
+
 		initialMap(countryWorldMap);
-		initialMap(userPreferenceWorldMap);
 	});
 
 	function processForClimateData(d) {
