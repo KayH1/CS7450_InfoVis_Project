@@ -266,7 +266,10 @@ worldMap.prototype.showCoffeeGeo = function() {
 			let selectedDiv = d3.select("#preferenceVis").selectAll(".coffeeIconUnderMap").filter(function(d, i) {
 				return d.rank === coffeeInfo.rank? true : false;
 			})
-			selectedDiv.style("border","6px solid #feb24c");
+			selectedDiv.style("outline","6px solid #feb24c")
+				.style("outline-radius", "15px")
+				.style("outline-offset", "-8px")
+				.style("border-radius", "5px")
 			d3.select(this).transition()
 				.style("height", "80px")
 				.style("width", "48px")
@@ -278,7 +281,9 @@ worldMap.prototype.showCoffeeGeo = function() {
 			let selectedDiv = d3.select("#preferenceVis").selectAll(".coffeeIconUnderMap").filter(function(d, i) {
 				return d.rank === coffeeInfo.rank? true : false;
 			})
-			selectedDiv.style("border","2px solid #8da0cb")
+			selectedDiv.style("outline","")
+				.style("outline-offset", "")
+				.style("border-radius", "25px");
 			d3.select(this).transition()
 				.style("height", "40px")
 				.style("width", "24px")
