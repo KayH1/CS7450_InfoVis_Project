@@ -155,10 +155,10 @@ function worldMap(divId, maxZoom, title, mapType) {
 
 worldMap.prototype.updateCoffeeSelectedSet = function(coffeeShowInfo) {
 	/* update map show coffee */
-	this.countryCoffeeInfoMap = d3.nest().key(function(d){
+	this.selectedCountryCoffeeInfoMap = d3.nest().key(function(d){
         return d.ISOofOrigin;
-    }).entries(coffeeShowInfo);
-    this.countryCoffeeInfoHolder = d3.nest().key(function(d){
+    }).object(coffeeShowInfo);
+    this.selectedCountryCoffeeInfoHolder = d3.nest().key(function(d){
         return d.ISOofOrigin;
     }).entries(coffeeShowInfo);
 	
@@ -166,7 +166,7 @@ worldMap.prototype.updateCoffeeSelectedSet = function(coffeeShowInfo) {
 		this.showCoffeeGeo();
 	}
 	/* extract coffee country from coffeeShowSet, call updateCountryShowSet */
-	//this.updateCountryShowSet();
+	this.updateCountryShowSet(d3.set(Object.keys(this.selectedCountryCoffeeInfoMap)));
 }
 
 /* ---------------------follow will not be used external, only called within worldMap-------------------------------- */
@@ -219,9 +219,11 @@ worldMap.prototype.updateCountryShowSet = function(countryShowSet) {
 		this.initialCountryGeo();
 	}
 	this.showCountryGeo();
+	updateMapZoom.call(this.map);
 }
 
 worldMap.prototype.showCoffeeGeo = function() {
+	/*
 	var countryCoffeeInfoMap = {
 		"CHN": [{country: "CHN", id:"coffee1", rating: 10}, {country: "CHN", id:"coffee2", rating:4}], 
 		"USA": [{country: "USA", id:"coffeeUSA", rating:8}]
@@ -230,13 +232,14 @@ worldMap.prototype.showCoffeeGeo = function() {
 		{key: "CHN", values: [{country: "CHN", id:"coffee1", rating: 10}, {country: "CHN", id:"coffee2", rating:4}]}, 
 		{key: "USA", values: [{country: "USA", id:"coffeeUSA", rating:8}]}
 	]; // fake data for testing
+	*/
 	
 	let associatedMap = this;
 	let svg = d3.select("#" + this.divId).select("svg").attr("id", this.divId + "geoSvg");
 	svg.selectAll(".coffeeIconGroup").remove();
 	
 	let coffeeIconGroup = svg.selectAll(".coffeeIconGroup")
-		.data(associatedMap.countryCoffeeInfoHolder).enter()
+		.data(associatedMap.selectedCountryCoffeeInfoHolder).enter()
 		.append("g").attr("class", "coffeeIconGroup")
 		.attr("transform", function(d) {
 			let countryInfo = associatedMap.data.countryInfoMap.get(d.key);
@@ -250,17 +253,20 @@ worldMap.prototype.showCoffeeGeo = function() {
 		.style("width", "24px")
 		.attr("transform", function(d, i) {
 			/* check length of coffee data */
-			let transformText = "translate(" + i*30 + ",0)";
-			if (associatedMap.countryCoffeeInfoMap[d.ISOofOrigin].length > 1) {
-				let step = 30/(associatedMap.countryCoffeeInfoMap[d.ISOofOrigin].length - 1);
+			let transformText = "translate(" + i*25 + ",0)";
+			if (associatedMap.selectedCountryCoffeeInfoMap[d.ISOofOrigin].length > 1) {
+				let step = 30/(associatedMap.selectedCountryCoffeeInfoMap[d.ISOofOrigin].length - 1);
 				transformText += " rotate(" + (-15 + step*i) + ",12,20)"
 			}
 			return transformText;
 		})
-		.on("mouseenter", function(e) {
+		.on("mouseover", function(e) {
 			/* add highlight for coffee icon */
 			let coffeeInfo = d3.select(this).datum();
-			console.log(coffeeInfo.id + " " + coffeeInfo.cupperPoints);
+			let selectedDiv = d3.select("#preferenceVis").selectAll(".coffeeIconUnderMap").filter(function(d, i) {
+				return d.rank === coffeeInfo.rank? true : false;
+			})
+			selectedDiv.style("border","6px solid #feb24c");
 			d3.select(this).transition()
 				.style("height", "80px")
 				.style("width", "48px")
@@ -268,7 +274,11 @@ worldMap.prototype.showCoffeeGeo = function() {
 		})
 		.on("mouseout", function(e) {
 			/* remove highlight for coffee icon */
-			console.log("mouse out");
+			let coffeeInfo = d3.select(this).datum();
+			let selectedDiv = d3.select("#preferenceVis").selectAll(".coffeeIconUnderMap").filter(function(d, i) {
+				return d.rank === coffeeInfo.rank? true : false;
+			})
+			selectedDiv.style("border","2px solid #8da0cb")
 			d3.select(this).transition()
 				.style("height", "40px")
 				.style("width", "24px")
@@ -324,8 +334,8 @@ worldMap.prototype.initialCountryGeo = function() {
 			/* record the top object */
 			layer.associatedMap = associatedMap;
 			let countryInfo = associatedMap.data.countryInfoMap.get(layer.feature["properties"]["ISO_A3"]);
-			// let countryCoffeeInfo = countryCoffeeInfoMap.get(layer.feature["properties"]["ISO_A3"]);
-			
+			let countryCoffeeInfo = associatedMap.data.countryCoffeeInfoMap.get(layer.feature["properties"]["ISO_A3"]);
+
 			let offset = [20, -20];
 			if (countryInfo["ISO3"] == "JPN" || countryInfo["ISO3"] == "PNG")
 				offset = [-50, 50];
@@ -333,7 +343,7 @@ worldMap.prototype.initialCountryGeo = function() {
 			/* tooltip content */
 				let htmlContent = countryInfo["Country"] + "  \
 					<img src='../data/country/flags/64/" + countryInfo["ISO2"] + "_64.png' alt='Flag' style='width:48px;height:48px;float:right;'><br/>\
-					#Coffee:&nbsp;&nbsp;5<br/>"
+					#Coffee:&nbsp;&nbsp;" + countryCoffeeInfo["value"]["coffee"].length + "<br/>"
 				
 				if (countryInfo["ISO3"] == "USA" || countryInfo["ISO3"] == "TZA" || countryInfo["ISO3"] == "PNG"){
 					htmlContent = countryInfo["Country"] + "<br/>\
@@ -341,8 +351,8 @@ worldMap.prototype.initialCountryGeo = function() {
 						style='width:48px;height:48px;float:right;display:block;position:absolute;top:10px;right:10px;'><br/>"
 				}
 
-				htmlContent += "AVG Rating:&nbsp;&nbsp;4.5<br/>Rating Range:&nbsp;[min, max]<br/>World Ranking:&nbsp;&nbsp;-1";
-				//htmlContent = htmlContent + "AVG Rating:&nbsp;&nbsp;" + countryCoffeeInfo["avg"] + "<br/>Rating Range:&nbsp;[" + countryCoffeeInfo["min"] + ", " + countryCoffeeInfo["max"] + "<br/>World Ranking:&nbsp;&nbsp;" + countryCoffeeInfo["world_rank"];
+				//htmlContent += "AVG Rating:&nbsp;&nbsp;4.5<br/>Rating Range:&nbsp;[min, max]<br/>World Ranking:&nbsp;&nbsp;-1";
+				htmlContent = htmlContent + "AVG Rating:&nbsp;&nbsp;" + countryCoffeeInfo["value"]["meanR"] + "<br/>Rating Range:&nbsp;[" + countryCoffeeInfo["value"]["minR"] + ", " + countryCoffeeInfo["value"]["maxR"] + "]<br/>World Ranking:&nbsp;&nbsp;" + countryCoffeeInfo["value"]["rank"];
 			/* tooltip cointent */
 			
 			layer.bindTooltip(htmlContent, {
@@ -354,7 +364,7 @@ worldMap.prototype.initialCountryGeo = function() {
 		pane: 'countryLayer'
 	})
 
-	if (this.mapType == worldMapType.get("CoffeeCompare")) {
+	//if (this.mapType == worldMapType.get("CoffeeCompare")) {
 		this.countryNameMarkerMap = d3.map();
 		
 		let generateSeparateGeo = d3.map();
@@ -380,7 +390,7 @@ worldMap.prototype.initialCountryGeo = function() {
 			});
 			associatedMap.countryNameMarkerMap.set(d.ISO3, countryNameMarker)
 		});
-	}
+	//}
 
 	this.countryLayer.associatedMap = this;
 	this.countryLayer.addTo(this.map);
@@ -647,29 +657,28 @@ function zoomToFeature(e) {
 function updateMapZoom(e) {
 	let associatedMap = this.associatedMap;
 
-	if (associatedMap.mapType == worldMapType.get("CoffeeCompare")){
-			if (this.getZoom() == this.getMinZoom()){
-				associatedMap.countryNameMarkerMap.keys().forEach(function(key) {
-					if (associatedMap.countryShowSet.has(key)){
-						associatedMap.countryNameMarkerMap.get(key).addTo(associatedMap.map);
-					} else {
-						if (associatedMap.map.hasLayer(associatedMap.countryNameMarkerMap.get(key)))
-							associatedMap.map.removeLayer(associatedMap.countryNameMarkerMap.get(key));
-					}
-				});
-			} else {
-				associatedMap.countryNameMarkerMap.keys().forEach(function(key) {
+	//if (associatedMap.mapType == worldMapType.get("CoffeeCompare")){
+		if (this.getZoom() == this.getMinZoom()){
+			associatedMap.countryNameMarkerMap.keys().forEach(function(key) {
+				if (associatedMap.countryShowSet.has(key)){
+					associatedMap.countryNameMarkerMap.get(key).addTo(associatedMap.map);
+				} else {
 					if (associatedMap.map.hasLayer(associatedMap.countryNameMarkerMap.get(key)))
 						associatedMap.map.removeLayer(associatedMap.countryNameMarkerMap.get(key));
-				});
-			}
-	}
+				}
+			});
+		} else {
+			associatedMap.countryNameMarkerMap.keys().forEach(function(key) {
+				if (associatedMap.map.hasLayer(associatedMap.countryNameMarkerMap.get(key)))
+					associatedMap.map.removeLayer(associatedMap.countryNameMarkerMap.get(key));
+			});
+		}
+	//}
 
 	if (associatedMap.mapType == worldMapType.get("UserPreference")){
 		d3.select("#" + associatedMap.divId).select("#" + associatedMap.divId + "geoSvg")
 			.selectAll(".coffeeIconGroup")
 			.attr("transform", function(d) {
-				console.log("tyest");
 				let countryInfo = associatedMap.data.countryInfoMap.get(d.key);
 				let iconPosition = associatedMap.map.latLngToLayerPoint(new L.LatLng(countryInfo["lat"], countryInfo["lng"]));
 				return "translate(" + (iconPosition.x-20) + "," + (iconPosition.y - 12) + ")";

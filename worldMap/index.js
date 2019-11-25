@@ -62,9 +62,31 @@ var countryWorldMap = new mapVis.worldMap("countryWorldMap", 4, "Coffee World Ma
 		data[4].forEach(function(d) {
 			countryClimateMap.get(countryNameCodeMap.get(d["Country"])).pr = d.climateData;
 		})
+
+		/* get country coffee Info */
+	    let coffeeInfo = d3.nest()
+	        .key(function (d) { return d.ISOofOrigin; })
+	        .rollup(function (leaves) {
+	            var totalCupPoints = d3.mean(leaves, function(c) {
+	                return c.totalCupPoints;
+	            })
+	            var minCupPoints = d3.min(leaves, function(c) {
+	                return c.totalCupPoints;
+	            })
+	            var maxCupPoints = d3.max(leaves, function(c) {
+	                return c.totalCupPoints;
+	            })
+	            return { meanR: Math.round(totalCupPoints), minR: Math.round(minCupPoints), maxR: Math.round(maxCupPoints), coffee: leaves };
+	        })
+	        .entries(data[0]);
+	    coffeeInfo.sort(function (a, b) { return +a.value.totalCupPoints - +b.value.totalCupPoints });
+	    coffeeInfo.forEach(function(d, i) {
+	    	d.value.rank = i + 1;
+	    	countryCoffeeInfoMap.set(d.key, d);
+	    });
 		
-		preferenceVisCombine.loadData(data[0])
 		initialMap(preferenceVisCombine.worldMap);
+		preferenceVisCombine.loadData(data[0])
 
 		initialMap(countryWorldMap);
 	});
@@ -94,11 +116,11 @@ var countryWorldMap = new mapVis.worldMap("countryWorldMap", 4, "Coffee World Ma
     return {
         'id': +row['id'],
         'species': row['species'],
-        'owner': row['owner'],
+        'owner': row['owner'].replace(/\n/g, "").replace(/ /g, ""),
         'countryOfOrigin': row['countryOfOrigin'],
-        'company': row['company'],
+        'company': row['company'].replace(/\n/g, "").replace(/ /g, ""),
         'region': row['region'],
-        'producer': row['producer'],
+        'producer': row['producer'].replace(/\n/g, "").replace(/ /g, ""),
         'harvestYear': row['harvestYear'],
         'gradingDate': row['gradingDate'],
         'owner1': row['owner1'],
@@ -138,14 +160,7 @@ var countryWorldMap = new mapVis.worldMap("countryWorldMap", 4, "Coffee World Ma
 		countryInfoMap.keys().forEach(function(d) {
 			countryShowSet.add(d)
 		});
-		countryShowSet.remove("USA");
-		//Map.updateCoffeeSelectedSet("placeHolder");
 		Map.updateCountryShowSet(countryShowSet);
-		/*
-		countryShowSet.remove("BRA");
-		Map.updateCoffeeSelectedSet("placeHolder");
-		Map.updateCountryShowSet(countryShowSet);
-		*/
 	}
 /* initialize vis components */
 

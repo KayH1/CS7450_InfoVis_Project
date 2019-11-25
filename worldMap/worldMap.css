@@ -8,8 +8,23 @@
   src: url('PiratesWriters.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3��5 */
 }
 
+#preferenceVis .coffeeIconUnderMap div {
+  text-anchor: start;
+  font-weight: 200;
+  font-family: pirates;
+  font-size: 18px;
+}
 
-#map1 svg #map1mapTitle {
+#preferenceVis #preferenceVissliders .sliderTitle {
+  text-anchor: start;
+  font-weight: 200;
+  font-family: pirates;
+  font-size: 20px;
+  margin: 0px !important;
+  padding: 0px !important;
+}
+
+#countryWorldMap svg #countryWorldMapmapTitle {
 	font-family: coffeeMapFont;
 	font-weight: 20px;
 	font-style: oblique;
@@ -17,7 +32,7 @@
 	text-anchor: middle;
 }
 
-#map2 svg #map2mapTitle {
+#preferenceVismap svg #preferenceVismapmapTitle {
   font-family: coffeeMapFont;
   font-weight: 20px;
   font-style: oblique;
