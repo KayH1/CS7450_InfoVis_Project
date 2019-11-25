@@ -52,7 +52,7 @@ h2 { color: #5b0000 /*, 8e2921, 5b0000, 7B3A30*/; font-family: 'Helvetica Neue',
   padding: 40px 20px 40px 20px; /* top, right, bottom, left */
 }
 
-svg {
+svg.freq-plot {
     position: sticky;
 }
 div.sticky {
@@ -318,7 +318,7 @@ div svg.embeddings {
   border: 1px solid black;
 }
 
-path {
+svg.parallel-coords path {
   fill: none;
   stroke: #663300;
   opacity: 0.1;

@@ -60,11 +60,22 @@ preferenceCombine.prototype.updateVis = function() {
     d3.select("#" + this.divId).selectAll(".coffeeIconUnderMap").data(this.sliders.topCoffee)
     	.selectAll("div").data(function(d) { return [d]; })
     	.html(function(d) {
-    		let htmlContent = "No." + d.rank + " from " + d.countryOfOrigin + "<br>producer:<br>"
+    		console.log(d.countryOfOrigin.length);
+    		let htmlContent = "No." + d.rank + " from ";
+    		if (d.countryOfOrigin.length >= 10){
+    			htmlContent += d.ISOofOrigin
+    		} else {
+    			htmlContent += d.countryOfOrigin;
+    		}
+    		htmlContent += "<br>producer:<br>";
     		if (d.producer === ""){
 				htmlContent += "NA";
     		} else {
-    			htmlContent += d.producer;
+    			if (d.producer.length >= 8){
+	    			htmlContent += d.producer.substring(0, 8)
+	    		} else {
+	    			htmlContent += d.producer;
+	    		}
     		}
     		return htmlContent;
     	});
