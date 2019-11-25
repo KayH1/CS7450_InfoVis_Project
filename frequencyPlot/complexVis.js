@@ -41,7 +41,7 @@ var svgParallelCoords = d3.select('svg.parallel-coords');
 var svgWidthParallelCoords = +svgParallelCoords.attr('width');
 var svgHeightParallelCoords = +svgParallelCoords.attr('height');
 
-var paddingParallelCoords = {t: 30, r: 40, b: 50, l: 60};
+var paddingParallelCoords = {t: 30, r: 40, b: 40, l: 60};
 
 var axes = ['flavor', 'aroma', 'aftertaste', 'acidity', 'balance', 'uniformity', 'sweetness', 'cleanCup', 'cupperPoints']
 //var axes = ['flavor', 'uniformity', 'aroma', 'sweetness', 'aftertaste', 'cleanCup', 'acidity', 'cupperPoints', 'balance']
