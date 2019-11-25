@@ -1,5 +1,7 @@
 import * as mapVis from "./worldMap.js"
-
+import * as slider from "./sliders.js"
+/* test for adding slider*/
+var sliders;
 /* test for coffee compare map */
 var countryWorldMap = new mapVis.worldMap("map1", 4, "Coffee World Map", "CoffeeCompare");
 /* test for user preference map */
@@ -9,7 +11,7 @@ var userPreferenceWorldMap = new mapVis.worldMap("map2", 4, "Explore Coffee Choi
 	var dataPath = {
 		coffeePath: "../data/coffee/Coffee-clean.csv",
 		countryInfoPath: "../data/country/CoffeeCountryInfo.csv",
-		countryGeoPath: "./countries.geojson",
+		countryGeoPath: "../worldMap/countries.geojson",
 		countryTempPath: "../data/country/temperature-2020_2039.csv",
 		countryPrPath: "../data/country/precipitation-2020_2039.csv"
 	}
@@ -33,8 +35,12 @@ var userPreferenceWorldMap = new mapVis.worldMap("map2", 4, "Explore Coffee Choi
 		}), // load country info
 		d3.json(dataPath.countryGeoPath),  // load country geo data
 		d3.csv(dataPath.countryTempPath, processForClimateData),
-		d3.csv(dataPath.countryPrPath, processForClimateData)
+		d3.csv(dataPath.countryPrPath, processForClimateData),
+		d3.csv('../data/coffee/coffee-clean.csv', dataPreprocessorCoffee)
 	]).then(function(data) {
+		/* add slider */
+		sliders = new slider.sliders(5, "sliders", data[4], userPreferenceWorldMap);
+
 		let countryInfoData = d3.nest()
 			.key(function(d) { return d.ISO3; })
 			.object(data[0]);
@@ -81,6 +87,39 @@ var userPreferenceWorldMap = new mapVis.worldMap("map2", 4, "Explore Coffee Choi
 			]
 		};
 	}
+
+	function dataPreprocessorCoffee(row) {
+    //console.log(row);
+    return {
+        'id': +row['id'],
+        'species': row['species'],
+        'owner': row['owner'],
+        'countryOfOrigin': row['countryOfOrigin'],
+        'company': row['company'],
+        'region': row['region'],
+        'producer': row['producer'],
+        'harvestYear': row['harvestYear'],
+        'gradingDate': row['gradingDate'],
+        'owner1': row['owner1'],
+        'variety': row['variety'],
+        'processingMethod': row['processingMethod'],
+        'aroma': +row['aroma'],
+        'flavor': +row['flavor'],
+        'aftertaste': +row['aftertaste'],
+        'acidity': +row['acidity'],
+        'body': +row['body'],
+        'balance': +row['balance'],
+        'uniformity': +row['uniformity'],
+        'cleanCup': +row['cleanCup'],
+        'sweetness': +row['sweetness'],
+        'cupperPoints': +row['cupperPoints'],
+        'totalCupPoints': +row['totalCupPoints'],
+        'moisture': +row['moisture'],
+        'color': row['color'],
+        'ISOofOrigin': row['ISOofOrigin'],
+        'pointCustomized': 0,
+    };
+}
 /* load data */
 
 
@@ -99,7 +138,7 @@ var userPreferenceWorldMap = new mapVis.worldMap("map2", 4, "Explore Coffee Choi
 			countryShowSet.add(d)
 		});
 		countryShowSet.remove("USA");
-		Map.updateCoffeeSelectedSet("placeHolder");
+		//Map.updateCoffeeSelectedSet("placeHolder");
 		Map.updateCountryShowSet(countryShowSet);
 		/*
 		countryShowSet.remove("BRA");

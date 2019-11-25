@@ -153,13 +153,20 @@ function worldMap(divId, maxZoom, title, mapType) {
 	}
 }
 
-worldMap.prototype.updateCoffeeSelectedSet = function(coffeeShowSet) {
+worldMap.prototype.updateCoffeeSelectedSet = function(coffeeShowInfo) {
 	/* update map show coffee */
-	this.coffeeShowSet = coffeeShowSet;
+	this.countryCoffeeInfoMap = d3.nest().key(function(d){
+        return d.ISOofOrigin;
+    }).entries(coffeeShowInfo);
+    this.countryCoffeeInfoHolder = d3.nest().key(function(d){
+        return d.ISOofOrigin;
+    }).entries(coffeeShowInfo);
+	
 	if (this.mapType == worldMapType.get("UserPreference")){
 		this.showCoffeeGeo();
 	}
 	/* extract coffee country from coffeeShowSet, call updateCountryShowSet */
+	//this.updateCountryShowSet();
 }
 
 /* ---------------------follow will not be used external, only called within worldMap-------------------------------- */
@@ -229,7 +236,7 @@ worldMap.prototype.showCoffeeGeo = function() {
 	svg.selectAll(".coffeeIconGroup").remove();
 	
 	let coffeeIconGroup = svg.selectAll(".coffeeIconGroup")
-		.data(countryCoffeeInfoHolder).enter()
+		.data(associatedMap.countryCoffeeInfoHolder).enter()
 		.append("g").attr("class", "coffeeIconGroup")
 		.attr("transform", function(d) {
 			let countryInfo = associatedMap.data.countryInfoMap.get(d.key);
@@ -238,14 +245,14 @@ worldMap.prototype.showCoffeeGeo = function() {
 		}).selectAll("coffeeIcon").data(d=>d.values)
 		.enter().append("image").attr("class", "coffeeIcon")
 		.attr("pointer-events", "visible")
-		.attr("href", "./icons/cup2.png")
+		.attr("href", "../worldMap/icons/cup2.png") // address tag
 		.style("height", "40px")
 		.style("width", "24px")
 		.attr("transform", function(d, i) {
 			/* check length of coffee data */
 			let transformText = "translate(" + i*30 + ",0)";
-			if (countryCoffeeInfoMap[d.country].length > 1) {
-				let step = 30/(countryCoffeeInfoMap[d.country].length - 1);
+			if (associatedMap.countryCoffeeInfoMap[d.ISOofOrigin].length > 1) {
+				let step = 30/(associatedMap.countryCoffeeInfoMap[d.ISOofOrigin].length - 1);
 				transformText += " rotate(" + (-15 + step*i) + ",12,20)"
 			}
 			return transformText;
@@ -253,7 +260,7 @@ worldMap.prototype.showCoffeeGeo = function() {
 		.on("mouseenter", function(e) {
 			/* add highlight for coffee icon */
 			let coffeeInfo = d3.select(this).datum();
-			console.log(coffeeInfo.id + " " + coffeeInfo.rating);
+			console.log(coffeeInfo.id + " " + coffeeInfo.cupperPoints);
 			d3.select(this).transition()
 				.style("height", "80px")
 				.style("width", "48px")
@@ -404,6 +411,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 	if (this.mapType == worldMapType.get("CoffeeCompare")){
 		let associatedMap = this;
 		let appenddiv = d3.select("#" + this.divId).select(".countryCompareInfo");
+		console.log(appenddiv.attr("height"));
 		let tempSVG = appenddiv.select("#" + this.divId + "tempDash");
 		let prSVG = appenddiv.select("#" + this.divId + "prDash");
 		let brGroup = appenddiv.selectAll("br");
