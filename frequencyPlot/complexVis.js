@@ -133,7 +133,7 @@ function dataPreprocessorCoffee(row) {
 /**********************
  Load coffee dataset
 **********************/
-d3.csv('../data/coffee/coffee-clean.csv', dataPreprocessorCoffee).then(function(dataset) {
+d3.csv('../data/coffee/Coffee-clean.csv', dataPreprocessorCoffee).then(function(dataset) {
     // **** Your JavaScript code goes here ****
     // Create global object called coffee to store dataset
     console.log("Loading coffee (complex viz)");

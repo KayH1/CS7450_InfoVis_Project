@@ -24,7 +24,7 @@ var countryWorldMap = new mapVis.worldMap("countryWorldMap", 4, "Coffee World Ma
 	var countryCoffeeInfoMap = d3.map(); // ISO3 -> array for coffee, avg rating for coffee, range for coffee, world rank of country
 
 	Promise.all([
-		d3.csv('../data/coffee/coffee-clean.csv', dataPreprocessorCoffee),
+		d3.csv(dataPath.coffeePath, dataPreprocessorCoffee),
 		d3.csv(dataPath.countryInfoPath, function(d) {
 			return {
 				Country: d.Country,
