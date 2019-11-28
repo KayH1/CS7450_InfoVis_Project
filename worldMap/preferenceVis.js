@@ -34,7 +34,7 @@ function preferenceCombine (divId) {
 		.attr("class", "coffeeIconUnderMap");
 	coffeeIconDiv.append("div").attr("class", "coffeeDetail")
 		.style("display", "inline-block").style("margin-left", "10px");
-	coffeeIconDiv.append("img").attr("src", "../worldMap/icons/coffeeBeanIcon.png")
+	coffeeIconDiv.append("img").attr("src", "./worldMap/icons/coffeeBeanIcon.png")
 			.style("position", "absolute")
 			.style("bottom", 0)
 			.style("right", 0)

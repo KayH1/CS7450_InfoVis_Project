@@ -9,11 +9,11 @@ var countryWorldMap = new mapVis.worldMap("countryWorldMap", 4, "Coffee World Ma
 
 /* load data */
 	var dataPath = {
-		coffeePath: "../data/coffee/Coffee-clean.csv",
-		countryInfoPath: "../data/country/CoffeeCountryInfo.csv",
-		countryGeoPath: "../worldMap/countries.geojson",
-		countryTempPath: "../data/country/temperature-2020_2039.csv",
-		countryPrPath: "../data/country/precipitation-2020_2039.csv"
+		coffeePath: "./data/coffee/Coffee-clean.csv",
+		countryInfoPath: "./data/country/CoffeeCountryInfo.csv",
+		countryGeoPath: "./worldMap/countries.geojson",
+		countryTempPath: "./data/country/temperature-2020_2039.csv",
+		countryPrPath: "./data/country/precipitation-2020_2039.csv"
 	}
 
 	var countryInfoMap = d3.map(); // ISO3 -> country info data (average coordinates, iso codes, country name)

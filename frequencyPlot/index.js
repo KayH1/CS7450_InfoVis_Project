@@ -50,7 +50,7 @@ function dataPreprocessorCoffee(row) {
  Load the data
 **********************/
 var dataPath = {
-    coffeePath: "../data/coffee/Coffee-clean.csv"
+    coffeePath: "./data/coffee/Coffee-clean.csv"
 };
 
 d3.csv(dataPath.coffeePath, dataPreprocessorCoffee).then(function(dataset) {
