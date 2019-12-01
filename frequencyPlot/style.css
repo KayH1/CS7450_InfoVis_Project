@@ -1,5 +1,14 @@
+/*div {
+  border: 3px solid green;
+}*/
+
 html {
   scroll-behavior: smooth;
+}
+
+table {
+
+  color: #663300;
 }
 
 .header {
@@ -10,6 +19,7 @@ html {
   text-align: center;
   color: white;
 }
+
 h2 { color: #5b0000 /*, 8e2921, 5b0000, 7B3A30*/; font-family: 'Helvetica Neue', sans-serif; font-size: 70px; font-weight: bold; letter-spacing: -1px; line-height: 1; text-align: left; }
 
 .para2 { color: #362e28; font-family: 'Helvetica Neue', sans-serif; font-size: 18px; font-weight: 100; line-height: 32px; margin: 0 0 72px; text-align: left; }
@@ -38,7 +48,13 @@ h2 { color: #5b0000 /*, 8e2921, 5b0000, 7B3A30*/; font-family: 'Helvetica Neue',
 
 
 .empty {
-  height: 300px;
+  height: 250px;
+  width: 400px;
+  /*border: 3px solid green;*/
+}
+
+.small.empty {
+  height: 1px;
   width: 400px;
   /*border: 3px solid green;*/
 }
@@ -136,7 +152,7 @@ https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp
 /* The sidebar menu */
 .sidenav {
   height: 40%; /* Full-height: remove this if you want "auto" height */
-  width: 160px; /* Set the width of the sidebar */
+  width: 190px; /* Set the width of the sidebar */
   position: sticky; /* Fixed Sidebar (stay in place on scroll) */
 /*  top: 25%;  Stay at the top */
   left: 40%;/*90%;*/
@@ -295,7 +311,7 @@ svg .countries.y.label {
 }
 
 
-/**********************
+/******************* ***
 Body formating
 **********************/
 
@@ -308,6 +324,7 @@ body {
 #main {
     margin: 20px;
     clear: left;
+
 }
 
 /**********************

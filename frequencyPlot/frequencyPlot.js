@@ -6,6 +6,8 @@ function frequencyPlot(selection, transition_time, useYAxis, dotRadius, dotColor
     this.selection = selection;
     this.transition_time = transition_time;
     this.useYAxis = useYAxis;
+    this.freezeOrder = true;
+    this.setup = true;
     
     this.dotRadius = dotRadius;
     this.dotColor = dotColor;
@@ -17,9 +19,13 @@ function frequencyPlot(selection, transition_time, useYAxis, dotRadius, dotColor
 
     this.mode = 'd'; // either bnw (box&whisker) or d (density) - default
     this.labelOpacity = 1;
+    this.sortMode = "overall"; // default is sorting by maximum value
+    this.sortAttr = "flavor"; // default is sorting by flavor values
 
     // specifies all the bins in which to place the datapoints
     this.bins = [];
+    // specifies the order of the country indices based on this.selection
+    this.rankings = [];
     // specifies the max x value for each country bin, given the current attribute selected
     this.binsMaxX = {
         "flavor": this.bins.slice(0),
@@ -87,6 +93,46 @@ function frequencyPlot(selection, transition_time, useYAxis, dotRadius, dotColor
         "cupperPoints": this.bins.slice(0),
         "totalCupPoints": this.bins.slice(0)
     };
+    // specifies the max/min x values for each country bin, given the current attribute selected for sorting the countries
+    this.binsMaxXSort = {
+        "flavor": this.bins.slice(0),
+        "aroma": this.bins.slice(0),
+        "aftertaste": this.bins.slice(0),
+        "acidity": this.bins.slice(0),
+        "body": this.bins.slice(0),
+        "balance": this.bins.slice(0),
+        "uniformity": this.bins.slice(0),
+        "sweetness": this.bins.slice(0),
+        "cleanCup": this.bins.slice(0),
+        "cupperPoints": this.bins.slice(0),
+        "totalCupPoints": this.bins.slice(0)
+    };
+    this.binsMinXSort = {
+        "flavor": this.bins.slice(0),
+        "aroma": this.bins.slice(0),
+        "aftertaste": this.bins.slice(0),
+        "acidity": this.bins.slice(0),
+        "body": this.bins.slice(0),
+        "balance": this.bins.slice(0),
+        "uniformity": this.bins.slice(0),
+        "sweetness": this.bins.slice(0),
+        "cleanCup": this.bins.slice(0),
+        "cupperPoints": this.bins.slice(0),
+        "totalCupPoints": this.bins.slice(0)
+    };
+    this.binsMedianXSort = {
+        "flavor": this.bins.slice(0),
+        "aroma": this.bins.slice(0),
+        "aftertaste": this.bins.slice(0),
+        "acidity": this.bins.slice(0),
+        "body": this.bins.slice(0),
+        "balance": this.bins.slice(0),
+        "uniformity": this.bins.slice(0),
+        "sweetness": this.bins.slice(0),
+        "cleanCup": this.bins.slice(0),
+        "cupperPoints": this.bins.slice(0),
+        "totalCupPoints": this.bins.slice(0)
+    };
     // data split into bins
     this.binned = [];
 
@@ -99,9 +145,9 @@ function frequencyPlot(selection, transition_time, useYAxis, dotRadius, dotColor
     var svgWidth = +this.svg.attr('width');
     var svgHeight = +this.svg.attr('height');
 
-    this.padding = {t: 40, r: 40, b: 50, l: 60, 
+    this.padding = {t: 40, r: 80, b: 50, l: 60, 
                     x_r: 145, 
-                    y_countries_b: 17, x_countries_r: 20, 
+                    y_countries_b: 0, x_countries_r: 20, 
                     x_axis_b: 20};
 
     // compute chart dimensions
@@ -146,21 +192,95 @@ frequencyPlot.prototype.onXScaleChanged = function(dataset) {
     if (dataset !== null) { this.updateChart(dataset); }
 }
 
-frequencyPlot.prototype.updateY = function(dataset) {
-    //console.log("updating y");
+
+frequencyPlot.prototype.updateY = function(dataset, mode, attr) {
+    this.sortMode = mode;
+    this.sortAttr = attr;
     this.chartScales.y = {};
 
     var freqPlot = this;
+
+    var whichAttr = freqPlot.selection;
+    
+    
+
+    if (mode === "overall") { whichAttr = "totalCupPoints"; }
+    else if (freqPlot.sortAttr === "current") { whichAttr = freqPlot.selection; }
+    else if (freqPlot.freezeOrder !== true || freqPlot.setup) { whichAttr = freqPlot.sortAttr; }
+
+    // order the countries in freqPlot.bins by extent
+    // determine the largest and smallest x values for each bin 
+    // (to determine the rankings of the countries)
+    freqPlot.binned.forEach(function(subdataset, idx) {
+        var sortedSubdataset = subdataset.sort((a,b) => d3.ascending(a[whichAttr], b[whichAttr]));
+        // extract the appropriate values for calculation
+        var sortedSubdatasetValues = sortedSubdataset.map(function(d) { return d[whichAttr]; });
+        
+
+        freqPlot.binsMaxXSort[whichAttr][idx] = d3.max(subdataset, function(d) { return d[whichAttr]; });
+        freqPlot.binsMinXSort[whichAttr][idx] = d3.min(subdataset, function(d) { return d[whichAttr]; });
+        freqPlot.binsMedianXSort[whichAttr][idx] = d3.quantile(sortedSubdatasetValues, 0.5);
+        
+    });
+
+    // determine the rankings of each country
+    if (freqPlot.freezeOrder !== true || freqPlot.setup == true || attr === 'current') {
+        
+        // sort alphabetically
+        if (mode === "name") {
+            var indexedTest = freqPlot.bins.map(function(e,i){return {ind: i, val: e}});
+            indexedTest.sort(function(x, y){return x.val > y.val ? 1 : x.val == y.val ? 0 : -1});
+            var indices = indexedTest.map(function(e){return e.ind});
+        }
+        // sort by maximum value
+        else if (mode === "max" || mode === "overall") {
+            var whichList = freqPlot.binsMaxXSort[whichAttr];
+            // make list with indices and values
+            indexedTest = whichList.map(function(e,i){return {ind: i, val: e}});
+            // sort index/value couples, based on values
+            indexedTest.sort(function(x, y){return x.val > y.val ? 1 : x.val == y.val ? 0 : -1});
+            // make list keeping only indices
+            var indices = indexedTest.map(function(e){return e.ind});
+            indices = indices.reverse();
+        }
+        // sort by minimum value
+        else if (mode === "min") {
+            var whichList = freqPlot.binsMinXSort[whichAttr];
+            // make list with indices and values
+            var indexedTest = whichList.map(function(e,i){return {ind: i, val: e}});
+            // sort index/value couples, based on values
+            indexedTest.sort(function(x, y){return x.val > y.val ? 1 : x.val == y.val ? 0 : -1});
+            // make list keeping only indices
+            var indices = indexedTest.map(function(e){return e.ind});
+        }
+        // sort by median value
+        else if (mode === "median") {
+            var whichList = freqPlot.binsMedianXSort[whichAttr];
+            // make list with indices and values
+            var indexedTest = whichList.map(function(e,i){return {ind: i, val: e}});
+            // sort index/value couples, based on values
+            indexedTest.sort(function(x, y){return x.val > y.val ? 1 : x.val == y.val ? 0 : -1});
+            // make list keeping only indices
+            var indices = indexedTest.map(function(e){return e.ind});
+            indices = indices.reverse();
+        }
+
+        freqPlot.rankings = indices;
+
+        freqPlot.setup = false;
+    }
+
     dataset.forEach(function(d) {
-        d.rank = freqPlot.bins.indexOf(d.countryOfOrigin);
+        d.rank = freqPlot.bins.length - freqPlot.rankings.indexOf(freqPlot.bins.indexOf(d.countryOfOrigin));
     });
 
     //console.log(dataset);
     return dataset;
 }
 
+
 frequencyPlot.prototype.updateChart = function(coffee_dataset) {
-    //console.log("updating chart");
+    console.log("updating chart");
 
     /**********************
      Store a reference to the visualization
@@ -172,7 +292,7 @@ frequencyPlot.prototype.updateChart = function(coffee_dataset) {
     **********************/
     // Update the scales based on new data attributes
     //console.log(d3.extent(chartScales.y));
-    var coffee = freqPlot.updateY(coffee_dataset);
+    var coffee = freqPlot.updateY(coffee_dataset, freqPlot.sortMode, freqPlot.sortAttr);
     var freq_rank = d3.extent(coffee, function(d) { return d.rank; });
 
     //console.log("rank ",freq_rank);
@@ -209,7 +329,6 @@ frequencyPlot.prototype.updateChart = function(coffee_dataset) {
     freqPlot.binned.forEach(function(subdataset, idx) {
         freqPlot.binsMaxX[freqPlot.selection][idx] = d3.max(subdataset, function(d) { return d[freqPlot.chartScales.x]; })
         freqPlot.binsMinX[freqPlot.selection][idx] = d3.min(subdataset, function(d) { return d[freqPlot.chartScales.x]; });
-    
         // the following box-and-whisker-relevant calculations were inpsired by https://www.d3-graph-gallery.com/graph/boxplot_basic.html
         // sort the data in this bin
         var sortedSubdataset = subdataset.sort((a,b) => d3.ascending(a[freqPlot.chartScales.x], b[freqPlot.chartScales.x]));
@@ -220,19 +339,7 @@ frequencyPlot.prototype.updateChart = function(coffee_dataset) {
         freqPlot.bins25perc[freqPlot.selection][idx] = d3.quantile(sortedSubdatasetValues, 0.25);
         freqPlot.binsMedianX[freqPlot.selection][idx] = d3.quantile(sortedSubdatasetValues, 0.5);
         freqPlot.bins75perc[freqPlot.selection][idx] = d3.quantile(sortedSubdatasetValues, 0.75);
-        /*if (subdataset[0].countryOfOrigin === "Myanmar") {
-            console.log("SUBDATASET: ",subdataset);
-            console.log("... ",freqPlot.chartScales.x);
-            console.log("HERE ",subdataset[0][freqPlot.chartScales.x]);
-        } 
-        
-
-        if (subdataset[0].countryOfOrigin === "Mexico") {
-            console.log("25 perc: ",freqPlot.bins25perc[freqPlot.selection][idx], " Median: ",freqPlot.binsMedianX[freqPlot.selection][idx], " 75 perc: ",freqPlot.bins75perc[freqPlot.selection][idx], " Max: ",freqPlot.binsMaxX[freqPlot.selection][idx]," Min: ",freqPlot.binsMinX[freqPlot.selection][idx]);
-        }*/
     });
-    
-    //console.log("BINS MAX X: ",freqPlot.binsMaxX);
     
 
     /**********************
@@ -252,10 +359,14 @@ frequencyPlot.prototype.updateChart = function(coffee_dataset) {
             return freqPlot.xScale(freqPlot.binsMaxX[freqPlot.selection][i])+20;
         })
         .attr('y', function(d, i) {
-            return freqPlot.yLabelScale(i)-12;
+            var yCoord = freqPlot.bins.length - freqPlot.rankings.indexOf(freqPlot.bins.indexOf(d));
+            return freqPlot.yLabelScale(yCoord)-12;
         })
-        .text(function(d){
-            return d;
+        .text(function(d, i){
+            var countryIdx = freqPlot.bins.indexOf(d);
+
+            return d+" (N="+freqPlot.binned[i].length+")";   
+   
         });
 
     var countries = freqPlot.chartG.selectAll('.countries.y.label text')
@@ -266,7 +377,8 @@ frequencyPlot.prototype.updateChart = function(coffee_dataset) {
             return freqPlot.xScale(freqPlot.binsMaxX[freqPlot.selection][i])+freqPlot.padding.x_countries_r;
         })
         .attr('y', function(d, i) {
-            return freqPlot.yLabelScale(i)-freqPlot.padding.y_countries_b;
+            var yCoord = freqPlot.bins.length - freqPlot.rankings.indexOf(freqPlot.bins.indexOf(d));
+            return freqPlot.yLabelScale(yCoord)-freqPlot.padding.y_countries_b;
         })
         .attr('opacity', freqPlot.labelOpacity);
 
@@ -308,7 +420,8 @@ frequencyPlot.prototype.updateChart = function(coffee_dataset) {
             return freqPlot.xScale(freqPlot.binsMedianX[freqPlot.selection][i]) - (freqPlot.xScale(freqPlot.binsMedianX[freqPlot.selection][i])-freqPlot.xScale(d));
         })
         .attr('y', function(d,i) {
-            return freqPlot.yScale(i)-freqPlot.dotRadius;
+            var yCoord = freqPlot.bins.length - freqPlot.rankings.indexOf(i);
+            return freqPlot.yScale(yCoord)-freqPlot.dotRadius;
         })
         .attr('width', function(d, i) {
             var diff = freqPlot.xScale(freqPlot.bins75perc[freqPlot.selection][i])-freqPlot.xScale(d);
@@ -344,7 +457,8 @@ frequencyPlot.prototype.updateChart = function(coffee_dataset) {
             return freqPlot.xScale(freqPlot.bins25perc[freqPlot.selection][i]) - (freqPlot.xScale(freqPlot.bins25perc[freqPlot.selection][i])-freqPlot.xScale(d));
         })
         .attr('y', function(d,i) {
-            return freqPlot.yScale(i);;
+            var yCoord = freqPlot.bins.length - freqPlot.rankings.indexOf(i);
+            return freqPlot.yScale(yCoord);;
         })
         .attr('width', function(d, i) {
             return freqPlot.xScale(freqPlot.bins25perc[freqPlot.selection][i])-freqPlot.xScale(d);
@@ -379,7 +493,8 @@ frequencyPlot.prototype.updateChart = function(coffee_dataset) {
             return freqPlot.xScale(d) - (freqPlot.xScale(d) - freqPlot.xScale(freqPlot.bins75perc[freqPlot.selection][i]));
         })
         .attr('y', function(d,i) {
-            return freqPlot.yScale(i);
+            var yCoord = freqPlot.bins.length - freqPlot.rankings.indexOf(i);
+            return freqPlot.yScale(yCoord);
         })
         .attr('width', function(d, i) {
             return freqPlot.xScale(d)-freqPlot.xScale(freqPlot.bins75perc[freqPlot.selection][i]);
@@ -412,7 +527,9 @@ frequencyPlot.prototype.updateChart = function(coffee_dataset) {
         .duration(freqPlot.transition_time)
         .attr('transform', function(d, i) {
             var tx = freqPlot.xScale(d)-1;
-            var ty = freqPlot.yScale(i)-freqPlot.dotRadius;
+
+            var yCoord = freqPlot.bins.length - freqPlot.rankings.indexOf(i);
+            var ty = freqPlot.yScale(yCoord)-freqPlot.dotRadius;
             return 'translate('+[tx,ty]+')';
         })
         .attr('opacity', function(d) {
@@ -524,7 +641,46 @@ frequencyPlot.prototype.updateChart = function(coffee_dataset) {
     d3.selectAll('button#reset').on('click', function(d) { resetSelections(freqPlot, coffee); });
     d3.selectAll('button#switchMode').on('click', function(d) {
         switchMode(freqPlot, coffee); });
+
+
+    // Set up evet handlers for each radio button 
+    // Source: https://www.dyn-web.com/tutorials/forms/radio/onclick.php
+    // get list of radio buttons with name 'optradio'
+    var sz = document.forms['sortForm'].elements['optradio'];
+
+    // loop through list
+    for (var i=0, len=sz.length; i<len; i++) {
+        sz[i].onclick = function() { // assign onclick handler function to each
+
+            // disable/enable dropdown, as appropriate
+            if (this.value==="max" || this.value==="min" || this.value==="median") {
+                document.forms['sortAttr'].elements["dropdown"].disabled = false;
+            }
+            else { document.forms['sortAttr'].elements["dropdown"].disabled = true; }
+
+            // put clicked radio button's value in total field
+            freqPlot.freezeOrder = false;
+            // specify mode (max, min, median, etc.)
+            freqPlot.updateY(coffee, this.value, freqPlot.sortAttr);
+            freqPlot.updateChart(coffee);
+            freqPlot.freezeOrder = true;
+        };
+    }
+
+    document.forms['sortAttr'].elements['dropdown'].onchange = function(e) {
+        freqPlot.freezeOrder = false;
+        // specify attribute (flavor, aroma, etc.)
+        freqPlot.updateY(coffee, freqPlot.sortMode, this.value);
+        freqPlot.updateChart(coffee);
+        freqPlot.freezeOrder = true;
+    }
 }
+
+
+
+
+
+
 
 
 function toggleCountryLabels(freqPlot, dataset) {
@@ -590,7 +746,8 @@ function switchMode(freqPlot, dataset) {
         var bnw = d3.selectAll('rect');
         bnw.style('opacity', 0);
     }
-
+    freqPlot.updateChart(dataset);
 }
+
 
 export { frequencyPlot };

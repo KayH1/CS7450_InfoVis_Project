@@ -63,6 +63,7 @@ d3.csv(dataPath.coffeePath, dataPreprocessorCoffee).then(function(dataset) {
     });
 
     frequencyPlot.bins = d3.map(dataset, function(d){return d.countryOfOrigin;}).keys();
+    frequencyPlot.bins = frequencyPlot.bins.sort().reverse();
     
     // bin the data
     dataset.forEach(function(d) {
@@ -74,9 +75,9 @@ d3.csv(dataPath.coffeePath, dataPreprocessorCoffee).then(function(dataset) {
         else { frequencyPlot.binned[idx] = [d]; }
     });
 
-    dataset = frequencyPlot.updateY(dataset);
+    dataset = frequencyPlot.updateY(dataset, frequencyPlot.sortMode, frequencyPlot.sortAttr);
     //console.log("ChartScale");
-    console.log(dataset);
+    //console.log(dataset);
     //console.log(frequencyPlot.bins);
     //console.log("Binned: ",frequencyPlot.binned);
     frequencyPlot.updateChart(dataset);
@@ -125,17 +126,17 @@ var isInViewport = function (elem) {
 };
 
 // select different coffee attribute components from DOM
-var flavor = document.querySelector('.scrollytelling-text .flavor');
-var aroma = document.querySelector('.scrollytelling-text .aroma');
-var aftertaste = document.querySelector('.scrollytelling-text .aftertaste');
-var acidity = document.querySelector('.scrollytelling-text .acidity');
-var body = document.querySelector('.scrollytelling-text .body');
-var balance = document.querySelector('.scrollytelling-text .balance');
-var uniformity = document.querySelector('.scrollytelling-text .uniformity');
-var sweetness = document.querySelector('.scrollytelling-text .sweetness');
-var cleanCup = document.querySelector('.scrollytelling-text .cleanCup');
-var cupperPoints = document.querySelector('.scrollytelling-text .cupperPoints');
-var totalCupPoints = document.querySelector('.scrollytelling-text .totalCupPoints');
+var flavor = document.querySelector('.scrollytelling-text #fp_flavor');
+var aroma = document.querySelector('.scrollytelling-text #fp_aroma');
+var aftertaste = document.querySelector('.scrollytelling-text #fp_aftertaste');
+var acidity = document.querySelector('.scrollytelling-text #fp_acidity');
+var body = document.querySelector('.scrollytelling-text #fp_body');
+var balance = document.querySelector('.scrollytelling-text #fp_balance');
+var uniformity = document.querySelector('.scrollytelling-text #fp_uniformity');
+var sweetness = document.querySelector('.scrollytelling-text #fp_sweetness');
+var cleanCup = document.querySelector('.scrollytelling-text #fp_cleanCup');
+var cupperPoints = document.querySelector('.scrollytelling-text #fp_cupperPoints');
+var totalCupPoints = document.querySelector('.scrollytelling-text #fp_totalCupPoints');
 
 
 // move to the top of the page if the page is refreshed/reloaded
