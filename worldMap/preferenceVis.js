@@ -1,5 +1,5 @@
-import * as slider from "./sliders.js"
-import * as mapVis from "./worldMap.js"
+import * as slider from "./vis/sliders.js"
+import * as mapVis from "./vis/worldMap.js"
 
 var variableList = ['aroma', 'flavor', 'aftertaste', 'acidity', 'body', 'balance', 'uniformity', 'cleanCup', 'sweetness', 'cupperPoints'];
 

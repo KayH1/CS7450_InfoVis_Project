@@ -1,4 +1,4 @@
-import * as mapVis from "./worldMap.js"
+import * as mapVis from "./vis/worldMap.js"
 import * as preferenceVis from "./preferenceVis.js"
 
 /* test for user preference map */
@@ -163,18 +163,3 @@ var countryWorldMap = new mapVis.worldMap("countryWorldMap", 4, "Coffee World Ma
 		Map.updateCountryShowSet(countryShowSet);
 	}
 /* initialize vis components */
-
-
-/* function call from different vis */
-	function mapCall() {
-		/* update parallel and cluster view */
-	}
-
-	function paralleCall() {
-		/* update map and cluster view */
-	}
-
-	function clusterCall() {
-		/* update parallel and map view */
-	}
-/* function call from different vis */

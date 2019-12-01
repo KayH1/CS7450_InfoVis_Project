@@ -84,3 +84,19 @@
   font-family: pirates;
   font-size: 20px;
 }
+
+/**********************
+Parallel coord
+**********************/
+svg.parallel-coords path {
+  fill: none;
+  stroke: #663300;
+  opacity: 0.1;
+}
+
+svg .parallel-coords.y.label {
+  /*font-family: sans-serif;*/
+  font-size: 14px;
+  fill: black;
+  text-anchor: middle;
+}

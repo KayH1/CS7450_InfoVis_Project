@@ -2,7 +2,12 @@ var worldMapType = d3.map();
 worldMapType.set("UserPreference", 1);
 worldMapType.set("CoffeeCompare", 2);
 
-function worldMap(divId, maxZoom, title, mapType) {
+/* if having parentVis and mapType is CoffeeCompare, 
+parentVis method will be called in "updateCountryInfoCompare" to
+update the clicked country and corresponding color map,
+parentVis must have method "updateCountryClicked" */
+
+function worldMap(divId, maxZoom, title, mapType, parentVis=null) {
 	/* add data as place holder */
 	this.data = {};
 	/* add divId of world map */
@@ -11,6 +16,8 @@ function worldMap(divId, maxZoom, title, mapType) {
 	this.mapTitle = title;
 	/* add mapType of world map */
 	this.mapType = worldMapType.get(mapType);
+	/* add parentVis */
+	this.parentVis = parentVis;
 
 	/* declare meta map attribute */
 	var minZoom = 2;
@@ -617,6 +624,10 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 			    .style('stroke-width', 2)
 			    .style("fill", "none");
 			presentPrLine.exit().remove();
+		}
+		/* treat for broadcast present selection country to update the color in embedding and parallel coordinate */
+		if (this.parentVis !== null) {
+			parentVis.updateCountryClicked(this.countryClickedMap);
 		}
 	}
 }
