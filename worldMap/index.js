@@ -24,7 +24,7 @@ var coffeeCompareVisCombine = new coffeeCompareVis.coffeeCompareCombine("complex
 	var countryCoffeeInfoMap = d3.map(); // ISO3 -> array for coffee, avg rating for coffee, range for coffee, world rank of country
 
 	Promise.all([
-		d3.csv(dataPath.coffeePath, dataPreprocessorCoffee),
+		d3.csv(dataPath.coffeePath, dataPreprocessorCoffeeSlider),
 		d3.csv(dataPath.countryInfoPath, function(d) {
 			return {
 				Country: d.Country,
@@ -112,7 +112,7 @@ var coffeeCompareVisCombine = new coffeeCompareVis.coffeeCompareCombine("complex
 		};
 	}
 
-	function dataPreprocessorCoffee(row) {
+	function dataPreprocessorCoffeeSlider(row) {
     //console.log(row);
     return {
         'id': +row['id'],
