@@ -2,6 +2,9 @@ var worldMapType = d3.map();
 worldMapType.set("UserPreference", 1);
 worldMapType.set("CoffeeCompare", 2);
 
+var coffeeIconPath = "../worldMap/icons/cup2.png";
+var countryFlagPath = "../data/country/flags/";
+
 /* if having parentVis and mapType is CoffeeCompare, 
 parentVis method will be called in "updateCountryInfoCompare" to
 update the clicked country and corresponding color map,
@@ -255,7 +258,7 @@ worldMap.prototype.showCoffeeGeo = function() {
 		}).selectAll("coffeeIcon").data(d=>d.values)
 		.enter().append("image").attr("class", "coffeeIcon")
 		.attr("pointer-events", "visible")
-		.attr("href", "../worldMap/icons/cup2.png") // address tag
+		.attr("href", coffeeIconPath) // address tag
 		.style("height", "40px")
 		.style("width", "24px")
 		.attr("transform", function(d, i) {
@@ -354,12 +357,12 @@ worldMap.prototype.initialCountryGeo = function() {
 			
 			/* tooltip content */
 				let htmlContent = countryInfo["Country"] + "  \
-					<img src='../data/country/flags/64/" + countryInfo["ISO2"] + "_64.png' alt='Flag' style='width:48px;height:48px;float:right;'><br/>\
+					<img src='" + countryFlagPath + "64/" + countryInfo["ISO2"] + "_64.png' alt='Flag' style='width:48px;height:48px;float:right;'><br/>\
 					#Coffee:&nbsp;&nbsp;" + countryCoffeeInfo["value"]["coffee"].length + "<br/>"
 				
 				if (countryInfo["ISO3"] == "USA" || countryInfo["ISO3"] == "TZA" || countryInfo["ISO3"] == "PNG"){
 					htmlContent = countryInfo["Country"] + "<br/>\
-						#Coffee:&nbsp;&nbsp;5<img src='../data/country/flags/64/" + countryInfo["ISO2"] + "_64.png' alt='Flag' \
+						#Coffee:&nbsp;&nbsp;5<img src='" + countryFlagPath + "64/" + countryInfo["ISO2"] + "_64.png' alt='Flag' \
 						style='width:48px;height:48px;float:right;display:block;position:absolute;top:10px;right:10px;'><br/>"
 				}
 

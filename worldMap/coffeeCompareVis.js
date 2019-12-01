@@ -1,6 +1,8 @@
 import * as mapVis from "./vis/worldMap.js"
 
 function coffeeCompareCombine (divId) {
+	this.divId = divId;
+	let assoMapId = 
 
 }
 

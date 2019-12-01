@@ -1,11 +1,11 @@
 import * as slider from "./vis/sliders.js"
 import * as mapVis from "./vis/worldMap.js"
 
+var coffeeBeanPath = "../worldMap/icons/coffeeBeanIcon.png";
 var variableList = ['aroma', 'flavor', 'aftertaste', 'acidity', 'body', 'balance', 'uniformity', 'cleanCup', 'sweetness', 'cupperPoints'];
 
 function preferenceCombine (divId) {
 	this.divId = divId;
-	d3.select("#" + this.divId);
     let assoSliderId = this.divId + "sliders";	
 	d3.select("#" + divId).style("display", "flex")
 	d3.select("#" + divId).append("div").attr("id", assoSliderId)
@@ -34,7 +34,7 @@ function preferenceCombine (divId) {
 		.attr("class", "coffeeIconUnderMap");
 	coffeeIconDiv.append("div").attr("class", "coffeeDetail")
 		.style("display", "inline-block").style("margin-left", "10px");
-	coffeeIconDiv.append("img").attr("src", "./worldMap/icons/coffeeBeanIcon.png")
+	coffeeIconDiv.append("img").attr("src", coffeeBeanPath)
 			.style("position", "absolute")
 			.style("bottom", 0)
 			.style("right", 0)
@@ -60,7 +60,6 @@ preferenceCombine.prototype.updateVis = function() {
     d3.select("#" + this.divId).selectAll(".coffeeIconUnderMap").data(this.sliders.topCoffee)
     	.selectAll("div").data(function(d) { return [d]; })
     	.html(function(d) {
-    		console.log(d.countryOfOrigin.length);
     		let htmlContent = "No." + d.rank + " from ";
     		if (d.countryOfOrigin.length >= 10){
     			htmlContent += d.ISOofOrigin
