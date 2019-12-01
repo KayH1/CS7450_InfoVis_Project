@@ -627,7 +627,11 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 		}
 		/* treat for broadcast present selection country to update the color in embedding and parallel coordinate */
 		if (this.parentVis !== null) {
-			this.parentVis.updateCountryClicked(this.countryClickedMap);
+			let countryClickedColorMap = d3.map();
+			associatedMap.countryClickedMap.keys().forEach(function(countryCode) {
+				countryClickedColorMap.set(countryCode, associatedMap.countryInfoColorMap[associatedMap.countryClickedMap.get(countryCode)]);
+			});
+			this.parentVis.updateCountryClicked(countryClickedColorMap);
 		}
 	}
 }
