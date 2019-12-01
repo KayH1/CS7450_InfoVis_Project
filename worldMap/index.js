@@ -1,10 +1,10 @@
-import * as mapVis from "./vis/worldMap.js"
+import * as coffeeCompareVis from "./coffeeCompareVis.js"
 import * as preferenceVis from "./preferenceVis.js"
 
 /* test for user preference map */
 var preferenceVisCombine = new preferenceVis.preferenceCombine("preferenceVis");
 /* test for coffee compare map */
-var countryWorldMap = new mapVis.worldMap("countryWorldMap", 4, "Coffee World Map", "CoffeeCompare");
+var coffeeCompareVisCombine = new coffeeCompareVis.coffeeCompareCombine("complexVis");
 
 
 /* load data */
@@ -88,7 +88,8 @@ var countryWorldMap = new mapVis.worldMap("countryWorldMap", 4, "Coffee World Ma
 		initialMap(preferenceVisCombine.worldMap);
 		preferenceVisCombine.loadData(data[0])
 
-		initialMap(countryWorldMap);
+		initialMap(coffeeCompareVisCombine.worldMap);
+		coffeeCompareVisCombine.loadData(data[0])
 	});
 
 	function processForClimateData(d) {

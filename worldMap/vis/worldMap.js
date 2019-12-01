@@ -627,7 +627,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 		}
 		/* treat for broadcast present selection country to update the color in embedding and parallel coordinate */
 		if (this.parentVis !== null) {
-			parentVis.updateCountryClicked(this.countryClickedMap);
+			this.parentVis.updateCountryClicked(this.countryClickedMap);
 		}
 	}
 }

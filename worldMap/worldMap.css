@@ -24,7 +24,7 @@
   padding: 0px !important;
 }
 
-#countryWorldMap svg #countryWorldMapmapTitle {
+#complexVismap svg #countryWorldMapmapTitle {
 	font-family: coffeeMapFont;
 	font-weight: 20px;
 	font-style: oblique;
@@ -85,16 +85,14 @@
   font-size: 20px;
 }
 
-/**********************
-Parallel coord
-**********************/
-svg.parallel-coords path {
+/********* Parallel coord ********/
+#complexVisbrushing svg.parallel-coords path {
   fill: none;
   stroke: #663300;
   opacity: 0.1;
 }
 
-svg .parallel-coords.y.label {
+#complexVisbrushing svg.parallel-coords .y.label {
   /*font-family: sans-serif;*/
   font-size: 14px;
   fill: black;
