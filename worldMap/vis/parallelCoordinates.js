@@ -27,6 +27,14 @@ function parallelCoordinates (divId) {
 			console.log("tes");
 		})
 	);
+
+	/*
+	.extent(
+		[this.paddingParallelCoords.l - 5, 2 * this.paddingParallelCoords.t - 25], 
+		[this.paddingParallelCoords.l + 5 + chartWidthParallelCoords, 2 * this.paddingParallelCoords.t - 15 + chartHeightParallelCoords]
+	)
+	*/
+
 	/* add brush */
 
 	this.axesSpacing = chartWidthParallelCoords / (this.axes.length-0.5);
@@ -65,15 +73,6 @@ function parallelCoordinates (divId) {
 	    })
 	    .text(function(d) { return d; })
 	    .style("font-weight", "bold");
-	console.log([this.paddingParallelCoords.l - 5, 2 * this.paddingParallelCoords.t - 15]);
-	console.log([10 + chartWidthParallelCoords, chartHeightParallelCoords + 10]);
-
-	/*
-	.extent(
-		[this.paddingParallelCoords.l - 5, 2 * this.paddingParallelCoords.t - 25], 
-		[this.paddingParallelCoords.l + 5 + chartWidthParallelCoords, 2 * this.paddingParallelCoords.t - 15 + chartHeightParallelCoords]
-	)
-	*/
 }
 
 var toolTipParallelCoords = d3.tip()
