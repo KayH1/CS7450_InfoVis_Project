@@ -50,32 +50,30 @@ function coffeeCompareCombine (divId) {
 	this.parallelCoords = new parallelCoords.parallelCoordinates(assoBrushingVisId);
 }
 
+coffeeCompareCombine.prototype.loadData = function(coffeeData) {
+	this.parallelCoords.initialParallelCoordinates(coffeeData);
+}
+
+/* called from map and update other vis */
 coffeeCompareCombine.prototype.updateCountryClicked = function(countryClickedMap) {
-	countryClickedMap.keys().forEach(function(countryCode) {
-		console.log(countryClickedMap.get(countryCode));
-	});
+	/* call other vis to update based on the country and color in map */
+	this.parallelCoords.updateLineColorSelectedCountry(countryClickedMap);
 };
 
-coffeeCompareCombine.prototype.loadData = function(coffeeData) {
-	this.data = coffeeData;
-	console.log("Update Vis ... Not Do");
+/* called from parallel coordinates and update other vis */
+coffeeCompareCombine.prototype.updateSelectedCoffeeParallel = function(selectedCoffeeSet) {
+
+}
+
+/* called from brush hist and update other vis */
+coffeeCompareCombine.prototype.updateSelectedCoffeeHist = function(selectedCoffeeSet) {
+
+}
+
+/* called from embedding and update other vis */
+coffeeCompareCombine.prototype.updateSelectedCoffeeEmbedding = function(selectedCoffeeSet) {
+
 }
 
 /* inter change parallel coordinate between brush histor */
-
-
-/* function call from different vis */
-	function mapCall() {
-		/* update parallel and cluster view */
-	}
-
-	function paralleCall() {
-		/* update map and cluster view */
-	}
-
-	function clusterCall() {
-		/* update parallel and map view */
-	}
-/* function call from different vis */
-
 export { coffeeCompareCombine };

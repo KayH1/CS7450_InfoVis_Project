@@ -122,6 +122,7 @@ function dataPreprocessorCoffee(row) {
         'totalCupPoints': +row['totalCupPoints'],
         'moisture': +row['moisture'],
         'color': row['color'],
+        'ISOofOrigin': row['ISOofOrigin'],
         'mdsX': +row['mdsX'],
         'mdsY': +row['mdsY'],
         //'altitudeLowMeters': row[altitudeLowMeters],

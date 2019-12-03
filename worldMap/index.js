@@ -37,6 +37,7 @@ var coffeeCompareVisCombine = new coffeeCompareVis.coffeeCompareCombine("complex
 		d3.json(dataPath.countryGeoPath),  // load country geo data
 		d3.csv(dataPath.countryTempPath, processForClimateData),
 		d3.csv(dataPath.countryPrPath, processForClimateData),
+		d3.csv(dataPath.coffeePath, dataPreprocessorCoffeeCompare)
 	]).then(function(data) {
 		/* add slider */
 		let countryInfoData = d3.nest()
@@ -84,12 +85,13 @@ var coffeeCompareVisCombine = new coffeeCompareVis.coffeeCompareCombine("complex
 	    	d.value.rank = i + 1;
 	    	countryCoffeeInfoMap.set(d.key, d);
 	    });
-		
+
 		initialMap(preferenceVisCombine.worldMap);
 		preferenceVisCombine.loadData(data[0])
 
+		/* do not change turns of following */
+		coffeeCompareVisCombine.loadData(data[5])
 		initialMap(coffeeCompareVisCombine.worldMap);
-		coffeeCompareVisCombine.loadData(data[0])
 	});
 
 	function processForClimateData(d) {
@@ -113,37 +115,70 @@ var coffeeCompareVisCombine = new coffeeCompareVis.coffeeCompareCombine("complex
 	}
 
 	function dataPreprocessorCoffeeSlider(row) {
-    //console.log(row);
-    return {
-        'id': +row['id'],
-        'species': row['species'],
-        'owner': row['owner'].replace(/\n/g, "").replace(/ /g, ""),
-        'countryOfOrigin': row['countryOfOrigin'],
-        'company': row['company'].replace(/\n/g, "").replace(/ /g, ""),
-        'region': row['region'],
-        'producer': row['producer'].replace(/\n/g, "").replace(/ /g, ""),
-        'harvestYear': row['harvestYear'],
-        'gradingDate': row['gradingDate'],
-        'owner1': row['owner1'],
-        'variety': row['variety'],
-        'processingMethod': row['processingMethod'],
-        'aroma': +row['aroma'],
-        'flavor': +row['flavor'],
-        'aftertaste': +row['aftertaste'],
-        'acidity': +row['acidity'],
-        'body': +row['body'],
-        'balance': +row['balance'],
-        'uniformity': +row['uniformity'],
-        'cleanCup': +row['cleanCup'],
-        'sweetness': +row['sweetness'],
-        'cupperPoints': +row['cupperPoints'],
-        'totalCupPoints': +row['totalCupPoints'],
-        'moisture': +row['moisture'],
-        'color': row['color'],
-        'ISOofOrigin': row['ISOofOrigin'],
-        'pointCustomized': 0,
-    };
-}
+	    return {
+	        'id': +row['id'],
+	        'species': row['species'],
+	        'owner': row['owner'].replace(/\n/g, "").replace(/ /g, ""),
+	        'countryOfOrigin': row['countryOfOrigin'],
+	        'company': row['company'].replace(/\n/g, "").replace(/ /g, ""),
+	        'region': row['region'],
+	        'producer': row['producer'].replace(/\n/g, "").replace(/ /g, ""),
+	        'harvestYear': row['harvestYear'],
+	        'gradingDate': row['gradingDate'],
+	        'owner1': row['owner1'],
+	        'variety': row['variety'],
+	        'processingMethod': row['processingMethod'],
+	        'aroma': +row['aroma'],
+	        'flavor': +row['flavor'],
+	        'aftertaste': +row['aftertaste'],
+	        'acidity': +row['acidity'],
+	        'body': +row['body'],
+	        'balance': +row['balance'],
+	        'uniformity': +row['uniformity'],
+	        'cleanCup': +row['cleanCup'],
+	        'sweetness': +row['sweetness'],
+	        'cupperPoints': +row['cupperPoints'],
+	        'totalCupPoints': +row['totalCupPoints'],
+	        'moisture': +row['moisture'],
+	        'color': row['color'],
+	        'ISOofOrigin': row['ISOofOrigin'],
+	        'pointCustomized': 0,
+	    };
+	}
+
+	function dataPreprocessorCoffeeCompare(row) {
+	    return {
+	        'id': +row['id'],
+	        'species': row['species'],
+	        'owner': row['owner'],
+	        'countryOfOrigin': row['countryOfOrigin'],
+	        'company': row['company'],
+	        'region': row['region'],
+	        'producer': row['producer'],
+	        'harvestYear': row['harvestYear'],
+	        'gradingDate': row['gradingDate'],
+	        'owner1': row['owner1'],
+	        'variety': row['variety'],
+	        'processingMethod': row['processingMethod'],
+	        'aroma': +row['aroma'],
+	        'flavor': +row['flavor'],
+	        'aftertaste': +row['aftertaste'],
+	        'acidity': +row['acidity'],
+	        'body': +row['body'],
+	        'balance': +row['balance'],
+	        'uniformity': +row['uniformity'],
+	        'cleanCup': +row['cleanCup'],
+	        'sweetness': +row['sweetness'],
+	        'cupperPoints': +row['cupperPoints'],
+	        'totalCupPoints': +row['totalCupPoints'],
+	        'moisture': +row['moisture'],
+	        'color': row['color'],
+	        'ISOofOrigin': row['ISOofOrigin'],
+	        'mdsX': +row['mdsX'],
+	        'mdsY': +row['mdsY']
+	    };
+	}
+
 /* load data */
 
 
