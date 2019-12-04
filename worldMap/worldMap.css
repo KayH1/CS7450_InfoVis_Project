@@ -88,7 +88,6 @@
 /********* Parallel coord ********/
   #complexVisbrushing svg.parallel-coords path {
     fill: none;
-    opacity: 0.3;
   }
 
   #complexVisbrushing svg.parallel-coords .y.label {

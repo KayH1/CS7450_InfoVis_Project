@@ -13,33 +13,22 @@ function parallelCoordinates (divId) {
 	this.axes = ['flavor', 'aroma', 'aftertaste', 'acidity', 'balance', 'uniformity', 'sweetness', 'cleanCup', 'cupperPoints']
 	var chartWidthParallelCoords = svgWidthParallelCoords - this.paddingParallelCoords.l - this.paddingParallelCoords.r;
 	var chartHeightParallelCoords = svgHeightParallelCoords - this.paddingParallelCoords.t - this.paddingParallelCoords.b;
-
-	/* add brush */
-	this.svgParallelCoords.append("g").attr("class", "brush").call(
-		d3.brush()
-		.on("brush", function(d) {
-			console.log("test");
-		})
-		.on("start", function(d) {
-			console.log("ggg");
-		})
-		.on("end", function(d) {
-			console.log("tes");
-		})
-	);
-
-	/*
-	.extent(
-		[this.paddingParallelCoords.l - 5, 2 * this.paddingParallelCoords.t - 25], 
-		[this.paddingParallelCoords.l + 5 + chartWidthParallelCoords, 2 * this.paddingParallelCoords.t - 15 + chartHeightParallelCoords]
-	)
-	*/
-
-	/* add brush */
-
 	this.axesSpacing = chartWidthParallelCoords / (this.axes.length-0.5);
-
+	
 	let assoParallel = this;
+
+	/* add brush */
+	this.brush = d3.brush().extent([
+			[this.paddingParallelCoords.l - 10, 2 * this.paddingParallelCoords.t - 30], 
+			[this.paddingParallelCoords.l + 10 + 8 * this.axesSpacing, 2 * this.paddingParallelCoords.t - 10 + chartHeightParallelCoords]
+		])
+		.on("end", selectCoffeeWithinSelection)
+	this.svgParallelCoords.append("g").attr("class", "brush").call(this.brush);
+	d3.select("#" + this.divId).select(".brush").each(function() {
+		this.assoParallel = assoParallel;
+	})
+	/* add brush */
+
 	// create the y scale
 	this.yScaleParallelCoords = d3.scaleLinear().range([chartHeightParallelCoords,0]).domain([0,10]);
 
@@ -86,7 +75,7 @@ var toolTipParallelCoords = d3.tip()
 /* for coffee color style */
 parallelCoordinates.prototype.coffeeLineStyle = {
 	defaultColor: "#654321",
-	ignoreColor: "#bdbdbd",
+	ignoreColor: "#d9d9d9",
 	mouseHoverColor: "red"
 }
 
@@ -102,6 +91,16 @@ parallelCoordinates.prototype.initialParallelCoordinates = function(coffeeData) 
 	                                [6*assoParallel.axesSpacing, assoParallel.paddingParallelCoords.t - 20 + assoParallel.yScaleParallelCoords(d[assoParallel.axes[6]])],
 	                                [7*assoParallel.axesSpacing, assoParallel.paddingParallelCoords.t - 20 + assoParallel.yScaleParallelCoords(d[assoParallel.axes[7]])],
 	                                [8*assoParallel.axesSpacing, assoParallel.paddingParallelCoords.t - 20 + assoParallel.yScaleParallelCoords(d[assoParallel.axes[8]])]
+	                                ];
+	      d['flavorProfilePosition'] = [[assoParallel.paddingParallelCoords.l, 2*assoParallel.paddingParallelCoords.t - 20 + assoParallel.yScaleParallelCoords(d[assoParallel.axes[0]])],
+	                                [assoParallel.paddingParallelCoords.l + assoParallel.axesSpacing, 2*assoParallel.paddingParallelCoords.t - 20 + assoParallel.yScaleParallelCoords(d[assoParallel.axes[1]])],
+	                                [assoParallel.paddingParallelCoords.l + 2*assoParallel.axesSpacing, 2*assoParallel.paddingParallelCoords.t - 20 + assoParallel.yScaleParallelCoords(d[assoParallel.axes[2]])],
+	                                [assoParallel.paddingParallelCoords.l + 3*assoParallel.axesSpacing, 2*assoParallel.paddingParallelCoords.t - 20 + assoParallel.yScaleParallelCoords(d[assoParallel.axes[3]])],
+	                                [assoParallel.paddingParallelCoords.l + 4*assoParallel.axesSpacing, 2*assoParallel.paddingParallelCoords.t -20 + assoParallel.yScaleParallelCoords(d[assoParallel.axes[4]])],
+	                                [assoParallel.paddingParallelCoords.l + 5*assoParallel.axesSpacing, 2*assoParallel.paddingParallelCoords.t - 20 + assoParallel.yScaleParallelCoords(d[assoParallel.axes[5]])],
+	                                [assoParallel.paddingParallelCoords.l + 6*assoParallel.axesSpacing, 2*assoParallel.paddingParallelCoords.t - 20 + assoParallel.yScaleParallelCoords(d[assoParallel.axes[6]])],
+	                                [assoParallel.paddingParallelCoords.l + 7*assoParallel.axesSpacing, 2*assoParallel.paddingParallelCoords.t - 20 + assoParallel.yScaleParallelCoords(d[assoParallel.axes[7]])],
+	                                [assoParallel.paddingParallelCoords.l + 8*assoParallel.axesSpacing, 2*assoParallel.paddingParallelCoords.t - 20 + assoParallel.yScaleParallelCoords(d[assoParallel.axes[8]])]
 	                                ]
 	});
 	this.data = coffeeData;
@@ -134,7 +133,8 @@ parallelCoordinates.prototype.initialParallelCoordinates = function(coffeeData) 
     .style('stroke-width', 1)
     .style('stroke', function(d) {
     	return assoParallel.coffeeColorMap.get(d["id"]);
-    });
+    })
+    .style("opacity", 0.2); // default opacity
 
     /**********************
      Create tooltip
@@ -186,6 +186,7 @@ parallelCoordinates.prototype.initialParallelCoordinates = function(coffeeData) 
             return assoParallel.coffeeLineStyle.mouseHoverColor;
           })
           .style('opacity', function(){
+          	this.previousOpacity = d3.select(this).style("opacity");
             return 1;
           })
           .style('stroke-width', function(){
@@ -200,19 +201,26 @@ parallelCoordinates.prototype.initialParallelCoordinates = function(coffeeData) 
             return assoParallel.coffeeColorMap.get(d["id"]);
           })
           .style('opacity', function(){
-            return 0.3;
+            return this.previousOpacity;
           })
           .style('stroke-width', function(){
             return 1;
           });
           toolTipParallelCoords.hide();
-	})
-	.on('mousedown', function() {
-		console.log("test");
-		let assoParallel = this.assoParallel;
-		let brush = assoParallel.svgParallelCoords.select(".brush");
-		brush.dispatch("start");
 	});
+	/* not work 
+	.on('mousedown', function() {
+		let assoParallel = this.assoParallel;
+		let brush_extent = assoParallel.svgParallelCoords.select('.brush .overlay');
+        let new_click_event = new Event('mousedown');
+        new_click_event.pageX = d3.event.pageX;
+        new_click_event.clientX = d3.event.clientX;
+        new_click_event.pageY = d3.event.pageY;
+        new_click_event.clientY = d3.event.clientY;
+        //brush_extent.dispatchEvent(new_click_event);
+		brush_extent.dispatch("mousedown");
+	});
+	*/
 }
 
 parallelCoordinates.prototype.setColorMap = function(color) {
@@ -223,8 +231,11 @@ parallelCoordinates.prototype.setColorMap = function(color) {
 }
 
 parallelCoordinates.prototype.updateLineColorSelectedCountry = function(countryColorMap) {
-	/* clear brush */
 	let assoParallel = this;
+	/* remove brush */
+	d3.select("#" + assoParallel.divId).select(".brush").call(assoParallel.brush.clear);
+
+	/* set color */
 	if (countryColorMap.size() > 0) {
 		this.setColorMap(assoParallel.coffeeLineStyle.ignoreColor);
 	} else {
@@ -234,10 +245,15 @@ parallelCoordinates.prototype.updateLineColorSelectedCountry = function(countryC
 		if (countryColorMap.has(coffee["ISOofOrigin"])) {
 			assoParallel.coffeeColorMap.set(coffee["id"], countryColorMap.get(coffee["ISOofOrigin"]));
 			d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", countryColorMap.get(coffee["ISOofOrigin"]))
-				.style("stroke-width", 8);
+				.style("stroke-width", 8).style("opacity", 0.5);
 		} else {
-			d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeColorMap.get(coffee["id"]))
-				.style('stroke-width', 1);
+			if (countryColorMap.size() == 0) {
+				d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeColorMap.get(coffee["id"]))
+					.style('stroke-width', 1).style("opacity", 0.2);
+			} else {
+				d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeColorMap.get(coffee["id"]))
+					.style('stroke-width', 1).style("opacity", 0.1);
+			}
 		}
 	})
 }
@@ -245,24 +261,37 @@ parallelCoordinates.prototype.updateLineColorSelectedCountry = function(countryC
 /* called by embedding and itself */
 parallelCoordinates.prototype.updateLineColorSelectedCoffee = function(coffeeSelectSet) {
 	let assoParallel = this;
-	if (coffeeSelectSet.size() > 0) {
-		assoParallel.setColorMap(assoParallel.coffeeLineStyle.ignoreColor);
-	} else {
-		assoParallel.setColorMap(assoParallel.coffeeLineStyle.defaultColor);
-	}
+	assoParallel.setColorMap(assoParallel.coffeeLineStyle.ignoreColor);
 	this.data.forEach(function(coffee) {
 		if (coffeeSelectSet.has(coffee["id"])) {
-			d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeLineStyle.defaultColor).style("stroke-width", 1);
+			assoParallel.coffeeColorMap.set(coffee["id"], assoParallel.coffeeLineStyle.defaultColor);
+			d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeLineStyle.defaultColor).style("stroke-width", 1).style("opacity", 0.3).style("stroke-width", 3);
 		} else {
-			d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeColorMap.get(coffee["id"])).style('stroke-width', 1);
+			d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeLineStyle.ignoreColor).style('stroke-width', 1).style("opacity", 0.1).style("stroke-width", 1);
 		}
 	})
 }
 
 /* for brush event */
-function checkElementWithinSelection() {
-
+function selectCoffeeWithinSelection() {
+	let assoParallel = this.assoParallel;
+	let coffeeSet = d3.set();
+	/* if not remove brush */
+	if (d3.event.selection != null) {
+		let [[x0, y0], [x1, y1]] = d3.event.selection;
+		if (x1 > x0 && y1 > y0) {
+			assoParallel.data.forEach(function(d) {
+				for (let step = 0; step < d["flavorProfilePosition"].length; step++) {
+					let position = d["flavorProfilePosition"][step];
+					if ((position[0] >= x0 && position[0] <= x1) && (position[1] >= y0 && position[1] <= y1)) {
+						coffeeSet.add(d["id"]);
+						break;
+					}
+				} 
+			});
+		}
+		assoParallel.updateLineColorSelectedCoffee(coffeeSet);
+	}
 }
-
 
 export { parallelCoordinates };
