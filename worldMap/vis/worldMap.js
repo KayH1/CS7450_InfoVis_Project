@@ -165,18 +165,23 @@ function worldMap(divId, maxZoom, title, mapType, parentVis=null) {
 
 worldMap.prototype.updateCoffeeSelectedSet = function(coffeeShowInfo) {
 	/* update map show coffee */
-	this.selectedCountryCoffeeInfoMap = d3.nest().key(function(d){
-        return d.ISOofOrigin;
-    }).object(coffeeShowInfo);
-    this.selectedCountryCoffeeInfoHolder = d3.nest().key(function(d){
-        return d.ISOofOrigin;
-    }).entries(coffeeShowInfo);
-	
+
+	/*
+		parameter would be a array contain selected coffee along with information for User Preference 
+		parameter would be a set contain selected countryC for CoffeeCompare, called by other vis
+	*/
 	if (this.mapType == worldMapType.get("UserPreference")){
+		this.selectedCountryCoffeeInfoMap = d3.nest().key(function(d){
+	        return d.ISOofOrigin;
+	    }).object(coffeeShowInfo);
+	    this.selectedCountryCoffeeInfoHolder = d3.nest().key(function(d){
+	        return d.ISOofOrigin;
+	    }).entries(coffeeShowInfo);
 		this.showCoffeeGeo();
+		this.updateCountryShowSet(d3.set(Object.keys(this.selectedCountryCoffeeInfoMap)));
+	} else if (this.mapType == worldMapType.get("CoffeeCompare")) {
+		this.updateCountryShowSet()
 	}
-	/* extract coffee country from coffeeShowSet, call updateCountryShowSet */
-	this.updateCountryShowSet(d3.set(Object.keys(this.selectedCountryCoffeeInfoMap)));
 }
 
 /* ---------------------follow will not be used external, only called within worldMap-------------------------------- */
@@ -221,7 +226,7 @@ var magicParameter = {
 	PHL: {direction: "right", latoffset: -9, lngoffset: -5},//
 }
 
-/* update country show in map based on input coffee */
+/* update country show in map based on showCountry */
 worldMap.prototype.updateCountryShowSet = function(countryShowSet) {
 	/* update map show geo */
 	this.countryShowSet = countryShowSet;

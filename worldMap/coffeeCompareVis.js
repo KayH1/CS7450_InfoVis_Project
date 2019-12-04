@@ -51,6 +51,9 @@ function coffeeCompareCombine (divId) {
 }
 
 coffeeCompareCombine.prototype.loadData = function(coffeeData) {
+	this.data = d3.nest().key(function(d){
+	    return d["id"];
+	}).object(coffeeData);
 	this.parallelCoords.initialParallelCoordinates(coffeeData);
 }
 
@@ -61,7 +64,16 @@ coffeeCompareCombine.prototype.updateCountryClicked = function(countryClickedMap
 };
 
 /* called from parallel coordinates and update other vis */
-coffeeCompareCombine.prototype.updateSelectedCoffeeParallel = function(selectedCoffeeSet) {
+coffeeCompareCombine.prototype.updateSelectedCoffeeParallel = function(selectedCoffeeSet, brushing) {
+	/* 
+		since map do not have coffee data copy and selectedCoffeeSet is a d3.set with only Coffee Id
+		some treatment need to do here to extract coffee country here for map 
+	*/
+	if (brushing) {
+		/* update based on the selected Coffee Set */
+	} else {
+		/* there is no brush, restore other vis to initial state */
+	}
 
 }
 

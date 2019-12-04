@@ -1,9 +1,12 @@
-function parallelCoordinates (divId) {
+function parallelCoordinates (divId, parentVis=null) {
 	this.divId = divId;
+	this.parentVis = parentVis;
 	this.svgParallelCoords = d3.select("#" + this.divId).append("center")
 		.append("svg").attr("class", "parallel-coords")
 		.attr("width", 1450)
 		.attr("height", 350);
+
+	this.outsideRequest = 0;  // if the update is called from outside, set as 1
 
 	var svgWidthParallelCoords = +this.svgParallelCoords.attr('width');
 	var svgHeightParallelCoords = +this.svgParallelCoords.attr('height');
@@ -22,6 +25,7 @@ function parallelCoordinates (divId) {
 			[this.paddingParallelCoords.l - 10, 2 * this.paddingParallelCoords.t - 30], 
 			[this.paddingParallelCoords.l + 10 + 8 * this.axesSpacing, 2 * this.paddingParallelCoords.t - 10 + chartHeightParallelCoords]
 		])
+		.on("start brush", null)
 		.on("end", selectCoffeeWithinSelection)
 	this.svgParallelCoords.append("g").attr("class", "brush").call(this.brush);
 	d3.select("#" + this.divId).select(".brush").each(function() {
@@ -148,7 +152,7 @@ parallelCoordinates.prototype.initialParallelCoordinates = function(coffeeData) 
     this.polylineEnterParallelCoords.each(function() {
     	this.assoParallel = assoParallel;
     })
-    this.polylineEnterParallelCoords.on('mouseover', function(d) {
+    this.polylineEnterParallelCoords.on('mouseenter', function(d) {
     	
     	let assoParallel = this.assoParallel;
     	if (assoParallel.coffeeColorMap.get(d["id"]) === assoParallel.coffeeLineStyle.ignoreColor)
@@ -180,13 +184,14 @@ parallelCoordinates.prototype.initialParallelCoordinates = function(coffeeData) 
             return 5;
           });
         */
+        this.previousOpacity = d3.select(this).style("opacity");
+        this.previousStrokeWidth = d3.select(this).style("stroke-width");
         d3.select(this)
           .select('path')
           .style('stroke', function(d) {
             return assoParallel.coffeeLineStyle.mouseHoverColor;
           })
           .style('opacity', function(){
-          	this.previousOpacity = d3.select(this).style("opacity");
             return 1;
           })
           .style('stroke-width', function(){
@@ -204,7 +209,7 @@ parallelCoordinates.prototype.initialParallelCoordinates = function(coffeeData) 
             return this.previousOpacity;
           })
           .style('stroke-width', function(){
-            return 1;
+            return this.previousStrokeWidth;
           });
           toolTipParallelCoords.hide();
 	});
@@ -230,9 +235,31 @@ parallelCoordinates.prototype.setColorMap = function(color) {
     })
 }
 
+parallelCoordinates.prototype.setSelectedCoffeeLineColor = function(coffeeSelectSet) {
+	let assoParallel = this;
+	if (d3.event.selection != null) {
+		assoParallel.setColorMap(assoParallel.coffeeLineStyle.ignoreColor);
+		this.data.forEach(function(coffee) {
+			if (coffeeSelectSet.has(coffee["id"])) {
+				assoParallel.coffeeColorMap.set(coffee["id"], assoParallel.coffeeLineStyle.defaultColor);
+				d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeLineStyle.defaultColor).style("opacity", 0.3).style("stroke-width", 3);
+			} else {
+				d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeLineStyle.ignoreColor).style('stroke-width', 1).style("opacity", 0.1).style("stroke-width", 1);
+			}
+		})
+	} else {
+		assoParallel.setColorMap(assoParallel.coffeeLineStyle.defaultColor);
+		this.data.forEach(function(coffee) {
+			d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeLineStyle.defaultColor).style("stroke-width", 1).style("opacity", 0.2);
+		})
+	}
+}
+
+/* called from parent vis initial by map */
 parallelCoordinates.prototype.updateLineColorSelectedCountry = function(countryColorMap) {
 	let assoParallel = this;
 	/* remove brush */
+	this.outsideRequest = 1
 	d3.select("#" + assoParallel.divId).select(".brush").call(assoParallel.brush.clear);
 
 	/* set color */
@@ -258,25 +285,23 @@ parallelCoordinates.prototype.updateLineColorSelectedCountry = function(countryC
 	})
 }
 
-/* called by embedding and itself */
+/* called from parent vis initial by embedding */ 
 parallelCoordinates.prototype.updateLineColorSelectedCoffee = function(coffeeSelectSet) {
 	let assoParallel = this;
-	assoParallel.setColorMap(assoParallel.coffeeLineStyle.ignoreColor);
-	this.data.forEach(function(coffee) {
-		if (coffeeSelectSet.has(coffee["id"])) {
-			assoParallel.coffeeColorMap.set(coffee["id"], assoParallel.coffeeLineStyle.defaultColor);
-			d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeLineStyle.defaultColor).style("stroke-width", 1).style("opacity", 0.3).style("stroke-width", 3);
-		} else {
-			d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeLineStyle.ignoreColor).style('stroke-width', 1).style("opacity", 0.1).style("stroke-width", 1);
-		}
-	})
+	/* remove brush */
+	this.outsideRequest = 1;
+	d3.select("#" + assoParallel.divId).select(".brush").call(assoParallel.brush.clear);
+	assoParallel.setSelectedCoffeeLineColor(coffeeSet);
 }
 
 /* for brush event */
 function selectCoffeeWithinSelection() {
 	let assoParallel = this.assoParallel;
 	let coffeeSet = d3.set();
-	/* if not remove brush */
+	/* 
+		if brush is show, then d3.event.selection != null 
+ 		if brush is disable from outside vis update call: assoParallel.outsideRequest == 1, not update parentVis
+	*/
 	if (d3.event.selection != null) {
 		let [[x0, y0], [x1, y1]] = d3.event.selection;
 		if (x1 > x0 && y1 > y0) {
@@ -290,8 +315,18 @@ function selectCoffeeWithinSelection() {
 				} 
 			});
 		}
-		assoParallel.updateLineColorSelectedCoffee(coffeeSet);
+		/* call parentVis to update based on selected coffee */
+		if (assoParallel.parentVis != null) {
+
+		}
+	} else if (assoParallel.outsideRequest == 0) {
+		/* there is no brush current, for other vis, show all datapoint, also call parentVis */
+		if (assoParallel.parentVis != null) {
+			
+		}
 	}
+	assoParallel.setSelectedCoffeeLineColor(coffeeSet);
+	/* call parent vis to update */
 }
 
 export { parallelCoordinates };
