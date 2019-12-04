@@ -46,14 +46,19 @@ function coffeeCompareCombine (divId) {
 		.style("margin-top", "30px");
 
 	this.worldMap = new mapVis.worldMap(assoMapId, 4, "Coffee World Map", "CoffeeCompare", this);
-	this.embedding = new embedding.embedding(assoEmbeddingId);
-	this.parallelCoords = new parallelCoords.parallelCoordinates(assoBrushingVisId);
+	this.embedding = new embedding.embedding(assoEmbeddingId, this);
+	this.parallelCoords = new parallelCoords.parallelCoordinates(assoBrushingVisId, this);
 }
 
 coffeeCompareCombine.prototype.loadData = function(coffeeData) {
 	this.data = d3.nest().key(function(d){
 	    return d["id"];
 	}).object(coffeeData);
+	this.countryCode = Object.keys(
+		d3.nest().key( function(d){ 
+			return d["ISOofOrigin"]; 
+		}).object(coffeeData)
+	);
 	this.parallelCoords.initialParallelCoordinates(coffeeData);
 }
 
@@ -66,15 +71,29 @@ coffeeCompareCombine.prototype.updateCountryClicked = function(countryClickedMap
 /* called from parallel coordinates and update other vis */
 coffeeCompareCombine.prototype.updateSelectedCoffeeParallel = function(selectedCoffeeSet, brushing) {
 	/* 
-		since map do not have coffee data copy and selectedCoffeeSet is a d3.set with only Coffee Id
+		map do not have coffee data copy and selectedCoffeeSet is a d3.set with only Coffee Id,
 		some treatment need to do here to extract coffee country here for map 
 	*/
-	if (brushing) {
-		/* update based on the selected Coffee Set */
-	} else {
-		/* there is no brush, restore other vis to initial state */
-	}
+	let assoCoffeeCompareCombine = this;
 
+	let countryCodeShow;
+	if (brushing) {  // there is brushing, although the selection might be empty
+		/* update based on the selected Coffee Set */
+		countryCodeShow = d3.set();
+		selectedCoffeeSet.each(function(d) {
+			countryCodeShow.add(assoCoffeeCompareCombine.data[d][0]["ISOofOrigin"])
+		})
+
+		/* some treatment for embedding to show selected coffee set */
+
+
+	} else {
+		/* restore the map show all country */
+		countryCodeShow = d3.set(assoCoffeeCompareCombine.countryCode);
+
+		/* some treatment for embedding to show initial look */
+	}
+	this.worldMap.updateCoffeeSelectedSet(countryCodeShow);
 }
 
 /* called from brush hist and update other vis */

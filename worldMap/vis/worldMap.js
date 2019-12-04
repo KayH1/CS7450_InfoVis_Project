@@ -21,9 +21,11 @@ function worldMap(divId, maxZoom, title, mapType, parentVis=null) {
 	this.mapType = worldMapType.get(mapType);
 	/* add parentVis */
 	this.parentVis = parentVis;
+	/* add flag for parent Update */
+	this.updateParent = true;
 
 	/* declare meta map attribute */
-	var minZoom = 2;
+	let minZoom = 2;
 	this.mapInitialCenter = new L.LatLng(21, -5);
 	var maxBounds = L.latLngBounds(L.latLng(-60, -150), L.latLng(73, 130));
 
@@ -34,6 +36,7 @@ function worldMap(divId, maxZoom, title, mapType, parentVis=null) {
 	}).setView(this.mapInitialCenter, minZoom);
 	this.map.associatedMap = this;
 	this.map.setMaxBounds(maxBounds);
+	this.previousZoomLevel = -1;
 
 	this.mapInitialCenterPoint = this.map.latLngToLayerPoint(this.mapInitialCenter);
 
@@ -170,6 +173,7 @@ worldMap.prototype.updateCoffeeSelectedSet = function(coffeeShowInfo) {
 		parameter would be a array contain selected coffee along with information for User Preference 
 		parameter would be a set contain selected countryC for CoffeeCompare, called by other vis
 	*/
+	this.updateParent = false; 
 	if (this.mapType == worldMapType.get("UserPreference")){
 		this.selectedCountryCoffeeInfoMap = d3.nest().key(function(d){
 	        return d.ISOofOrigin;
@@ -180,7 +184,7 @@ worldMap.prototype.updateCoffeeSelectedSet = function(coffeeShowInfo) {
 		this.showCoffeeGeo();
 		this.updateCountryShowSet(d3.set(Object.keys(this.selectedCountryCoffeeInfoMap)));
 	} else if (this.mapType == worldMapType.get("CoffeeCompare")) {
-		this.updateCountryShowSet()
+		this.updateCountryShowSet(coffeeShowInfo);  // coffeeShow is set with country code to show
 	}
 }
 
@@ -634,13 +638,14 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 			presentPrLine.exit().remove();
 		}
 		/* treat for broadcast present selection country to update the color in embedding and parallel coordinate */
-		if (this.parentVis !== null) {
+		if (this.parentVis !== null && this.updateParent) {
 			let countryClickedColorMap = d3.map();
 			associatedMap.countryClickedMap.keys().forEach(function(countryCode) {
 				countryClickedColorMap.set(countryCode, associatedMap.countryInfoColorMap[associatedMap.countryClickedMap.get(countryCode)]);
 			});
 			this.parentVis.updateCountryClicked(countryClickedColorMap);
 		}
+		this.updateParent = true;
 	}
 }
 
@@ -702,7 +707,6 @@ function updateMapZoom(e) {
 			});
 		}
 	//}
-
 	if (associatedMap.mapType == worldMapType.get("UserPreference")){
 		d3.select("#" + associatedMap.divId).select("#" + associatedMap.divId + "geoSvg")
 			.selectAll(".coffeeIconGroup")
@@ -716,6 +720,11 @@ function updateMapZoom(e) {
 
 function updateMapTitle(e) {
 	let associatedMap = this.associatedMap;
+	
+	if (this.getZoom() == associatedMap.previousZoomLevel)
+		return;
+	associatedMap.previousZoomLevel = this.getZoom();
+	
 	let svg = d3.select('#'+ associatedMap.divId).select("#" + associatedMap.divId + "geoSvg");
 	let mapTitle = svg.select("#" + associatedMap.divId + "mapTitle").remove();
 

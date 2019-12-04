@@ -317,13 +317,15 @@ function selectCoffeeWithinSelection() {
 		}
 		/* call parentVis to update based on selected coffee */
 		if (assoParallel.parentVis != null) {
-
+			assoParallel.parentVis.updateSelectedCoffeeParallel(coffeeSet, true);
 		}
-	} else if (assoParallel.outsideRequest == 0) {
-		/* there is no brush current, for other vis, show all datapoint, also call parentVis */
-		if (assoParallel.parentVis != null) {
-			
+	} else {
+		if (assoParallel.outsideRequest == 0) {
+			/* there is no brush current, for other vis, show all datapoint, also call parentVis */
+			if (assoParallel.parentVis != null)
+				assoParallel.parentVis.updateSelectedCoffeeParallel(coffeeSet, false);
 		}
+		assoParallel.outsideRequest = 0;
 	}
 	assoParallel.setSelectedCoffeeLineColor(coffeeSet);
 	/* call parent vis to update */
