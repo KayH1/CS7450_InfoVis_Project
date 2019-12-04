@@ -328,7 +328,6 @@ function selectCoffeeWithinSelection() {
 		assoParallel.outsideRequest = 0;
 	}
 	assoParallel.setSelectedCoffeeLineColor(coffeeSet);
-	/* call parent vis to update */
 }
 
 export { parallelCoordinates };
