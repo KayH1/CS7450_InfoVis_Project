@@ -14,15 +14,15 @@
         <img src='./frequencyPlot/coffee3.jpg'
              sizes='(min-width: 960px) 960px,
                     100vw' height="800"/>
-            <div class="centered"><strong></strong><h1 style="font-size:600%;">
-              "You can't buy happiness, but you can buy coffee, and that's pretty close"
+            <div class="centered"><strong></strong><h1 style="font-size:600%; width:990px;">
+              "You can't buy happiness, but you can buy coffee, and that's pretty close..."
               </h1></strong>
            </div>
            <div>
-            <center><svg height="75" width="75">
+            <center><a href="#start"><svg height="75" width="75">
                 <circle cx="38" cy="38" r="30" stroke="white" stroke-width="1" fill="#bc8644" />
                 <polygon points="19,30 57,30 38,55" style="fill:white;stroke:white;stroke-width:1" />
-              </svg></center>
+              </svg></a></center>
            </div>
       </div>
 
@@ -39,7 +39,7 @@
 
 <body>
 
-  <br></br> <br></br> <br></br> <br></br> <br></br>
+  </br></br><br></br><br></br><br></br><br><div id="start"></div> </br>
 
   <div><strong></strong><h1 style="font-size:350%;">
 
@@ -53,8 +53,7 @@
       <div id="main">
         <br></br><br></br>
         
-        <div class = "sticky"  style="margin-left:34%;">
-          
+        <div class="sticky" style="margin-left:32%;">
           <table style="border:0;">
             <tr>
               <td >
@@ -65,59 +64,67 @@
               </td>
               <td valign="top">
                 <div>
-                  <table style="border:0; border-spacing: 0; border-collapse: collapse;" cellspacing="0" cellpadding="0">
-                    <tr>
-                      <td height="10">
-                        </br>Sort countries by:
-                      </td>
-                    </tr>
-                    <tr>
-                      <td valign="top" height="30">
-                        <form id="sortAttr" class="sortAttr">
-                          <fieldset>
-                              <select name="dropdown" style="display:inline;" disabled>
-                                <option value="flavor">Flavor</option>
-                                <option value="aroma">Aroma</option>
-                                <option value="aftertaste">Aftertaste</option>
-                                <option value="acidity">Acidity</option>
-                                <option value="body">Body</option>
-                                <option value="balance">Balance</option>
-                                <option value="uniformity">Uniformity</option>
-                                <option value="sweetness">Sweetness</option>
-                                <option value="cleanCup">Clean cup</option>
-                                <option value="cupperPoints">Cupper points</option>
-                                <option value="totalCupPoints">Total cup points</option>
-                                <option value="current">Current attribute</option>
-                              </select>
-                          </fieldset>
-                        </form>
-                      </td>
-                    </tr>
-                  </table>
-                    <form class="sortForm" id="sortForm">
-                      <fieldset>
-                        <div>
-                          <label><input type="radio" name="optradio" value="overall" id="overall" checked>Overall rating</label>
-                        </div>
-                        <div class="radio">
-                          <label><input type="radio" name="optradio" value="name" id="name">Country name</label>
-                        </div>
+                  </br></br>
+                  Sort countries by:
+
+                  <form class="sortForm" id="sortForm" style="margin-left:7%;">
+                    <fieldset>
+                      <div>
+                        <label><input type="radio" name="optradio" value="overall" class="optradio" id="overall" checked> Overall rating</label>
+                      </div>
+                      <div class="radio">
+                        <label><input type="radio" name="optradio" value="name" class="optradio" id="name"> Country name</label>
+                      </div>
+                      <div>
+                        <label><input type="radio" name="optradio" value="num" class="optradio" id="num"> # coffees</label>
+                      </div>
 
 
-                        <div class="radio">
-                          <label><input type="radio" name="optradio" value="max" id="max">Maximum value</label>
-                        </div>
-                        <div class="radio">
-                          <label><input type="radio" name="optradio" value="min" id="min">Minimum value</label>
-                        </div>
-                        <div class="radio">
-                          <label><input type="radio" name="optradio" value="median" id="median">Median</label>
-                        </div>
-                        
-                        
-                      </fieldset>
-                    </form>
-                    </br></br>
+                      <table style="border:0; border-spacing: 0; border-collapse: collapse; width: 225px;" cellspacing="0" cellpadding="0">
+                        <tr>
+                          <td>
+                            <div class="radio">
+                              <label><input type="radio" name="optradio" class="optradio" value="attribute" id="attribute"> Attribute</label>
+                            </div>
+                          </td>
+                          <td valign="top" height="30">
+                            <form class="sortAttr" id="sortAttr" >
+                              <fieldset>
+                                <select name="dropdown" style="display:inline;" id="attDropdown" disabled>
+                                  <option value="current">Current attribute</option>
+                                  <option value="flavor">Flavor</option>
+                                  <option value="aroma">Aroma</option>
+                                  <option value="aftertaste">Aftertaste</option>
+                                  <option value="acidity">Acidity</option>
+                                  <option value="body">Body</option>
+                                  <option value="balance">Balance</option>
+                                  <option value="uniformity">Uniformity</option>
+                                  <option value="sweetness">Sweetness</option>
+                                  <option value="cleanCup">Clean cup</option>
+                                  <option value="cupperPoints">Cupper points</option>
+                                  <option value="totalCupPoints">Total cup points</option>
+                                </select>
+                              </fieldset>
+                            </form>
+                          </td>
+                        </tr>
+                      </table>
+                    </fieldset>
+                  </form>
+                  <form class="maxMinMed" id="maxMinMed" style="margin-left:10%;">
+                    <fieldset>
+                      <div class="radio">
+                        <label><input type="radio" name="optradio" value="max" class="optradio" id="max" disabled checked> Maximum value</label>
+                      </div>
+                      <div class="radio">
+                        <label><input type="radio" name="optradio" value="min" class="optradio" id="min" disabled> Minimum value</label>
+                      </div>
+                      <div class="radio">
+                        <label><input type="radio" name="optradio" value="median" class="optradio" id="median" disabled> Median</label>
+                      </div>
+                    </fieldset>
+                  </form>
+                  </br></br>
                 </div>
                 <div select class="sidenav small" id="xScaleSelect">
                   <a href="#st_flavor" class="flavor active">Flavor</a>
@@ -132,9 +139,6 @@
                   <a href="#st_cupperPoints" class="cupperPoints">Cupper points</a>
                   <a href="#st_totalCupPoints" class="totalCupPoints">Total cup points</a>
                 </div>
-
-                
-                </td>
               </td>
             </tr>
             <tr>

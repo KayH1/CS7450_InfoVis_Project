@@ -1,11 +1,13 @@
 import * as coffeeCompareVis from "./coffeeCompareVis.js"
 import * as preferenceVis from "./preferenceVis.js"
 
+/* specify the flavor profile attributes */
+var atts = ['flavor', 'aroma', 'aftertaste', 'acidity', 'balance', 'body', 'uniformity', 'sweetness', 'cleanCup', 'cupperPoints'];
+
 /* test for user preference map */
 var preferenceVisCombine = new preferenceVis.preferenceCombine("preferenceVis");
 /* test for coffee compare map */
-var coffeeCompareVisCombine = new coffeeCompareVis.coffeeCompareCombine("complexVis");
-
+var coffeeCompareVisCombine = new coffeeCompareVis.coffeeCompareCombine("complexVis", atts);
 
 /* load data */
 	var dataPath = {
@@ -86,11 +88,23 @@ var coffeeCompareVisCombine = new coffeeCompareVis.coffeeCompareCombine("complex
 	    	countryCoffeeInfoMap.set(d.key, d);
 	    });
 
+	    /* get frequency info */
+	    atts.forEach(function(att) {
+	    	let attBins = {};
+
+	    	data[5].forEach(function(d) {
+	    		attBins[d[att]] = (attBins[d[att]]||0) + 1;
+	    		d.freq = (d.freq || {});
+	    		d.freq[att] = (d.freq[att] || {});
+	    		d.freq[att] = [d[att], attBins[d[att]]];
+	    	});
+	    })
+		
 		initialMap(preferenceVisCombine.worldMap);
-		preferenceVisCombine.loadData(data[0])
+		preferenceVisCombine.loadData(data[0]);
 
 		/* do not change turns of following */
-		coffeeCompareVisCombine.loadData(data[5])
+		coffeeCompareVisCombine.loadData(data[5]);
 		initialMap(coffeeCompareVisCombine.worldMap);
 	});
 

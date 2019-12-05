@@ -216,11 +216,10 @@ frequencyPlot.prototype.updateY = function(dataset, mode, attr) {
         // extract the appropriate values for calculation
         var sortedSubdatasetValues = sortedSubdataset.map(function(d) { return d[whichAttr]; });
         
-
         freqPlot.binsMaxXSort[whichAttr][idx] = d3.max(subdataset, function(d) { return d[whichAttr]; });
         freqPlot.binsMinXSort[whichAttr][idx] = d3.min(subdataset, function(d) { return d[whichAttr]; });
         freqPlot.binsMedianXSort[whichAttr][idx] = d3.quantile(sortedSubdatasetValues, 0.5);
-        
+
     });
 
     // determine the rankings of each country
@@ -263,6 +262,15 @@ frequencyPlot.prototype.updateY = function(dataset, mode, attr) {
             // make list keeping only indices
             var indices = indexedTest.map(function(e){return e.ind});
             indices = indices.reverse();
+        }
+        // sort by number of coffees
+        else if (mode === "num") {
+            var len = freqPlot.binned.length;
+            var indices = new Array(len);
+            for (var i = 0; i < len; ++i) indices[i] = i;
+                indices.sort(function(a,b) { return freqPlot.binned[a] < freqPlot.binned[b] ? -1 : freqPlot.binned[a] > freqPlot.binned[b] ? 1 : 0;});
+            indices = indices.reverse();
+            //console.log(indices);
         }
 
         freqPlot.rankings = indices;
@@ -356,7 +364,9 @@ frequencyPlot.prototype.updateChart = function(coffee_dataset) {
         .transition()
         .duration(freqPlot.transition_time)
         .attr('x', function(d, i) {
-            return freqPlot.xScale(freqPlot.binsMaxX[freqPlot.selection][i])+20;
+            //console.log("max ",d3.max(freqPlot.binsMaxX[freqPlot.selection]));
+            //return freqPlot.xScale(freqPlot.binsMaxX[freqPlot.selection][i])+20;
+            return freqPlot.xScale(d3.max(freqPlot.binsMaxX[freqPlot.selection]));
         })
         .attr('y', function(d, i) {
             var yCoord = freqPlot.bins.length - freqPlot.rankings.indexOf(freqPlot.bins.indexOf(d));
@@ -373,8 +383,7 @@ frequencyPlot.prototype.updateChart = function(coffee_dataset) {
         .transition()
         .duration(freqPlot.transition_time)
         .attr('x', function(d, i) {
-            //console.log(freqPlot.xScale(freqPlot.binsMaxX[i])+20);
-            return freqPlot.xScale(freqPlot.binsMaxX[freqPlot.selection][i])+freqPlot.padding.x_countries_r;
+            return freqPlot.xScale(d3.max(freqPlot.binsMaxX[freqPlot.selection]))+freqPlot.padding.x_countries_r;
         })
         .attr('y', function(d, i) {
             var yCoord = freqPlot.bins.length - freqPlot.rankings.indexOf(freqPlot.bins.indexOf(d));
@@ -647,28 +656,74 @@ frequencyPlot.prototype.updateChart = function(coffee_dataset) {
     // Source: https://www.dyn-web.com/tutorials/forms/radio/onclick.php
     // get list of radio buttons with name 'optradio'
     var sz = document.forms['sortForm'].elements['optradio'];
+    var sz2 = document.forms['maxMinMed'].elements['optradio'];
 
     // loop through list
     for (var i=0, len=sz.length; i<len; i++) {
         sz[i].onclick = function() { // assign onclick handler function to each
 
             // disable/enable dropdown, as appropriate
-            if (this.value==="max" || this.value==="min" || this.value==="median") {
-                document.forms['sortAttr'].elements["dropdown"].disabled = false;
-            }
-            else { document.forms['sortAttr'].elements["dropdown"].disabled = true; }
+            if (this.value=="attribute") {
+                //document.forms['sortAttr'].elements["dropdown"].disabled = false;
+                document.getElementById('attDropdown').disabled = false;
+                document.getElementById('max').disabled = false;
+                document.getElementById('min').disabled = false;
+                document.getElementById('median').disabled = false;
+                freqPlot.freezeOrder = false;
+                if (document.getElementById('max').checked) { freqPlot.sortMode = 'max'; }
+                else if (document.getElementById('min').checked) { freqPlot.sortMode = 'min'; }
+                else if (document.getElementById('median').checked) { freqPlot.sortMode = 'median'; }
 
-            // put clicked radio button's value in total field
-            freqPlot.freezeOrder = false;
-            // specify mode (max, min, median, etc.)
-            freqPlot.updateY(coffee, this.value, freqPlot.sortAttr);
-            freqPlot.updateChart(coffee);
-            freqPlot.freezeOrder = true;
+                var att = document.getElementById('attDropdown');
+                att = att.options[att.selectedIndex].value;
+                // specify attribute (flavor, aroma, etc.)
+                freqPlot.updateY(coffee, freqPlot.sortMode, att);
+                freqPlot.updateChart(coffee);
+                freqPlot.freezeOrder = true;
+                
+            }
+            else { 
+                document.getElementById('attDropdown').disabled = true;
+                document.getElementById('max').disabled = true;
+                document.getElementById('min').disabled = true;
+                document.getElementById('median').disabled = true;
+                document.getElementById('max').checked = true;
+                document.getElementById('min').checked = false;
+                document.getElementById('median').checked = false;
+
+                if (this.value=="name" || this.value=="overall" || this.value=="num") {
+                    // put clicked radio button's value in total field
+                    freqPlot.freezeOrder = false;
+                    // specify mode (max, min, median, etc.)
+                    freqPlot.updateY(coffee, this.value, freqPlot.sortAttr);
+                    freqPlot.updateChart(coffee);
+                    freqPlot.freezeOrder = true;
+                }
+            }
         };
     }
-
-    document.forms['sortAttr'].elements['dropdown'].onchange = function(e) {
+    for (var i=0, len=sz2.length; i<len; i++) {
+        sz2[i].onclick = function() {
+            if (this.value=="max" || this.value=="min" || this.value=="median") {
+                // put clicked radio button's value in total field
+                freqPlot.freezeOrder = false;
+                // specify mode (max, min, median, etc.)
+                freqPlot.updateY(coffee, this.value, freqPlot.sortAttr);
+                freqPlot.updateChart(coffee);
+                freqPlot.freezeOrder = true;
+            }
+        }
+    }
+    //document.forms['sortAttr'].elements['dropdown'].onchange = function(e) {
+    document.getElementById('attDropdown').onchange = function(e) {
         freqPlot.freezeOrder = false;
+        if (document.getElementById('max').checked) {
+            freqPlot.sortMode = 'max';
+        } else if (document.getElementById('min').checked) {
+            freqPlot.sortMode = 'min';
+        } else if (document.getElementById('median').checked) {
+            freqPlot.sortMode = 'median';
+        }
         // specify attribute (flavor, aroma, etc.)
         freqPlot.updateY(coffee, freqPlot.sortMode, this.value);
         freqPlot.updateChart(coffee);

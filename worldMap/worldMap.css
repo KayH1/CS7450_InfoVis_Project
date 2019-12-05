@@ -93,10 +93,33 @@
   #complexVisbrushing svg.parallel-coords .y.label {
     /*font-family: sans-serif;*/
     font-size: 14px;
-    fill: black;
+    fill: #663300;
     text-anchor: middle;
   }
 /********* Parallel coord ********/
+
+
+/********* Histograms ********/
+  #complexVishistograms svg.histograms .dotHist {
+    fill: #663300;
+    /*opacity: 0.3;*/
+  }
+
+  #complexVishistograms svg.histograms .y.label {
+    /*font-family: sans-serif;*/
+    font-size: 14px;
+    fill: #663300;
+    text-anchor: middle;
+  }
+
+  #complexVishistograms svg.histograms .x.label {
+    font-size: 14px;
+    fill: #663300;
+    text-anchor: middle;
+
+  }
+/********* Histograms ********/
+
 
 /********* d3-tip ********/
   .d3-tip {

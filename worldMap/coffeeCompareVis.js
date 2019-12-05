@@ -1,7 +1,7 @@
 import * as mapVis from "./vis/worldMap.js"
 import * as parallelCoords from "./vis/parallelCoordinates.js"
 import * as embedding from "./vis/embedding.js"
-
+import * as hists from "./vis/histograms.js"
 /*
     <div id="complexVis" style="padding: 100px 0px 50px 0px;">
         <div id="MapEmbedding" style="display: table;margin-left: auto;margin-right: auto;">
@@ -18,7 +18,7 @@ import * as embedding from "./vis/embedding.js"
     </div>
 */
 
-function coffeeCompareCombine (divId) {
+function coffeeCompareCombine (divId, attributes) {
 	this.divId = divId;
 	let mapEmbeddingDiv = d3.select("#" + this.divId).append("div").attr("id", "MapEmbedding")
 		.style("display", "table")
@@ -45,10 +45,22 @@ function coffeeCompareCombine (divId) {
 	d3.select("#" + divId).append("div").attr("id", assoBrushingVisId)
 		.style("margin-top", "30px");
 
-	this.worldMap = new mapVis.worldMap(assoMapId, 4, "Coffee World Map", "CoffeeCompare", this);
+    /* for histograms */
+    let assoHistogramVisId = this.divId + "histograms";
+    d3.select("#" + divId).append("div").attr("id", assoHistogramVisId)
+        .style("margin-top", "30px");
+
+    
+    this.worldMap = new mapVis.worldMap(assoMapId, 4, "Coffee World Map", "CoffeeCompare", this);
 	this.embedding = new embedding.embedding(assoEmbeddingId, this);
-	this.parallelCoords = new parallelCoords.parallelCoordinates(assoBrushingVisId, this);
+	this.parallelCoords = new parallelCoords.parallelCoordinates(assoBrushingVisId, attributes, this);
+    this.histograms = new hists.histograms(assoHistogramVisId, attributes, this);
+
 }
+
+
+
+
 
 coffeeCompareCombine.prototype.loadData = function(coffeeData) {
 	this.data = d3.nest().key(function(d){
@@ -60,12 +72,29 @@ coffeeCompareCombine.prototype.loadData = function(coffeeData) {
 		}).object(coffeeData)
 	);
 	this.parallelCoords.initialParallelCoordinates(coffeeData);
+    this.histograms.initialHistograms(coffeeData);
+}
+
+
+coffeeCompareCombine.prototype.togglePCandH = function() {
+    if (this.parallelCoords.visible) {
+        document.getElementById(this.parallelCoords.divId).style.display = 'none';
+        this.parallelCoords.visible = false;
+        document.getElementById(this.histograms.divId).style.display = 'block';
+        this.histograms.visible = true;
+    } else if (this.histograms.visible) {
+        document.getElementById(this.parallelCoords.divId).style.display = 'block';
+        this.parallelCoords.visible = true;
+        document.getElementById(this.histograms.divId).style.display = 'none';
+        this.histograms.visible = false;
+    }
 }
 
 /* called from map and update other vis */
 coffeeCompareCombine.prototype.updateCountryClicked = function(countryClickedMap) {
 	/* call other vis to update based on the country and color in map */
 	this.parallelCoords.updateLineColorSelectedCountry(countryClickedMap);
+    this.histograms.updateDotColorSelectedCountry(countryClickedMap);
 };
 
 /* called from parallel coordinates and update other vis */
@@ -97,8 +126,27 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeParallel = function(selectedC
 }
 
 /* called from brush hist and update other vis */
-coffeeCompareCombine.prototype.updateSelectedCoffeeHist = function(selectedCoffeeSet) {
+coffeeCompareCombine.prototype.updateSelectedCoffeeHist = function(selectedCoffeeSet, brushing) {
+    let assoCoffeeCompareCombine = this;
 
+    let countryCodeShow;
+    if (brushing) {  // there is brushing, although the selection might be empty
+        /* update based on the selected Coffee Set */
+        countryCodeShow = d3.set();
+        selectedCoffeeSet.each(function(d) {
+            countryCodeShow.add(assoCoffeeCompareCombine.data[d][0]["ISOofOrigin"])
+        })
+
+        /* some treatment for embedding to show selected coffee set */
+
+
+    } else {
+        /* restore the map show all country */
+        countryCodeShow = d3.set(assoCoffeeCompareCombine.countryCode);
+
+        /* some treatment for embedding to show initial look */
+    }
+    this.worldMap.updateCoffeeSelectedSet(countryCodeShow);
 }
 
 /* called from embedding and update other vis */
