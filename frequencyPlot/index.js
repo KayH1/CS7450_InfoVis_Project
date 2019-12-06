@@ -126,7 +126,7 @@ var isInViewport = function (elem) {
 };
 
 // select different coffee attribute components from DOM
-var flavor = document.querySelector('.scrollytelling-text #fp_flavor');
+var flavor = document.querySelector('.scrollytelling-text #st_flavor');
 var aroma = document.querySelector('.scrollytelling-text #fp_aroma');
 var aftertaste = document.querySelector('.scrollytelling-text #fp_aftertaste');
 var acidity = document.querySelector('.scrollytelling-text #fp_acidity');

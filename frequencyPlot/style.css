@@ -59,6 +59,12 @@ h2 { color: #5b0000 /*, 8e2921, 5b0000, 7B3A30*/; font-family: 'Helvetica Neue',
   /*border: 3px solid green;*/
 }
 
+.special.empty {
+  height: 20px;
+  width: 400px;
+  /*border: 3px solid green;*/
+}
+
 
 .scrollytelling-text {
   max-width: 440px;
