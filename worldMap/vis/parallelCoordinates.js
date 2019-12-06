@@ -104,12 +104,24 @@ parallelCoordinates.prototype.initialParallelCoordinates = function(coffeeData) 
         });
 
     });
+    
     this.data = coffeeData;
+    
+    /* add scale for stroke-width when country select */
+    this.strokeWidthCountryScale = d3.scaleLog().range([4,8]).domain([250, 1]);
+
+    this.countryStrokeWidth = d3.nest().key(function(d) {
+        return d["ISOofOrigin"];
+    }).object(this.data);
+    Object.keys(assoParallel.countryStrokeWidth).forEach(function(key){ 
+        let countryCount = assoParallel.countryStrokeWidth[key].length;
+        assoParallel.countryStrokeWidth[key] = assoParallel.strokeWidthCountryScale(countryCount);  
+    });
     
     // display the data as polylines
     this.chartGParallelCoords.selectAll('g')
       .data(this.data, function(d) { return d['id']; })
-      .enter()
+      .enter();
 
     /**********************
      Draw lines
@@ -164,7 +176,6 @@ parallelCoordinates.prototype.initialParallelCoordinates = function(coffeeData) 
         this.previousOpacity = d3.select(this).select('path').style("opacity");
         this.previousStrokeWidth = d3.select(this).select('path').style("stroke-width");
         
-        console.log(this.previousStrokeWidth);
         d3.select(this)
           .select('path')
           .style('stroke', function(d) {
@@ -254,7 +265,7 @@ parallelCoordinates.prototype.updateLineColorSelectedCountry = function(countryC
         if (countryColorMap.has(coffee["ISOofOrigin"])) {
             assoParallel.coffeeColorMap.set(coffee["id"], countryColorMap.get(coffee["ISOofOrigin"]));
             d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", countryColorMap.get(coffee["ISOofOrigin"]))
-                .style("stroke-width", 8).style("opacity", 0.5);
+                .style("stroke-width", assoParallel.countryStrokeWidth[coffee["ISOofOrigin"]]).style("opacity", 0.5);
         } else {
             if (countryColorMap.size() == 0) {
                 d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeColorMap.get(coffee["id"]))
