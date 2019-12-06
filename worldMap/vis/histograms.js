@@ -196,17 +196,6 @@ histograms.prototype.initialHistograms = function(coffeeData) {
     });
 }
 
-
-
-var toolTipHistograms = d3.tip()
-  .attr("class", "d3-tip")
-  .offset([-12, 0])
-  .html(function(d) { 
-      return "<h5>Country: "+d.countryOfOrigin+"<br>"+"</h5>";
-});
-
-
-
 histograms.prototype.setColorMap = function(color) {
     let assoHist = this;
     this.data.forEach(function(d) {
@@ -255,7 +244,6 @@ histograms.prototype.updateDotColorSelectedCountry = function(countryColorMap) {
         assoHist.data.forEach(function(coffee) {
             if (countryColorMap.has(coffee["ISOofOrigin"])) {
                 assoHist.coffeeColorMap.set(coffee["id"], countryColorMap.get(coffee["ISOofOrigin"]));
-                console.log(assoHist.coffeeDotMap[i].get(coffee["id"]));
                 d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("fill", countryColorMap.get(coffee["ISOofOrigin"]))
                     .style('r',1).style('stroke',countryColorMap.get(coffee["ISOofOrigin"])).style("opacity", 1);
             } else {
@@ -290,13 +278,11 @@ function selectCoffeeWithinSelection() {
     */
     if (d3.event.selection != null) {
         let [[x0, y0], [x1, y1]] = d3.event.selection;
-        console.log(x0,y0,x1,y1);
         if (x1 > x0 && y1 > y0) {
             assoHist.axes.forEach(function(axis, i) {
                 assoHist.data.forEach(function(d) {
                     let position = d["flavorProfileDotPosition"][i];
                     if ((position[0]+assoHist.paddingHistograms.l >= x0 && position[0]+assoHist.paddingHistograms.l <= x1) && (position[1]+assoHist.paddingHistograms.t >= y0 && position[1]+assoHist.paddingHistograms.t <= y1)) {
-                        console.log(d);
                         coffeeSet.add(d["id"]);
                     }
                 });
