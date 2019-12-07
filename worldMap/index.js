@@ -115,7 +115,6 @@ var coffeeCompareVisCombine = new coffeeCompareVis.coffeeCompareCombine("complex
                 var indices = new Array(len);
                 for (var i = 0; i < len; ++i) {
                     indices[i] = i;
-                    console.log(currList[keys[0]].length);
                     indices.sort(function(a,b) { return currList[keys[a]].length < currList[keys[b]].length ? -1 : currList[keys[a]].length > currList[keys[b]].length ? 1 : 0;});
                 }
                 indices = indices.reverse();

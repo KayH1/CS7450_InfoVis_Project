@@ -76,9 +76,7 @@ function histograms (divId, attributes, parentVis=null) {
         })
         .text(function(d) { return d; })
         .style("font-weight", "bold");
-
-    console.log(this.countryColorMap);
-    
+        
 }
 
 var toolTipHistograms = d3.tip()

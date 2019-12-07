@@ -425,20 +425,35 @@ worldMap.prototype.showCountryGeo = function() {
 	if (this.mapType == worldMapType.get("CoffeeCompare")) {
 		/* show country name label for country compare */
 		updateMapZoom.call(this.map);
-		
 		/* clear selected country set */
-		this.countryClickedMap.clear();
-		this.updateCountryInfoCompare();
+		//this.countryClickedMap.clear();
+		//this.updateCountryInfoCompare();
+		/* remove above to create filter */
 	}
 
 	this.map.setZoom(this.map.getMinZoom());
-	this.countryLayer.eachLayer(function(layer) {
-		if (associatedMap.countryShowSet.has(layer.feature["properties"]["ISO_A3"])) {
-			layer.setStyle(associatedMap.countryGeoShowStyle());
-		} else {
-			layer.setStyle(associatedMap.countryGeoNotShowStyle());
-		}
-	});
+	if (associatedMap.mapType == worldMapType.get("CoffeeCompare")) {
+		this.countryLayer.eachLayer(function(layer) {
+			/* update selected country style and restore clicked style */
+			if (associatedMap.countryShowSet.has(layer.feature["properties"]["ISO_A3"])) {
+				layer.setStyle(associatedMap.countryGeoShowStyle());
+			} else {
+				layer.setStyle(associatedMap.countryGeoNotShowStyle());
+			}
+			if (associatedMap.countryClickedMap.has(layer.feature["properties"]["ISO_A3"])){
+				let colorToAssign = associatedMap.countryClickedMap.get(layer.feature["properties"]["ISO_A3"]);
+				layer.setStyle(associatedMap.countrySelectedStyle(associatedMap.countryInfoColorMap[colorToAssign]));
+			}
+		});
+	} else if (associatedMap.mapType == worldMapType.get("UserPreference")) {
+		this.countryLayer.eachLayer(function(layer) {
+			if (associatedMap.countryShowSet.has(layer.feature["properties"]["ISO_A3"])) {
+				layer.setStyle(associatedMap.countryGeoShowStyle());
+			} else {
+				layer.setStyle(associatedMap.countryGeoNotShowStyle());
+			}
+		});
+	}
 }
 
 worldMap.prototype.updateCountryInfoCompare = function() {

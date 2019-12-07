@@ -59,9 +59,6 @@ function coffeeCompareCombine (divId, attributes) {
 }
 
 
-
-
-
 coffeeCompareCombine.prototype.loadData = function(coffeeData) {
 	this.data = d3.nest().key(function(d){
 	    return d["id"];
@@ -105,7 +102,10 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeParallel = function(selectedC
 		map do not have coffee data copy and selectedCoffeeSet is a d3.set with only Coffee Id,
 		some treatment need to do here to extract coffee country here for map 
 	*/
-    let assoCoffeeCompareCombine = this;
+
+	let assoCoffeeCompareCombine = this;
+	let parallelCoffeeShowSet;
+	let embeddingCoffeeShowSet;
 
 	let countryCodeShow;
 	if (brushing) {  // there is brushing, although the selection might be empty
@@ -114,17 +114,33 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeParallel = function(selectedC
 		selectedCoffeeSet.each(function(d) {
 			countryCodeShow.add(assoCoffeeCompareCombine.data[d][0]["ISOofOrigin"])
 		})
-
 		/* some treatment for embedding to show selected coffee set */
+		
+		
+		/****** perform set join (current place holder) ********/ 
+		
+		parallelCoffeeShowSet = selectedCoffeeSet;
+		embeddingCoffeeShowSet = selectedCoffeeSet;
 
+		/****** perform set join (current place holder) ********/
 
 	} else {
 		/* restore the map show all country */
 		countryCodeShow = d3.set(assoCoffeeCompareCombine.countryCode);
+		parallelCoffeeShowSet = selectedCoffeeSet;
+		
 
-		/* some treatment for embedding to show initial look */
+		/****** set embedding as its own filtered coffee show set ********/ 
+		embeddingCoffeeShowSet = selectedCoffeeSet;
+
+		/****** set embedding as its own filtered coffee show set ********/ 
 	}
 	this.worldMap.updateCoffeeSelectedSet(countryCodeShow);
+	this.parallelCoords.setShowCoffeeLineColor(parallelCoffeeShowSet);
+	
+	/****** also update embedding ******/
+
+	/****** also update embedding ******/
 }
 
 /* called from brush hist and update other vis */
@@ -154,6 +170,7 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeHist = function(selectedCoffe
 coffeeCompareCombine.prototype.updateSelectedCoffeeEmbedding = function(selectedCoffeeSet) {
 
 }
+
 
 /* inter change parallel coordinate between brush histor */
 export { coffeeCompareCombine };

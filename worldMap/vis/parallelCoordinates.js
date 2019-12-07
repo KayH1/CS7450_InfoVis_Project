@@ -132,6 +132,11 @@ parallelCoordinates.prototype.initialParallelCoordinates = function(coffeeData) 
     this.coffeeColorMap = d3.map();
     this.setColorMap(assoParallel.coffeeLineStyle.defaultColor);
 
+    this.countryColorMap = d3.map();
+    this.coffeeAllSet = d3.set(this.data.map(d=>d["id"]));
+    this.coffeeSelectSet = d3.set(this.data.map(d=>d["id"]));
+    this.coffeeShowSet = this.coffeeSelectSet;
+
     // create path elements
     this.coffeeLineMap = d3.map();
     this.polylineEnterParallelCoords = this.polylineParallelCoords.enter()
@@ -228,69 +233,55 @@ parallelCoordinates.prototype.setColorMap = function(color) {
     })
 }
 
-parallelCoordinates.prototype.setSelectedCoffeeLineColor = function(coffeeSelectSet) {
+parallelCoordinates.prototype.setShowCoffeeLineColor = function(coffeeShowSet=null) {
     let assoParallel = this;
-    if (d3.event.selection != null) {
-        assoParallel.setColorMap(assoParallel.coffeeLineStyle.ignoreColor);
+    if (coffeeShowSet != null) {
+        assoParallel.coffeeShowSet = coffeeShowSet;
+    }
+    
+    if (assoParallel.countryColorMap.size() > 0) {
+        this.setColorMap(assoParallel.coffeeLineStyle.ignoreColor);
         this.data.forEach(function(coffee) {
-            if (coffeeSelectSet.has(coffee["id"])) {
-                assoParallel.coffeeColorMap.set(coffee["id"], assoParallel.coffeeLineStyle.defaultColor);
-                d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeLineStyle.defaultColor).style("opacity", 0.3).style("stroke-width", 3);
+            if (assoParallel.countryColorMap.has(coffee["ISOofOrigin"]) && assoParallel.coffeeShowSet.has(coffee["id"])) {
+                assoParallel.coffeeColorMap.set(coffee["id"], assoParallel.countryColorMap.get(coffee["ISOofOrigin"]));
+                d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.countryColorMap.get(coffee["ISOofOrigin"]))
+                    .style("stroke-width", assoParallel.countryStrokeWidth[coffee["ISOofOrigin"]]).style("opacity", 0.5);
             } else {
-                d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeLineStyle.ignoreColor).style('stroke-width', 1).style("opacity", 0.1).style("stroke-width", 1);
+                d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeColorMap.get(coffee["id"]))
+                    .style('stroke-width', 1).style("opacity", 0.1);
             }
         })
     } else {
-        assoParallel.setColorMap(assoParallel.coffeeLineStyle.defaultColor);
-        this.data.forEach(function(coffee) {
-            d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeLineStyle.defaultColor).style("stroke-width", 1).style("opacity", 0.2);
-        })
+        if (assoParallel.coffeeShowSet.size() == assoParallel.coffeeAllSet.size()) {
+            assoParallel.setColorMap(assoParallel.coffeeLineStyle.defaultColor);
+            this.data.forEach(function(coffee) {
+                d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeLineStyle.defaultColor).style("stroke-width", 1).style("opacity", 0.2);
+            });
+        } else {
+            this.setColorMap(assoParallel.coffeeLineStyle.ignoreColor);
+            this.data.forEach(function(coffee) {
+                if (assoParallel.coffeeShowSet.has(coffee["id"])) {
+                    assoParallel.coffeeColorMap.set(coffee["id"], assoParallel.coffeeLineStyle.defaultColor);
+                    d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeLineStyle.defaultColor).style("opacity", 0.3).style("stroke-width", 3);
+                } else {
+                    d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeLineStyle.ignoreColor).style('stroke-width', 1).style("opacity", 0.1);
+                }
+            });
+        }
     }
 }
 
 /* called from parent vis initial by map */
 parallelCoordinates.prototype.updateLineColorSelectedCountry = function(countryColorMap) {
     let assoParallel = this;
-    /* remove brush */
-    this.outsideRequest = 1
-    d3.select("#" + assoParallel.divId).select(".brush").call(assoParallel.brush.clear);
-
-    /* set color */
-    if (countryColorMap.size() > 0) {
-        this.setColorMap(assoParallel.coffeeLineStyle.ignoreColor);
-    } else {
-        this.setColorMap(assoParallel.coffeeLineStyle.defaultColor);
-    }
-    this.data.forEach(function(coffee) {
-        if (countryColorMap.has(coffee["ISOofOrigin"])) {
-            assoParallel.coffeeColorMap.set(coffee["id"], countryColorMap.get(coffee["ISOofOrigin"]));
-            d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", countryColorMap.get(coffee["ISOofOrigin"]))
-                .style("stroke-width", assoParallel.countryStrokeWidth[coffee["ISOofOrigin"]]).style("opacity", 0.5);
-        } else {
-            if (countryColorMap.size() == 0) {
-                d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeColorMap.get(coffee["id"]))
-                    .style('stroke-width', 1).style("opacity", 0.2);
-            } else {
-                d3.select(assoParallel.coffeeLineMap.get(coffee["id"])).style("stroke", assoParallel.coffeeColorMap.get(coffee["id"]))
-                    .style('stroke-width', 1).style("opacity", 0.1);
-            }
-        }
-    })
-}
-
-/* called from parent vis initial by embedding */ 
-parallelCoordinates.prototype.updateLineColorSelectedCoffee = function(coffeeSelectSet) {
-    let assoParallel = this;
-    /* remove brush */
-    this.outsideRequest = 1;
-    d3.select("#" + assoParallel.divId).select(".brush").call(assoParallel.brush.clear);
-    assoParallel.setSelectedCoffeeLineColor(coffeeSet);
+    assoParallel.countryColorMap = countryColorMap;
+    assoParallel.setShowCoffeeLineColor();
 }
 
 /* for brush event */
 function selectCoffeeWithinSelection() {
     let assoParallel = this.assoParallel;
-    let coffeeSet = d3.set();
+    assoParallel.coffeeSelectSet.clear();
     /* 
         if brush is show, then d3.event.selection != null 
         if brush is disable from outside vis update call: assoParallel.outsideRequest == 1, not update parentVis
@@ -302,7 +293,7 @@ function selectCoffeeWithinSelection() {
                 for (let step = 0; step < d["flavorProfilePosition"].length; step++) {
                     let position = d["flavorProfilePosition"][step];
                     if ((position[0] >= x0 && position[0] <= x1) && (position[1] >= y0 && position[1] <= y1)) {
-                        coffeeSet.add(d["id"]);
+                        assoParallel.coffeeSelectSet.add(d["id"]);
                         break;
                     }
                 }
@@ -310,17 +301,18 @@ function selectCoffeeWithinSelection() {
         }
         /* call parentVis to update based on selected coffee */
         if (assoParallel.parentVis != null) {
-            assoParallel.parentVis.updateSelectedCoffeeParallel(coffeeSet, true);
+            assoParallel.parentVis.updateSelectedCoffeeParallel(assoParallel.coffeeSelectSet, true);
+        } else {
+            assoParallel.setShowCoffeeLineColor(assoParallel.coffeeSelectSet);
         }
     } else {
-        if (assoParallel.outsideRequest == 0) {
-            /* there is no brush current, for other vis, show all datapoint, also call parentVis */
-            if (assoParallel.parentVis != null)
-                assoParallel.parentVis.updateSelectedCoffeeParallel(coffeeSet, false);
+        /* there is no brush current, for other vis, show all datapoint, also call parentVis */
+        if (assoParallel.parentVis != null){
+            assoParallel.parentVis.updateSelectedCoffeeParallel(assoParallel.coffeeAllSet, false);
+        } else {
+            assoParallel.setShowCoffeeLineColor(assoParallel.coffeeAllSet);
         }
-        assoParallel.outsideRequest = 0;
     }
-    assoParallel.setSelectedCoffeeLineColor(coffeeSet);
 }
 
 export { parallelCoordinates };
