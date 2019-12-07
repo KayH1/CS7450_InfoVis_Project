@@ -21,8 +21,6 @@ function worldMap(divId, maxZoom, title, mapType, parentVis=null) {
 	this.mapType = worldMapType.get(mapType);
 	/* add parentVis */
 	this.parentVis = parentVis;
-	/* add flag for parent Update */
-	this.updateParent = true;
 
 	/* declare meta map attribute */
 	let minZoom = 2;
@@ -173,7 +171,6 @@ worldMap.prototype.updateCoffeeSelectedSet = function(coffeeShowInfo) {
 		parameter would be a array contain selected coffee along with information for User Preference 
 		parameter would be a set contain selected countryC for CoffeeCompare, called by other vis
 	*/
-	this.updateParent = false; 
 	if (this.mapType == worldMapType.get("UserPreference")){
 		this.selectedCountryCoffeeInfoMap = d3.nest().key(function(d){
 	        return d.ISOofOrigin;
@@ -653,14 +650,13 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 			presentPrLine.exit().remove();
 		}
 		/* treat for broadcast present selection country to update the color in embedding and parallel coordinate */
-		if (this.parentVis !== null && this.updateParent) {
+		if (this.parentVis !== null) {
 			let countryClickedColorMap = d3.map();
 			associatedMap.countryClickedMap.keys().forEach(function(countryCode) {
 				countryClickedColorMap.set(countryCode, associatedMap.countryInfoColorMap[associatedMap.countryClickedMap.get(countryCode)]);
 			});
 			this.parentVis.updateCountryClicked(countryClickedColorMap);
 		}
-		this.updateParent = true;
 	}
 }
 

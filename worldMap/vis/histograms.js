@@ -148,6 +148,11 @@ histograms.prototype.initialHistograms = function(coffeeData) {
 
 
     assoHist.data = coffeeData;
+    assoHist.countryColorMap = d3.map();
+    assoHist.coffeeAllSet = d3.set(assoHist.data.map(d=>d["id"]));
+    assoHist.coffeeSelectSet = d3.set(assoHist.data.map(d=>d["id"]));
+    assoHist.coffeeShowSet = assoHist.coffeeSelectSet;
+
 
     /**********************
      Draw dots
@@ -200,75 +205,60 @@ histograms.prototype.setColorMap = function(color) {
     })
 }
 
-histograms.prototype.setSelectedCoffeeDotColor = function(coffeeSelectSet) {
+histograms.prototype.setShowCoffeeDotColor = function(coffeeShowSet=null) {
     let assoHist = this;
-    if (d3.event.selection != null) {
-        assoHist.setColorMap(assoHist.coffeeDotStyle.ignoreColor);
+    if (coffeeShowSet != null) {
+        assoHist.coffeeShowSet = coffeeShowSet;
+    }
+    if (assoHist.countryColorMap.size() > 0) {
+        this.setColorMap(assoHist.coffeeDotStyle.ignoreColor);
         assoHist.axes.forEach(function(axis, i) {
             assoHist.data.forEach(function(coffee) {
-                if (coffeeSelectSet.has(coffee["id"])) {
-                    assoHist.coffeeColorMap.set(coffee["id"], assoHist.coffeeDotStyle.defaultColor);
-                    d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("fill", assoHist.coffeeDotStyle.defaultColor).style("opacity", 0.3).style("stroke-width", 3);
+                if (assoHist.countryColorMap.has(coffee["ISOofOrigin"]) && assoHist.coffeeShowSet.has(coffee["id"])) {
+                    assoHist.coffeeColorMap.set(coffee["id"], assoHist.countryColorMap.get(coffee["ISOofOrigin"]));
+                    d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("fill", assoHist.countryColorMap.get(coffee["ISOofOrigin"]))
+                        .style('r',1).style("opacity", 1);
                 } else {
-                    d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("fill", assoHist.coffeeDotStyle.ignoreColor).style('stroke-width', 1).style("opacity", 0.1).style("stroke-width", 1);
+                        d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("fill", assoHist.coffeeColorMap.get(coffee["id"])).style('r',1)
+                            .style('stroke-width', 1).style("opacity", 0.2);
                 }
             })
         })
     } else {
-        assoHist.setColorMap(assoHist.coffeeDotStyle.defaultColor);
-        assoHist.axes.forEach(function(axis, i) {
-            assoHist.data.forEach(function(coffee) {
-                d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("stroke", assoHist.coffeeDotStyle.defaultColor).style("stroke-width", 1).style("opacity", 0.3);
+        if (assoHist.coffeeShowSet.size() != assoHist.coffeeAllSet.size()) {
+            assoHist.setColorMap(assoHist.coffeeDotStyle.ignoreColor);
+            assoHist.axes.forEach(function(axis, i) {
+                assoHist.data.forEach(function(coffee) {
+                    if (assoHist.coffeeSelectSet.has(coffee["id"])) {
+                        assoHist.coffeeColorMap.set(coffee["id"], assoHist.coffeeDotStyle.defaultColor);
+                        d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("fill", assoHist.coffeeDotStyle.defaultColor).style("opacity", 0.3).style("stroke-width", 3);
+                    } else {
+                        d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("fill", assoHist.coffeeDotStyle.ignoreColor).style('stroke-width', 1).style("opacity", 0.1);
+                    }
+                })
             })
-        })
+        } else {
+            assoHist.setColorMap(assoHist.coffeeDotStyle.defaultColor);
+            assoHist.axes.forEach(function(axis, i) {
+                assoHist.data.forEach(function(coffee) {
+                    d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("fill", assoHist.coffeeDotStyle.defaultColor).style("stroke-width", 1).style("opacity", 0.3);
+                })
+            })
+        }
     }
 }
 
 /* called from parent vis initial by map */
 histograms.prototype.updateDotColorSelectedCountry = function(countryColorMap) {
     let assoHist = this;
-    /* remove brush */
-    this.outsideRequest = 1
-    d3.select("#" + assoHist.divId).select(".brush").call(assoHist.brush.clear);
-
-    /* set color */
-    if (countryColorMap.size() > 0) {
-        this.setColorMap(assoHist.coffeeDotStyle.ignoreColor);
-    } else {
-        this.setColorMap(assoHist.coffeeDotStyle.defaultColor);
-    }
-    assoHist.axes.forEach(function(axis, i) {
-        assoHist.data.forEach(function(coffee) {
-            if (countryColorMap.has(coffee["ISOofOrigin"])) {
-                assoHist.coffeeColorMap.set(coffee["id"], countryColorMap.get(coffee["ISOofOrigin"]));
-                d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("fill", countryColorMap.get(coffee["ISOofOrigin"]))
-                    .style('r',1).style('stroke',countryColorMap.get(coffee["ISOofOrigin"])).style("opacity", 1);
-            } else {
-                if (countryColorMap.size() == 0) {
-                    d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("fill", assoHist.coffeeColorMap.get(coffee["id"])).style('r',1)
-                        .style('stroke-width', 1).style("opacity", 0.2);
-                } else {
-                    d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("stroke", assoHist.coffeeColorMap.get(coffee["id"])).style('r',1)
-                        .style('stroke-width', 1).style("opacity", 0.1);
-                }
-            }
-        })
-    })
-}
-
-/* called from parent vis initial by embedding */ 
-histograms.prototype.updateDotColorSelectedCoffee = function(coffeeSelectSet) {
-    let assoHist = this;
-    /* remove brush */
-    this.outsideRequest = 1;
-    d3.select("#" + assoHist.divId).select(".brush").call(assoHist.brush.clear);
-    assoHist.setSelectedCoffeeDotColor(coffeeSet);
+    assoHist.countryColorMap = countryColorMap;
+    assoHist.setShowCoffeeDotColor();
 }
 
 /* for brush event */
 function selectCoffeeWithinSelection() {
     let assoHist = this.assoHist;
-    let coffeeSet = d3.set();
+    assoHist.coffeeSelectSet.clear();
     /* 
         if brush is show, then d3.event.selection != null 
         if brush is disable from outside vis update call: assoHist.outsideRequest == 1, not update parentVis
@@ -280,27 +270,26 @@ function selectCoffeeWithinSelection() {
                 assoHist.data.forEach(function(d) {
                     let position = d["flavorProfileDotPosition"][i];
                     if ((position[0]+assoHist.paddingHistograms.l >= x0 && position[0]+assoHist.paddingHistograms.l <= x1) && (position[1]+assoHist.paddingHistograms.t >= y0 && position[1]+assoHist.paddingHistograms.t <= y1)) {
-                        coffeeSet.add(d["id"]);
+                        assoHist.coffeeSelectSet.add(d["id"]);
                     }
                 });
             });
         }
 
-        console.log(coffeeSet);
         /* call parentVis to update based on selected coffee */
         if (assoHist.parentVis != null) {
-            assoHist.parentVis.updateSelectedCoffeeHist(coffeeSet, true);
+            assoHist.parentVis.updateSelectedCoffeeHist(assoHist.coffeeSelectSet, true);
+        } else {
+            assoHist.setShowCoffeeLineColor(assoHist.coffeeSelectSet);
         }
     } else {
-        if (assoHist.outsideRequest == 0) {
-            /* there is no brush current, for other vis, show all datapoint, also call parentVis */
-            if (assoHist.parentVis != null)
-                assoHist.parentVis.updateSelectedCoffeeHist(coffeeSet, false);
+        /* there is no brush current, for other vis, show all datapoint, also call parentVis */
+        if (assoHist.parentVis != null) {
+            assoHist.parentVis.updateSelectedCoffeeHist(assoHist.coffeeAllSet, false);
+        } else {
+            assoHist.setShowCoffeeLineColor(assoHist.coffeeAllSet);
         }
-        assoHist.outsideRequest = 0;
     }
-    assoHist.setSelectedCoffeeDotColor(coffeeSet);
 }
-
 
 export { histograms };
