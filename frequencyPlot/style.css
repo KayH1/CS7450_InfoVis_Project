@@ -81,7 +81,6 @@ div.sticky {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  
   }
 
 div #freq-plot-sticky {
@@ -331,7 +330,10 @@ body {
 #main {
     margin: 20px;
     clear: left;
-
+    
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
 }
 
 /**********************
