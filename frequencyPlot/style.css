@@ -390,3 +390,7 @@ Lab 6
 .embeddings .dot:hover text {
   opacity: 1;
 }
+
+.button-icon {
+  vertical-align: text-bottom;;
+}
