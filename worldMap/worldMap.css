@@ -8,31 +8,26 @@
   src: url('PiratesWriters.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3��5 */
 }
 
+@font-face {
+  font-family: 'HelveticaNeue';
+  src: url('HelveticaNeue.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3��5 */
+}
+
 #preferenceVis .coffeeIconUnderMap div {
   text-anchor: start;
- /* font-weight: 200;
-  font-family: pirates;
-  font-size: 18px;*/
-
   color: #362e28; 
-  font-family: 'Helvetica Neue', sans-serif; 
+  font-family: 'HelveticaNeue', sans-serif; 
   font-size: 16px; 
   font-weight: 100;
   text-align: left;
-
 }
 
 #preferenceVis #preferenceVissliders .sliderTitle {
-  text-anchor: start;
- /* font-weight: 200;
-  font-family: pirates;
-  font-size: 20px;*/
   margin: 0px !important;
   padding: 0px !important;
-
-
+  text-anchor: start;
   color: #362e28; 
-  font-family: 'Helvetica Neue', sans-serif; 
+  font-family: 'HelveticaNeue', sans-serif; 
   font-size: 18px; 
   font-weight: 100;
   text-align: left;
@@ -63,7 +58,7 @@
   	text-anchor: start;
   	font-weight: 200;
   	/*font-family: pirates;*/
-    font-family: 'Helvetica Neue', sans-serif; 
+    font-family: 'HelveticaNeue', sans-serif; 
   	font-size: 12px;
 }
 
@@ -78,7 +73,7 @@
     font-weight: 200;
     min-width: 135px;
     /*font-family: pirates;*/
-    font-family: 'Helvetica Neue', sans-serif; 
+    font-family: 'HelveticaNeue', sans-serif; 
     font-size: 15px;
 }
 
@@ -87,7 +82,7 @@
   /*font-family: pirates;
   font-size: 22px;*/
 
-  font-family: 'Helvetica Neue', sans-serif; 
+  font-family: 'HelveticaNeue', sans-serif; 
   font-size: 18px; 
 
   /*background: rgba(128,177,211,0.8);*/
@@ -108,7 +103,7 @@
   font-size: 20px;*/
 
   
-  font-family: 'Helvetica Neue', sans-serif; 
+  font-family: 'HelveticaNeue', sans-serif; 
   font-size: 12px; 
  
 
