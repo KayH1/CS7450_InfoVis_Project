@@ -112,20 +112,15 @@ text-align:    center;
 }
 
 button#reset {
-  background:    #ffffff;
-background:    linear-gradient(#ffffff, #f3f3f3);
- background-color: white;
-border-radius: 5px;
-padding:       8px 20px;
-color:         #741b47;
-display:       inline-block;
-/*font:          normal bold 24px/1 'Helvetica Neue', sans-serif;*/
-text-align:    center;
-
-
-    position: sticky;
-    top: 90%;
-    left: 80%;
+  background-color: #ffecc3;
+  border: none;
+  color: #8e2921;
+  padding: 12px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  position: sticky;
+  top: 90%;
+  left: 80%;
 }
 
 button#switchMode {
@@ -398,4 +393,8 @@ Lab 6
 
 .button-icon {
   vertical-align: text-bottom;;
+}
+
+.fa {
+  padding-right: 10px;
 }
