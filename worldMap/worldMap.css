@@ -9,9 +9,15 @@
 }
 
 @font-face {
-  font-family: 'HelveticaNeue';
-  src: url('HelveticaNeue.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3��5 */
+  font-family: 'HelveticaNeueBd';
+  src: url('HelveticaNeueBd.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3��5 */
 }
+
+@font-face {
+  font-family: 'HelveticaNeue';
+  src: url('HelveticaNeueLt.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3��5 */
+}
+
 
 #preferenceVis .coffeeIconUnderMap div {
   text-anchor: start;
@@ -26,11 +32,12 @@
   margin: 0px !important;
   padding: 0px !important;
   text-anchor: start;
-  color: #362e28; 
-  font-family: 'HelveticaNeue', sans-serif; 
+  color: #5b0000; 
+  font-family: 'HelveticaNeueBd', sans-serif; 
   font-size: 18px; 
-  font-weight: 100;
+  font-weight: 1000;
   text-align: left;
+  text-transform: capitalize;
 }
 
 #complexVismap svg #complexVismapmapTitle {
@@ -58,7 +65,7 @@
   	text-anchor: start;
   	font-weight: 200;
   	/*font-family: pirates;*/
-    font-family: 'HelveticaNeue', sans-serif; 
+    font-family: 'HelveticaNeueBd', sans-serif; 
   	font-size: 12px;
 }
 
@@ -74,7 +81,7 @@
     min-width: 135px;
     /*font-family: pirates;*/
     font-family: 'HelveticaNeue', sans-serif; 
-    font-size: 15px;
+    font-size: 13px;
 }
 
 .countryCompareInfo {
@@ -82,7 +89,7 @@
   /*font-family: pirates;
   font-size: 22px;*/
 
-  font-family: 'HelveticaNeue', sans-serif; 
+  font-family: 'HelveticaNeueBd', sans-serif; 
   font-size: 18px; 
 
   /*background: rgba(128,177,211,0.8);*/
@@ -93,7 +100,7 @@
 
 .countryCompareInfo h3 {
   margin: 0 0 5px;
-  color: #5b0000 ;
+  color: #5b0000;
   font-size: 20px;
   /*color: rgb(217,95,2);*/
 }
@@ -101,12 +108,8 @@
 .countryShowColorLegend {
  /* font-family: pirates;
   font-size: 20px;*/
-
-  
-  font-family: 'HelveticaNeue', sans-serif; 
-  font-size: 12px; 
- 
-
+  font-family: 'HelveticaNeueBd', sans-serif;
+  font-size: 15px;
 }
 
 /********* Parallel coord ********/
