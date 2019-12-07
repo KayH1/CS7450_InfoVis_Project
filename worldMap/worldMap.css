@@ -10,18 +10,32 @@
 
 #preferenceVis .coffeeIconUnderMap div {
   text-anchor: start;
-  font-weight: 200;
+ /* font-weight: 200;
   font-family: pirates;
-  font-size: 18px;
+  font-size: 18px;*/
+
+  color: #362e28; 
+  font-family: 'Helvetica Neue', sans-serif; 
+  font-size: 16px; 
+  font-weight: 100;
+  text-align: left;
+
 }
 
 #preferenceVis #preferenceVissliders .sliderTitle {
   text-anchor: start;
-  font-weight: 200;
+ /* font-weight: 200;
   font-family: pirates;
-  font-size: 20px;
+  font-size: 20px;*/
   margin: 0px !important;
   padding: 0px !important;
+
+
+  color: #362e28; 
+  font-family: 'Helvetica Neue', sans-serif; 
+  font-size: 18px; 
+  font-weight: 100;
+  text-align: left;
 }
 
 #complexVismap svg #complexVismapmapTitle {
@@ -48,8 +62,9 @@
   	box-shadow: 1 0px 0px;
   	text-anchor: start;
   	font-weight: 200;
-  	font-family: pirates;
-  	font-size: 15px;
+  	/*font-family: pirates;*/
+    font-family: 'Helvetica Neue', sans-serif; 
+  	font-size: 12px;
 }
 
 .countryInfoTooltip {
@@ -62,27 +77,41 @@
     text-anchor: start;
     font-weight: 200;
     min-width: 135px;
-    font-family: pirates;
+    /*font-family: pirates;*/
+    font-family: 'Helvetica Neue', sans-serif; 
     font-size: 15px;
 }
 
 .countryCompareInfo {
   padding: 0px 10px;
-  font-family: pirates;
-  font-size: 22px;
-  background: rgba(128,177,211,0.8);
+  /*font-family: pirates;
+  font-size: 22px;*/
+
+  font-family: 'Helvetica Neue', sans-serif; 
+  font-size: 18px; 
+
+  /*background: rgba(128,177,211,0.8);*/
+  background: white;
   box-shadow: 0 0 15px rgba(0,0,0,0.2);
   border-radius: 5px;
 }
 
 .countryCompareInfo h3 {
   margin: 0 0 5px;
-  color: rgb(217,95,2);
+  color: #5b0000 ;
+  font-size: 20px;
+  /*color: rgb(217,95,2);*/
 }
 
 .countryShowColorLegend {
-  font-family: pirates;
-  font-size: 20px;
+ /* font-family: pirates;
+  font-size: 20px;*/
+
+  
+  font-family: 'Helvetica Neue', sans-serif; 
+  font-size: 12px; 
+ 
+
 }
 
 /********* Parallel coord ********/
