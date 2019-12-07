@@ -28,7 +28,7 @@ function preferenceCombine (divId) {
 		.style("width", "180px").style("height", "100px")
 		.style("margin", "10px 10px 10px 10px")
 		.style("border","2px solid #8da0cb")
-		.style("background", "rgba(222,184,135,0.7)")
+		.style("background", "#FDFAF0")
 		.style("border-radius", "25px")
 		.style("display", "inline-block")
 		.attr("class", "coffeeIconUnderMap");
