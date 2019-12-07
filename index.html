@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
     <link rel="stylesheet" href="./frequencyPlot/style.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="./worldMap/worldMap.css">
 
 
@@ -45,17 +44,23 @@
 
   
 
-  <div><strong></strong><!-- <h1 style="font-size:350%;"> --><h2>
+  <div><strong></strong><!-- <h1 style="font-size:350%;"> --><h4>
 
               <center>  What is important to you in your morning coffee?  <br></br></center>
             
-                <!-- </h1> --><h2></strong></div>
+                <!-- </h1> --><h4></strong></div>
 
                  <div><strong></strong><h1 style="font-size:200%;">
 
               <center>  Move the sliders around to see your preffered coffee based on country!</center>
             
-                </h1></strong></div>
+                </h1></strong></div> <br></br>
+
+                    <center><div style="width: 1000px"><strong></strong><h1 style="font-size:100%;">
+
+               NOTE: All your selections and the following information revolves around the 1312 Arabica coffee beans reviewed by Coffee Quality Institute's highly trained individuals.
+            
+                </h1></strong></div></center>
 
 
   <div style="display: table;margin-left: auto;margin-right: auto;">
@@ -63,27 +68,26 @@
   </div>
       <br></br><br></br>
 
+   
+
+
         
-  <div><strong></strong><!-- <h1 style="font-size:350%;"> --><h2>
+  <div><strong></strong><!-- <h1 style="font-size:350%;"> --><h4>
 
-              <center>   What makes your coffee beans perfect?   <br>Let's find out!</br></center>
+              <center>   What makes your coffee beans perfect? </center>
             
-                </h2></strong></div> <br></br>
+                </h4></strong></div> <br></br>
 
-                 <div><strong></strong><h1 style="font-size:150%;">
+                 <center>  <div style="width: 1000px" align="left" ><strong></strong><h1 style="font-size:150%;">
 
-              <center>     These are the different factors that make a coffee bean unique! All of these are
-              professionally judged through a 'cupping' system where they are rated on a scale of 0-10
-              and then the total overall points are summed up to give a coffee bean a score. </center>
+                 The following factors make a coffee bean unique! All of these factors are
+              professionally rated (on a scale of 0-10) for various coffees through a 'cupping' system. 
+              The factor points are summed to give a coffee bean an overall score. </br></br></br>
+              <center>Interested in a coffee bean from a particular country? Just click to select it and watch its journey through different attributes as you scroll through!</center>
             
-                </h1></strong></div> <br></br>
+                </h1></strong></div> </center><br></br>
 
-                <div><strong></strong><h1 style="font-size:150%;">
-
-              <center>  Interested in a coffee bean from a particular country? Just click to select it and watch its journey through different attributes as you scroll through! </center>
-            
-                </h1></strong></div>
-
+ 
 
         
       <div id="main">
@@ -92,10 +96,10 @@
         <div class="scrollytelling-text" style="margin-left:50px">
           <div class="special empty" id="st_flavor"></div>
           <div class="flavor">
-            <h2>Flavor</h2>
+            <h2><strong>Flavor</strong></h2>
             <p class="para"> 
 
-              Coffee’s taste distinguished from its acidity, aroma, and body, or the quality that remains after those qualities are considered. <br></br> </p>
+             Flavor is a combined impression with taste and smell. <br></br> </p>
 
             <p class="para2"> 
 
@@ -125,11 +129,11 @@
             <h2>Aroma</h2>
             <p class="para"> 
 
-              Aroma is the smell of coffee </p>
+              Fragrance (smell of dry ground coffee) + Aroma (smell of coffee in hot water) </p>
 
             <p class="para2">
               A coffee's aroma is one of the main categories used by professional coffee tasters to judge the quality of a coffee.
-
+              
               Depending on the roast of the coffee, it can range anywhere from light and fruity to burnt. Most coffee will smell lightly caramelized and almost nutty. A stale coffee will smell musty and cardboard-like.
               <br></br> For example, a Yemen Mocha Mattari is known for its dark chocolate aroma. If this is something you're interested in, click here to buy it!
 
@@ -388,8 +392,7 @@
                 <div id="buttons">
                   <button type="button" id="countryLabelsToggle">Toggle country labels</button>
                   <button type="button" id="switchMode">Switch mode</button>
-                  <button type="button" id="reset"><i class="material-icons md-dark button-icon">close</i>Clear selections</button>
-                  <!-- <button class="mdc-icon-button material-icons">close</button> -->
+                  <button type="button" id="reset">Clear selections</button>
                 </div>
               </td>
             </tr>
@@ -397,13 +400,12 @@
         </div>
 
       </div>
-      <div><strong></strong><h1 style="font-size:300%; padding: 100px 0px 100px 0px;">
+      <div><strong></strong><h4 style="font-size:300%; padding: 100px 0px 100px 0px;">
 
-              <center>This is how coffee beans make a perfect cup of coffee. 
-              Now it's time for you to explore!
+              <center>    Now it's time for you to explore!
                </center>
             
-                </h1></strong></div>
+                </h4></strong></div>
 
 
              <!--    <p class="para2">
@@ -419,15 +421,15 @@
             
                 </center></p> -->
 
-                 <div><strong></strong><h1 style="font-size:150%;">
+                  <center>   <div style="width: 1100px" align="left"><strong></strong><h1 style="font-size:150%;">
 
-              <center>    Clicking different countries shows a comparison between their temperatures and rainfall - this is an important characteristic to compare coffee bean growing countries.
+              Clicking different countries in the visualization below shows a comparison between their projected (~20 years) temperature and rainfall - this is an important characteristic to compare coffee bean growing countries.
             For example, Brazil and Columbia have similar patterns that are great for growing coffee! Click around to find out other countries that are similar! <br></br>
 
-             <br>You can toggle between the parallel coordinates view and the historgram view and all views are interconnected. You may be surprised with what you find out!  </br>
-              </center>
+             <br><center>You can toggle between the parallel coordinates view and the historgram view and all views are interconnected. You may be surprised with what you find out! </center> </br>
+             
             
-                </h1></strong></div>
+                </h1></strong></div> </center>
 
 
 
