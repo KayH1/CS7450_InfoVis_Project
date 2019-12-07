@@ -82,11 +82,13 @@ coffeeCompareCombine.prototype.togglePCandH = function() {
         this.parallelCoords.visible = false;
         document.getElementById(this.histograms.divId).style.display = 'block';
         this.histograms.visible = true;
+
     } else if (this.histograms.visible) {
         document.getElementById(this.parallelCoords.divId).style.display = 'block';
         this.parallelCoords.visible = true;
         document.getElementById(this.histograms.divId).style.display = 'none';
         this.histograms.visible = false;
+
     }
 }
 
@@ -103,7 +105,7 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeParallel = function(selectedC
 		map do not have coffee data copy and selectedCoffeeSet is a d3.set with only Coffee Id,
 		some treatment need to do here to extract coffee country here for map 
 	*/
-	let assoCoffeeCompareCombine = this;
+    let assoCoffeeCompareCombine = this;
 
 	let countryCodeShow;
 	if (brushing) {  // there is brushing, although the selection might be empty
@@ -128,7 +130,6 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeParallel = function(selectedC
 /* called from brush hist and update other vis */
 coffeeCompareCombine.prototype.updateSelectedCoffeeHist = function(selectedCoffeeSet, brushing) {
     let assoCoffeeCompareCombine = this;
-
     let countryCodeShow;
     if (brushing) {  // there is brushing, although the selection might be empty
         /* update based on the selected Coffee Set */

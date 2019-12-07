@@ -29,7 +29,7 @@ function parallelCoordinates (divId, attributes, parentVis=null) {
     /* add brush */
     this.brush = d3.brush().extent([
             [this.paddingParallelCoords.l - 10, 2 * this.paddingParallelCoords.t - 30], 
-            [this.paddingParallelCoords.l + 10 + 8 * this.axesSpacing, 2 * this.paddingParallelCoords.t - 10 + chartHeightParallelCoords]
+            [this.paddingParallelCoords.l + 10 + (this.axes.length-1) * this.axesSpacing, 2 * this.paddingParallelCoords.t - 10 + chartHeightParallelCoords]
         ])
         .on("start brush", null)
         .on("end", selectCoffeeWithinSelection)

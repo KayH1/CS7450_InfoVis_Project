@@ -10,10 +10,8 @@ function histograms (divId, attributes, parentVis=null) {
     this.svgHistograms = d3.select("#" + this.divId).append("center")
         .append("svg").attr("class", "histograms")
         .attr("width", 1450)
-        .attr("height", 350)
-        ;
+        .attr("height", 350);
 
-    
 
     this.outsideRequest = 0;  // if the update is called from outside, set as 1
 
@@ -34,7 +32,7 @@ function histograms (divId, attributes, parentVis=null) {
     /* add brush */
     this.brush = d3.brush().extent([
             [this.paddingHistograms.l - 10, 2 * this.paddingHistograms.t - 30], 
-            [this.paddingHistograms.l + 10 + 8 * this.axesSpacing, 2 * this.paddingHistograms.t - 10 + this.chartHeightHistograms]
+            [this.paddingHistograms.l + this.axes.length * this.axesSpacing, 2 * this.paddingHistograms.t - 10 + this.chartHeightHistograms]
         ])
         .on("start brush", null)
         .on("end", selectCoffeeWithinSelection)
@@ -79,6 +77,7 @@ function histograms (divId, attributes, parentVis=null) {
         .text(function(d) { return d; })
         .style("font-weight", "bold");
 
+    console.log(this.countryColorMap);
     
 }
 
