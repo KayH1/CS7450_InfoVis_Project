@@ -2,7 +2,7 @@ var worldMapType = d3.map();
 worldMapType.set("UserPreference", 1);
 worldMapType.set("CoffeeCompare", 2);
 
-var coffeeIconPath = "../worldMap/icons/cup2.png";
+var coffeeIconPath = "../worldMap/icons/coffeeBeanTooltip.png";
 var countryFlagPath = "../data/country/flags/";
 
 /* if having parentVis and mapType is CoffeeCompare, 
@@ -260,13 +260,13 @@ worldMap.prototype.showCoffeeGeo = function() {
 		.attr("transform", function(d) {
 			let countryInfo = associatedMap.data.countryInfoMap.get(d.key);
 			let iconPosition = associatedMap.map.latLngToLayerPoint(new L.LatLng(countryInfo["lat"], countryInfo["lng"]));
-			return "translate(" + (iconPosition.x-18) + "," + (iconPosition.y-18) + ")";
+			return "translate(" + (iconPosition.x-24) + "," + (iconPosition.y - 40) + ")";
 		}).selectAll("coffeeIcon").data(d=>d.values)
 		.enter().append("image").attr("class", "coffeeIcon")
 		.attr("pointer-events", "visible")
 		.attr("href", coffeeIconPath) // address tag
-		.style("height", "40px")
-		.style("width", "24px")
+		.style("height", "80px")
+		.style("width", "48px")
 		.attr("transform", function(d, i) {
 			/* check length of coffee data */
 			let transformText = "translate(" + i*25 + ",0)";
@@ -289,8 +289,8 @@ worldMap.prototype.showCoffeeGeo = function() {
 				.style("border-radius", "10px")
 				.style("border", "2px solid rgba(0,0,0,0)");
 			d3.select(this).transition()
-				.style("height", "80px")
-				.style("width", "48px")
+				.style("height", "120px")
+				.style("width", "72px")
 				.duration(400);
 		})
 		.on("mouseout", function(e) {
@@ -305,8 +305,8 @@ worldMap.prototype.showCoffeeGeo = function() {
 				.style("border-radius", "25px")
 				.style("border","2px solid #8da0cb");
 			d3.select(this).transition()
-				.style("height", "40px")
-				.style("width", "24px")
+				.style("height", "80px")
+				.style("width", "48px")
 				.duration(400);
 		});
 }
@@ -483,7 +483,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 			if (tempSVG.empty()){
 				tempSVG = appenddiv.append("svg")
 					.attr("id", this.divId + "tempDash")
-					.attr("width", 180)
+					.attr("width", 190)
 					.attr("height", 90)
 					.style("margin", 0);
 				tempSVG.selectAll("#temptitle")
@@ -598,7 +598,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 				.attr("height", 15)
 				.merge(presentClimateLegend)
 				.attr("x", function(d, i){
-					return 3 + i * 45;
+					return 2 + i * 46;
 				})
 				.attr("y", 90)
 				.attr("fill", function(d, i){
@@ -615,7 +615,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 				.attr("height", 15)
 				.merge(presentClimateLegendText)
 				.attr("x", function(d, i){
-					return 21 + i * 45;
+					return 19 + i * 46;
 				})
 				.attr("y", 102)
 				.text(d=>d.CountryCode)
@@ -728,7 +728,7 @@ function updateMapZoom(e) {
 			.attr("transform", function(d) {
 				let countryInfo = associatedMap.data.countryInfoMap.get(d.key);
 				let iconPosition = associatedMap.map.latLngToLayerPoint(new L.LatLng(countryInfo["lat"], countryInfo["lng"]));
-				return "translate(" + (iconPosition.x-20) + "," + (iconPosition.y - 12) + ")";
+				return "translate(" + (iconPosition.x-24) + "," + (iconPosition.y - 40) + ")";
 			});
 	}
 }

@@ -27,8 +27,9 @@ function sliders(divId, selectedAttributes, assoPreferenceVis){
 
         var divLabelWeight = divRow.append('div');
         divLabelWeight.attr('class', 'sliderTitle')
-            .style("width", "75px")
-            .style("height", "30px");
+            .style("width", "90px")
+            .style("height", "30px")
+            .style("padding-top", "5px");
         divLabelWeight.text(this.variableCatalogue[i]['variable-name'] + ': ')
 
         var divSliderParent = divRow.append('div');
@@ -43,7 +44,7 @@ function sliders(divId, selectedAttributes, assoPreferenceVis){
             .min(d3.min(ticks))
             .max(d3.max(ticks))
             .width(250)
-            .tickFormat(d3.format('.0%'))
+            .tickFormat(d3.format('.1f'))
             .ticks(5)
             .default(defaultweight)
             .step(0.2)

@@ -79,9 +79,9 @@
     text-anchor: start;
     font-weight: 200;
     min-width: 135px;
-    /*font-family: pirates;*/
-    font-family: 'HelveticaNeue', sans-serif; 
-    font-size: 13px;
+    font-family: pirates;
+    /*font-family: 'HelveticaNeue', sans-serif; */
+    font-size: 14px;
 }
 
 .countryCompareInfo {
