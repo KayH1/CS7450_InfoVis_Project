@@ -2,6 +2,11 @@
   border: 3px solid green;
 }*/
 
+@font-face {
+  font-family: 'HelveticaNeue';
+  src: url('HelveticaNeueLt.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3��5 */
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -20,11 +25,11 @@ table {
   color: white;
 }
 
-h2 { color: #5b0000 /*, 8e2921, 5b0000, 7B3A30*/; font-family: 'Helvetica Neue', sans-serif; font-size: 70px; font-weight: bold; letter-spacing: -1px; line-height: 1; text-align: left; }
+h2 { color: #5b0000 /*, 8e2921, 5b0000, 7B3A30*/; font-family: 'HelveticaNeue', sans-serif; font-size: 70px; font-weight: bold; letter-spacing: -1px; line-height: 1; text-align: left; }
 
-.para2 { color: #362e28; font-family: 'Helvetica Neue', sans-serif; font-size: 18px; font-weight: 100; line-height: 32px; margin: 0 0 72px; text-align: left; }
+.para2 { color: #362e28; font-family: 'HelveticaNeue', sans-serif; font-size: 18px; font-weight: 100; line-height: 32px; margin: 0 0 72px; text-align: left; }
 
-.question{ color: #362e28; font-family: 'Helvetica Neue', sans-serif; font-size: 18px; font-weight: bold; line-height: 32px; margin: 0 0 72px; text-align: left; }
+.question{ color: #362e28; font-family: 'HelveticaNeue', sans-serif; font-size: 18px; font-weight: bold; line-height: 32px; margin: 0 0 72px; text-align: left; }
 
 .para{
  /* {"color":"#c7821c",

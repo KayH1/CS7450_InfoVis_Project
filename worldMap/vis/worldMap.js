@@ -619,7 +619,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 				})
 				.attr("y", 102)
 				.text(d=>d.CountryCode)
-				.style("font-size", 15)
+				.style("font-size", 12)
 				.style("font-weight", "bold");
 			presentClimateLegendText.exit().remove();
 
