@@ -260,7 +260,7 @@ worldMap.prototype.showCoffeeGeo = function() {
 		.attr("transform", function(d) {
 			let countryInfo = associatedMap.data.countryInfoMap.get(d.key);
 			let iconPosition = associatedMap.map.latLngToLayerPoint(new L.LatLng(countryInfo["lat"], countryInfo["lng"]));
-			return "translate(" + (iconPosition.x-24) + "," + (iconPosition.y - 40) + ")";
+			return "translate(" + (iconPosition.x-35) + "," + (iconPosition.y - 55) + ")";
 		}).selectAll("coffeeIcon").data(d=>d.values)
 		.enter().append("image").attr("class", "coffeeIcon")
 		.attr("pointer-events", "visible")
@@ -272,7 +272,7 @@ worldMap.prototype.showCoffeeGeo = function() {
 			let transformText = "translate(" + i*25 + ",0)";
 			if (associatedMap.selectedCountryCoffeeInfoMap[d.ISOofOrigin].length > 1) {
 				let step = 30/(associatedMap.selectedCountryCoffeeInfoMap[d.ISOofOrigin].length - 1);
-				transformText += " rotate(" + (-15 + step*i) + ",12,20)"
+				transformText += " rotate(" + (-15 + step*i) + ",24,40)"
 			}
 			return transformText;
 		})
