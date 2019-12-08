@@ -7,7 +7,7 @@ function histograms (divId, attributes, parentVis=null, maxWidth=null) {
     this.visible = false;
     document.getElementById(this.divId).style.display = 'none';
     
-    var width = 1450;
+    var width = 1600;
     if (maxWidth !== null) { width = maxWidth; }
     this.svgHistograms = d3.select("#" + this.divId).append("center")
         .append("svg").attr("class", "histograms")
@@ -20,15 +20,14 @@ function histograms (divId, attributes, parentVis=null, maxWidth=null) {
     var svgWidthHistograms = +this.svgHistograms.attr('width');
     var svgHeightHistograms = +this.svgHistograms.attr('height');
 
-    this.paddingHistograms = {t: 30, r: 40, b: 50, l: 60, totalCupPoints: 0};
+    this.paddingHistograms = {t: 30, r: 60, b: 60, l: 80, totalCupPoints: 20};
 
-    console.log(attributes);
     this.axes = attributes;
     this.numXAxesTicks = [5, 5, 5, 5, 5, 5, 3, 3, 3, 5, 5];
     this.numYAxesTicks = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 10];
 
     var len = this.axes.length;
-    if (this.axes.length > 1) { len = len+1; }
+    //if (this.axes.length > 1) { len = len+1; }
     this.chartWidthHistograms = svgWidthHistograms - this.paddingHistograms.l - this.paddingHistograms.r;
     this.chartHeightHistograms = svgHeightHistograms - this.paddingHistograms.t - this.paddingHistograms.b;
     this.axesSpacing = this.chartWidthHistograms / (len);
@@ -66,7 +65,7 @@ function histograms (divId, attributes, parentVis=null, maxWidth=null) {
             return 'y label '+d;
         })
         .attr('transform', function(d,i) {
-            var add_spacing = 0;
+            var add_spacing = 15;
             var rot = -15;
             if (d === "totalCupPoints") {
                 add_spacing = assoHist.paddingHistograms.totalCupPoints;
@@ -78,9 +77,8 @@ function histograms (divId, attributes, parentVis=null, maxWidth=null) {
             var att = d;
             if (att === "cleanCup") { att = "Clean cup"; }
             else if (att === "cupperPoints") { att = "Cupper points"; }
-            else if (att === "totalCupPoints") { att = "TOTAL CUP POINTS"; }//Total cup points"; }
+            else if (att === "totalCupPoints") { att = "TOTAL POINTS"; }//Total cup points"; }
             var att = att[0].toUpperCase() + att.slice(1);
-
             return att;
         })
         .style("font-weight", "bold");
@@ -107,7 +105,6 @@ histograms.prototype.initialHistograms = function(coffeeData) {
 
     /* create the x axes */
     assoHist.axes.forEach(function(axis, i) {
-        console.log(assoHist.axes);
         var dom = [0,10];
         if (axis === "totalCupPoints") { dom = [0,100]; }
 
@@ -120,7 +117,7 @@ histograms.prototype.initialHistograms = function(coffeeData) {
         assoHist.chartGHistograms.append('g')
             .attr('class','y-axes y axis '+axis)
             .attr('transform', function(d, idx) {
-                var add_spacing = 0;
+                var add_spacing = 20;
                 if (axis === "totalCupPoints") { add_spacing = assoHist.paddingHistograms.totalCupPoints; }
                 return 'translate('+(i*assoHist.axesSpacing+add_spacing)+','+(assoHist.paddingHistograms.t-20)+')';
             })
@@ -130,15 +127,13 @@ histograms.prototype.initialHistograms = function(coffeeData) {
         var xScale = d3.scaleLinear().range([0, assoHist.chartWidthHistograms/(assoHist.axes.length+1)-15]).domain(freq_rank).nice();
         
 
-
-
         assoHist.xScaleHistograms.push(xScale);
 
         assoHist.chartGHistograms.append('g')
             .attr('class', function(d,idx) {
                 return 'x axis '+d+' x-axes';
             }).attr('transform', function(d,idx) {
-                var add_spacing = 0;
+                var add_spacing = 20;
                 if (axis === "totalCupPoints") { add_spacing = assoHist.paddingHistograms.totalCupPoints; }
                 return 'translate('+(i*assoHist.axesSpacing+add_spacing)+','+(assoHist.chartHeightHistograms+10)+')';
             })
@@ -154,7 +149,7 @@ histograms.prototype.initialHistograms = function(coffeeData) {
                 return 'x label';
             })
             .attr('transform', function(d,i) {
-                return 'translate('+(i*assoHist.axesSpacing + assoHist.chartWidthHistograms/(2*assoHist.axes.length+2))+','+(assoHist.chartHeightHistograms+4.5*assoHist.paddingHistograms.b/5)+')';
+                return 'translate('+(i*assoHist.axesSpacing + assoHist.chartWidthHistograms/(2*assoHist.axes.length))+','+(assoHist.chartHeightHistograms+ assoHist.paddingHistograms.t + 10)+')';
             })
             .text("frequency")
             .style("font-weight", "bold");
@@ -182,7 +177,6 @@ histograms.prototype.initialHistograms = function(coffeeData) {
     assoHist.coffeeSelectSet = d3.set(assoHist.data.map(d=>d["id"]));
     assoHist.coffeeShowSet = assoHist.coffeeSelectSet;
 
-
     /**********************
      Draw dots
     **********************/
@@ -208,7 +202,7 @@ histograms.prototype.initialHistograms = function(coffeeData) {
             })
             .attr('cy', function(d) { return d['flavorProfileDotPosition'][i][1]; })
             .attr('cx', function(d) { 
-                var add_spacing = 0;
+                var add_spacing = 20;
                 if (axis === 'totalCupPoints') { add_spacing = assoHist.paddingHistograms.totalCupPoints; }
                 return d['flavorProfileDotPosition'][i][0] + add_spacing; })
             .style('opacity', 0.5)
@@ -253,11 +247,11 @@ histograms.prototype.setShowCoffeeDotColor = function(coffeeShowSet=null) {
             assoHist.data.forEach(function(coffee) {
                 if (assoHist.countryColorMap.has(coffee["ISOofOrigin"]) && assoHist.coffeeShowSet.has(coffee["id"])) {
                     assoHist.coffeeColorMap.set(coffee["id"], assoHist.countryColorMap.get(coffee["ISOofOrigin"]));
-                    d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("fill", assoHist.countryColorMap.get(coffee["ISOofOrigin"]))
+                    d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).attr("fill", assoHist.countryColorMap.get(coffee["ISOofOrigin"]))
                         .style('r',2).style("opacity", 1);
                 } else {
-                        d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("fill", assoHist.coffeeColorMap.get(coffee["id"])).style('r',2)
-                            .style('stroke-width', 1).style("opacity", 0.2);
+                        d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).attr("fill", assoHist.coffeeColorMap.get(coffee["id"])).style('r',2)
+                            .style("opacity", 0.2);
                 }
             })
         })
@@ -306,7 +300,8 @@ function selectCoffeeWithinSelection() {
             assoHist.axes.forEach(function(axis, i) {
                 assoHist.data.forEach(function(d) {
                     let position = d["flavorProfileDotPosition"][i];
-                    if ((position[0]+assoHist.paddingHistograms.l >= x0 && position[0]+assoHist.paddingHistograms.l <= x1) && (position[1]+assoHist.paddingHistograms.t >= y0 && position[1]+assoHist.paddingHistograms.t <= y1)) {
+                    // add extra 20 for spacing, as above
+                    if ((position[0]+assoHist.paddingHistograms.l + 20 >= x0 && position[0]+assoHist.paddingHistograms.l + 20 <= x1) && (position[1]+assoHist.paddingHistograms.t >= y0 && position[1]+assoHist.paddingHistograms.t <= y1)) {
                         assoHist.coffeeSelectSet.add(d["id"]);
                     }
                 });

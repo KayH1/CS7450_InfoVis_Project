@@ -90,8 +90,7 @@ var coffeeCompareVisCombine = new coffeeCompareVis.coffeeCompareCombine("complex
 
         /* get frequency info for each country */
         var freqs = {};
-
-        console.log("ATTS ",atts);
+        
         atts.forEach(function(att) {
             let attBins = {};
 

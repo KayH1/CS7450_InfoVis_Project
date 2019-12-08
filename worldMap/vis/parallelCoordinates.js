@@ -9,22 +9,20 @@ function parallelCoordinates (divId, attributes, parentVis=null) {
 
     this.svgParallelCoords = d3.select("#" + this.divId).append("center")
         .append("svg").attr("class", "parallel-coords")
-        .attr("width", 1450)
+        .attr("width", 1600)
         .attr("height", 350);
-
-    this.outsideRequest = 0;  // if the update is called from outside, set as 1
 
     var svgWidthParallelCoords = +this.svgParallelCoords.attr('width');
     var svgHeightParallelCoords = +this.svgParallelCoords.attr('height');
 
-    this.paddingParallelCoords = {t: 30, r: 40, b: 50, l: 60, totalCupPoints: 50};
+    this.paddingParallelCoords = {t: 30, r: 60, b: 50, l: 95, totalCupPoints: 50};
 
     this.axes = attributes;
-    this.axes = this.axes.filter(function(v, idx, a) { return v !== "totalCupPoints"; })
+    this.axes = this.axes; //.filter(function(v, idx, a) { return v !== "totalCupPoints"; })
 
     var chartWidthParallelCoords = svgWidthParallelCoords - this.paddingParallelCoords.l - this.paddingParallelCoords.r;
     var chartHeightParallelCoords = svgHeightParallelCoords - this.paddingParallelCoords.t - this.paddingParallelCoords.b;
-    this.axesSpacing = chartWidthParallelCoords / (this.axes.length+1);//-0.5);
+    this.axesSpacing = chartWidthParallelCoords / (this.axes.length-1) - 5;//-0.5);
     
     let assoParallel = this;
 
@@ -60,7 +58,16 @@ function parallelCoordinates (divId, attributes, parentVis=null) {
             return 'translate('+(i*assoParallel.axesSpacing)+','+(assoParallel.paddingParallelCoords.t-20)+')';
         });
     this.enterAxesParallelCoords.call(d3.axisLeft(this.yScaleParallelCoords).ticks(5))
-        .selectAll("text").style("font-size", "12px").style("font-weight", 500);
+        .each(function(d){
+            if (d==='totalCupPoints') {
+                let axisText = d3.select(this).selectAll("text");
+                axisText.each(function(d) {
+                    let points = (+d3.select(this).text());
+                    d3.select(this).text(points * 10);
+                })
+            }
+        })
+        .selectAll("text").style("font-size", "12px").style("font-weight", 500)
     this.enterTextParallelCoords = this.chartGParallelCoords.selectAll('.axistitle')
         .data(this.axes)
         .enter()
@@ -70,15 +77,18 @@ function parallelCoordinates (divId, attributes, parentVis=null) {
             return 'y label '+d;
         })
         .attr('transform', function(d,i) {
-            return 'translate('+(i*assoParallel.axesSpacing)+',-10) rotate(-15)';
+            let rot = -15;
+            if (d === "totalCupPoints") {
+                rot = 0;
+            }
+            return 'translate('+(i*assoParallel.axesSpacing)+',-10) rotate(' + rot + ')';
         })
         .text(function(d) { 
             var att = d;
             if (att === "cleanCup") { att = "Clean cup"; }
             else if (att === "cupperPoints") { att = "Cupper points"; }
-            else if (att === "totalCupPoints") { att = "Total cup points"; }
+            else if (att === "totalCupPoints") { att = "TOTAL POINTS"; }
             var att = att[0].toUpperCase() + att.slice(1);
-
             return att; })
         .style("font-weight", "bold");
 }
@@ -106,13 +116,12 @@ parallelCoordinates.prototype.initialParallelCoordinates = function(coffeeData) 
         
         assoParallel.axes.forEach(function(axis, i) {
             if (axis !== 'totalCupPoints') {
-        
                 d['flavorProfileLine'].push([i*assoParallel.axesSpacing, assoParallel.paddingParallelCoords.t - 20 + assoParallel.yScaleParallelCoords(d[assoParallel.axes[i]])]); 
-                
-
                 d['flavorProfilePosition'].push([assoParallel.paddingParallelCoords.l + i*assoParallel.axesSpacing, 2*assoParallel.paddingParallelCoords.t - 20 + assoParallel.yScaleParallelCoords(d[assoParallel.axes[i]]) ]);
+            } else {
+                d['flavorProfileLine'].push([i*assoParallel.axesSpacing, assoParallel.paddingParallelCoords.t - 20 + assoParallel.yScaleParallelCoords(d[assoParallel.axes[i]]/10)]); 
+                d['flavorProfilePosition'].push([assoParallel.paddingParallelCoords.l + i*assoParallel.axesSpacing, 2*assoParallel.paddingParallelCoords.t - 20 + assoParallel.yScaleParallelCoords(d[assoParallel.axes[i]]/10) ]);
             };
-
         });
 
     });

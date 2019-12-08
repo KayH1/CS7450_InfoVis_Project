@@ -20,8 +20,7 @@ import * as hists from "./vis/histograms.js"
 
 function coffeeCompareCombine (divId, attributes) {
 	this.divId = divId;
-	attributes = attributes.slice(0,attributes.length-1);
-	console.log("Atts ",attributes);
+	//attributes = attributes.slice(0,attributes.length-1);
 	let mapEmbeddingDiv = d3.select("#" + this.divId).append("div").attr("id", "MapEmbedding")
 		.style("display", "table")
 		.style("margin-left", "auto")
@@ -45,30 +44,30 @@ function coffeeCompareCombine (divId, attributes) {
 	/* for parallel coordinate or brushing hist */
 	let assoBrushingVisId = this.divId + "brushing"
 	d3.select("#" + divId).append("div").attr("id", assoBrushingVisId)
-		.style("margin-top", "40px");
+		.style("margin-top", "10px");
 
     /* for histograms */
     let assoHistogramVisId = this.divId + "histograms";
     d3.select("#" + divId).append("div").attr("id", assoHistogramVisId)
-        .style("margin-top", "40px");
+        .style("margin-top", "10px");
 
-
+    /*
     let assoHistogramTotalVisId = this.divId + "histogramsTotal";
     d3.select("#" + divId).append("div").attr("id", assoHistogramTotalVisId)
         .style("margin-top", "80px");
-    
-    console.log("Attributes: ",attributes);
+    */
+
     this.worldMap = new mapVis.worldMap(assoMapId, 4, "Coffee World Map", "CoffeeCompare", this);
 	this.embedding = new embedding.embedding(assoEmbeddingId, this);
 	this.parallelCoords = new parallelCoords.parallelCoordinates(assoBrushingVisId, attributes, this);
     this.histograms = new hists.histograms(assoHistogramVisId, attributes, this);
+    
+    /*
     this.histogramsTotalCupPoints = new hists.histograms(assoHistogramTotalVisId, ["totalCupPoints"], this, 350);
-
-
-    document.getElementById(this.histogramsTotalCupPoints.divId).style.display = 'block';
+	document.getElementById(this.histogramsTotalCupPoints.divId).style.display = 'block';
     document.getElementById(this.histogramsTotalCupPoints.divId).style.width = '160px';
-        
     this.histogramsTotalCupPoints.visible = true;
+	*/
 }
 
 
@@ -84,7 +83,7 @@ coffeeCompareCombine.prototype.loadData = function(coffeeData) {
 	this.parallelCoords.initialParallelCoordinates(coffeeData);
     this.histograms.initialHistograms(coffeeData);
     this.embedding.initialEmbedding(coffeeData);
-    this.histogramsTotalCupPoints.initialHistograms(coffeeData);
+    //this.histogramsTotalCupPoints.initialHistograms(coffeeData);
 }
 
 
@@ -112,8 +111,7 @@ coffeeCompareCombine.prototype.updateCountryClicked = function(countryClickedMap
 	this.parallelCoords.updateLineColorSelectedCountry(countryClickedMap);
     this.histograms.updateDotColorSelectedCountry(countryClickedMap);
     this.embedding.updateDotColorSelectedCountry(countryClickedMap);
-    this.histogramsTotalCupPoints.updateDotColorSelectedCountry(countryClickedMap);
-    
+    //this.histogramsTotalCupPoints.updateDotColorSelectedCountry(countryClickedMap);
 };
 
 /* called from parallel coordinates and update other vis */
@@ -163,7 +161,7 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeParallel = function(selectedC
 	}
 	this.worldMap.updateCoffeeSelectedSet(countryCodeShow);
 	this.parallelCoords.setShowCoffeeLineColor(parallelCoffeeShowSet);
-	this.histogramsTotalCupPoints.setShowCoffeeDotColor(histCoffeeShowSet);
+	//this.histogramsTotalCupPoints.setShowCoffeeDotColor(histCoffeeShowSet);
 	this.embedding.setShowCoffeeDotColor(embeddingCoffeeShowSet);
 }
 
@@ -216,8 +214,7 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeHist = function(selectedCoffe
 	this.worldMap.updateCoffeeSelectedSet(countryCodeShow);
 	this.histograms.setShowCoffeeDotColor(histCoffeeShowSet);
 	this.embedding.setShowCoffeeDotColor(embeddingCoffeeShowSet);
-	this.histogramsTotalCupPoints.setShowCoffeeDotColor(histCoffeeShowSet);
-
+	//this.histogramsTotalCupPoints.setShowCoffeeDotColor(histCoffeeShowSet);
 	this.parallelCoords.setShowCoffeeLineColor(parallelCoffeeShowSet);
 	
 }
@@ -295,10 +292,10 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeEmbedding = function(selected
 	this.worldMap.updateCoffeeSelectedSet(countryCodeShow);
 	if (flag) {
 		this.histograms.setShowCoffeeDotColor(histCoffeeShowSet);
-		this.histogramsTotalCupPoints.setShowCoffeeDotColor(coffeeShowSetTotal);
+		//this.histogramsTotalCupPoints.setShowCoffeeDotColor(coffeeShowSetTotal);
 	} else {
 		this.parallelCoords.setShowCoffeeLineColor(parallelCoffeeShowSet);
-		this.histogramsTotalCupPoints.setShowCoffeeDotColor(coffeeShowSetTotal);
+		//this.histogramsTotalCupPoints.setShowCoffeeDotColor(coffeeShowSetTotal);
 	}
 	this.embedding.setShowCoffeeDotColor(embeddingCoffeeShowSet);
 }

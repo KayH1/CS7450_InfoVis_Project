@@ -66,6 +66,10 @@ function sliders(divId, selectedAttributes, assoPreferenceVis){
         gStep.call(this.sliderHolder[i]);
         d3.select('p#' + this.variableCatalogue[i]['weight-id']).text(d3.format('.0%')(this.variableCatalogue[i]['weight']));
     }
+
+    var illustration = d3.select("#" + this.divId).append("div").attr("class", "illustrationSliders").style('width', '405px').style("font-weight", "bold").style('padding-left', '5px');
+    illustration.append("p").text("Move the sliders around to see your preffered coffee based on country!").style('font-size', "22px");
+    illustration.append("p").text("**All your selections and the following information revolves around the 1312 Arabica coffee beans reviewed by Coffee Quality Institute's highly trained individuals.").style('font-size', "12px");
 }
 
 sliders.prototype.updateRanks = function() {
