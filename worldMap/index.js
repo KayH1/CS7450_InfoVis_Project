@@ -2,7 +2,7 @@ import * as coffeeCompareVis from "./coffeeCompareVis.js"
 import * as preferenceVis from "./preferenceVis.js"
 
 /* specify the flavor profile atts */
-var atts = ['flavor', 'aroma', 'aftertaste', 'acidity', 'balance', 'body', 'uniformity', 'sweetness', 'cleanCup', 'cupperPoints'];
+var atts = ['flavor', 'aroma', 'aftertaste', 'acidity', 'balance', 'body', 'uniformity', 'sweetness', 'cleanCup', 'cupperPoints', 'totalCupPoints'];
 
 /* test for user preference map */
 var preferenceVisCombine = new preferenceVis.preferenceCombine("preferenceVis");
@@ -91,6 +91,7 @@ var coffeeCompareVisCombine = new coffeeCompareVis.coffeeCompareCombine("complex
         /* get frequency info for each country */
         var freqs = {};
 
+        console.log("ATTS ",atts);
         atts.forEach(function(att) {
             let attBins = {};
 

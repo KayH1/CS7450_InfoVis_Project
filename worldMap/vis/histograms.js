@@ -1,4 +1,4 @@
-function histograms (divId, attributes, parentVis=null) {
+function histograms (divId, attributes, parentVis=null, maxWidth=null) {
     
     this.divId = divId;
     this.parentVis = parentVis;
@@ -7,9 +7,11 @@ function histograms (divId, attributes, parentVis=null) {
     this.visible = false;
     document.getElementById(this.divId).style.display = 'none';
     
+    var width = 1450;
+    if (maxWidth !== null) { width = maxWidth; }
     this.svgHistograms = d3.select("#" + this.divId).append("center")
         .append("svg").attr("class", "histograms")
-        .attr("width", 1450)
+        .attr("width", width)
         .attr("height", 350);
 
 
@@ -18,14 +20,18 @@ function histograms (divId, attributes, parentVis=null) {
     var svgWidthHistograms = +this.svgHistograms.attr('width');
     var svgHeightHistograms = +this.svgHistograms.attr('height');
 
-    this.paddingHistograms = {t: 30, r: 40, b: 50, l: 60};
+    this.paddingHistograms = {t: 30, r: 40, b: 50, l: 60, totalCupPoints: 0};
 
+    console.log(attributes);
     this.axes = attributes;
-    this.numAxesTicks = [5,5,5,5,5,5,3,3,3,5];
+    this.numXAxesTicks = [5, 5, 5, 5, 5, 5, 3, 3, 3, 5, 5];
+    this.numYAxesTicks = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 10];
 
+    var len = this.axes.length;
+    if (this.axes.length > 1) { len = len+1; }
     this.chartWidthHistograms = svgWidthHistograms - this.paddingHistograms.l - this.paddingHistograms.r;
     this.chartHeightHistograms = svgHeightHistograms - this.paddingHistograms.t - this.paddingHistograms.b;
-    this.axesSpacing = this.chartWidthHistograms / (this.axes.length);
+    this.axesSpacing = this.chartWidthHistograms / (len);
     
     let assoHist = this;
 
@@ -43,7 +49,7 @@ function histograms (divId, attributes, parentVis=null) {
     /* add brush */
 
     // create the y and x scales
-    this.yScaleHistograms = d3.scaleLinear().range([this.chartHeightHistograms,0]).domain([0,10]).nice();
+    this.yScaleHistograms = [];
     this.xScaleHistograms = [];
 
     // Create a group element for appending chart elements
@@ -51,18 +57,6 @@ function histograms (divId, attributes, parentVis=null) {
         .attr('transform', 'translate('+[this.paddingHistograms.l, this.paddingHistograms.t]+')');
 
     // Create groups for the y-axes
-    this.enterYAxesHistograms = this.chartGHistograms.selectAll('g.y-axes')
-        .data(this.axes)
-        .enter()
-        .append('g')
-        .attr('class', function(d,i) {
-            return 'y axis '+d+' y-axes';
-        })
-        .attr('transform', function(d,i){
-            return 'translate('+(i*assoHist.axesSpacing)+','+(assoHist.paddingHistograms.t-20)+')';
-        });
-    this.enterYAxesHistograms.call(d3.axisLeft(this.yScaleHistograms).ticks(5))
-        .selectAll("text").style("font-size", "12px").style("font-weight", 500);
     this.enterTextHistograms = this.chartGHistograms.selectAll('.axistitle')
         .data(this.axes)
         .enter()
@@ -72,9 +66,23 @@ function histograms (divId, attributes, parentVis=null) {
             return 'y label '+d;
         })
         .attr('transform', function(d,i) {
-            return 'translate('+(i*assoHist.axesSpacing-10)+',-10) rotate(-20)';
+            var add_spacing = 0;
+            var rot = -15;
+            if (d === "totalCupPoints") {
+                add_spacing = assoHist.paddingHistograms.totalCupPoints;
+                rot = 0;
+            }
+            return 'translate('+(i*assoHist.axesSpacing+add_spacing)+',-10) rotate('+rot+')';
         })
-        .text(function(d) { return d; })
+        .text(function(d) {
+            var att = d;
+            if (att === "cleanCup") { att = "Clean cup"; }
+            else if (att === "cupperPoints") { att = "Cupper points"; }
+            else if (att === "totalCupPoints") { att = "TOTAL CUP POINTS"; }//Total cup points"; }
+            var att = att[0].toUpperCase() + att.slice(1);
+
+            return att;
+        })
         .style("font-weight", "bold");
         
 }
@@ -99,10 +107,30 @@ histograms.prototype.initialHistograms = function(coffeeData) {
 
     /* create the x axes */
     assoHist.axes.forEach(function(axis, i) {
-        
+        console.log(assoHist.axes);
+        var dom = [0,10];
+        if (axis === "totalCupPoints") { dom = [0,100]; }
+
         var freq_rank = d3.extent(coffeeData, function(d) { return d.freq[axis][1]; });
+        
+        var yScale = d3.scaleLinear().range([assoHist.chartHeightHistograms,0]).domain(dom).nice();
+        
+        assoHist.yScaleHistograms.push(yScale);
+
+        assoHist.chartGHistograms.append('g')
+            .attr('class','y-axes y axis '+axis)
+            .attr('transform', function(d, idx) {
+                var add_spacing = 0;
+                if (axis === "totalCupPoints") { add_spacing = assoHist.paddingHistograms.totalCupPoints; }
+                return 'translate('+(i*assoHist.axesSpacing+add_spacing)+','+(assoHist.paddingHistograms.t-20)+')';
+            })
+            .call(d3.axisLeft(assoHist.yScaleHistograms[i]).ticks(assoHist.numYAxesTicks[i]))
+            .selectAll("text").style("font-size", "12px").style("font-weight", 500);
 
         var xScale = d3.scaleLinear().range([0, assoHist.chartWidthHistograms/(assoHist.axes.length+1)-15]).domain(freq_rank).nice();
+        
+
+
 
         assoHist.xScaleHistograms.push(xScale);
 
@@ -110,9 +138,11 @@ histograms.prototype.initialHistograms = function(coffeeData) {
             .attr('class', function(d,idx) {
                 return 'x axis '+d+' x-axes';
             }).attr('transform', function(d,idx) {
-                return 'translate('+(i*assoHist.axesSpacing)+','+(assoHist.chartHeightHistograms+10)+')';
+                var add_spacing = 0;
+                if (axis === "totalCupPoints") { add_spacing = assoHist.paddingHistograms.totalCupPoints; }
+                return 'translate('+(i*assoHist.axesSpacing+add_spacing)+','+(assoHist.chartHeightHistograms+10)+')';
             })
-            .call(d3.axisBottom(assoHist.xScaleHistograms[i]).ticks(assoHist.numAxesTicks[i]))
+            .call(d3.axisBottom(assoHist.xScaleHistograms[i]).ticks(assoHist.numXAxesTicks[i]))
             .selectAll("text").style("font-size", "12px").style("font-weight", 500);
     
         assoHist.enterXTextHistograms = assoHist.chartGHistograms.selectAll('.xaxistitle')
@@ -130,8 +160,6 @@ histograms.prototype.initialHistograms = function(coffeeData) {
             .style("font-weight", "bold");
     });
 
-    
-
     assoHist.enterXAxesHistograms = assoHist.chartGHistograms.selectAll('g.x-axes');
 
     /* determine the datacase dot positions */
@@ -140,7 +168,8 @@ histograms.prototype.initialHistograms = function(coffeeData) {
         assoHist.axes.forEach(function(axis, i) {
             var inter = assoHist.xScaleHistograms[i](d.freq[axis][1]);
             let x = 2 + i*assoHist.axesSpacing + assoHist.xScaleHistograms[i](d.freq[axis][1]);
-            let y = assoHist.paddingHistograms.t - 20 + assoHist.yScaleHistograms(d.freq[axis][0]);
+
+            let y = assoHist.paddingHistograms.t - 20 + assoHist.yScaleHistograms[i](d.freq[axis][0]);
             d['flavorProfileDotPosition'].push([x, y]);
         })
 
@@ -178,7 +207,10 @@ histograms.prototype.initialHistograms = function(coffeeData) {
                 return 2;
             })
             .attr('cy', function(d) { return d['flavorProfileDotPosition'][i][1]; })
-            .attr('cx', function(d) { return d['flavorProfileDotPosition'][i][0]; })
+            .attr('cx', function(d) { 
+                var add_spacing = 0;
+                if (axis === 'totalCupPoints') { add_spacing = assoHist.paddingHistograms.totalCupPoints; }
+                return d['flavorProfileDotPosition'][i][0] + add_spacing; })
             .style('opacity', 0.5)
             .attr('fill', function(d) {
                 return assoHist.coffeeColorMap.get(d["id"]);

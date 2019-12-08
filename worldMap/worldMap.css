@@ -130,19 +130,42 @@
 /********* Histograms ********/
   #complexVishistograms svg.histograms .dotHist {
     fill: #663300;
-    /*opacity: 0.3;*/
   }
 
   #complexVishistograms svg.histograms .y.label {
-    /*font-family: sans-serif;*/
+    font-family: 'HelveticaNeueBd', sans-serif; 
     font-size: 14px;
+    color: #362e28; 
     fill: #663300;
     text-anchor: middle;
   }
 
   #complexVishistograms svg.histograms .x.label {
+    font-family: 'HelveticaNeueBd', sans-serif; 
     font-size: 14px;
+    text-anchor: middle;
+  }
+
+  #complexVishistogramsTotal {
+
+    position:relative;
+    bottom:437px;
+    left:1370px;
+  }
+  #complexVishistogramsTotal svg.histograms .dotHist {
     fill: #663300;
+  }
+
+  #complexVishistogramsTotal svg.histograms .y.label {
+    font-family: 'HelveticaNeueBd', sans-serif; 
+    font-size: 14px;
+    color: #362e28; 
+    fill: #663300;
+  }
+
+  #complexVishistogramsTotal svg.histograms .x.label {
+    font-family: 'HelveticaNeueBd', sans-serif; 
+    font-size: 14px;
     text-anchor: middle;
   }
 

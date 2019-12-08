@@ -20,6 +20,8 @@ import * as hists from "./vis/histograms.js"
 
 function coffeeCompareCombine (divId, attributes) {
 	this.divId = divId;
+	attributes = attributes.slice(0,attributes.length-1);
+	console.log("Atts ",attributes);
 	let mapEmbeddingDiv = d3.select("#" + this.divId).append("div").attr("id", "MapEmbedding")
 		.style("display", "table")
 		.style("margin-left", "auto")
@@ -50,12 +52,23 @@ function coffeeCompareCombine (divId, attributes) {
     d3.select("#" + divId).append("div").attr("id", assoHistogramVisId)
         .style("margin-top", "40px");
 
+
+    let assoHistogramTotalVisId = this.divId + "histogramsTotal";
+    d3.select("#" + divId).append("div").attr("id", assoHistogramTotalVisId)
+        .style("margin-top", "80px");
     
+    console.log("Attributes: ",attributes);
     this.worldMap = new mapVis.worldMap(assoMapId, 4, "Coffee World Map", "CoffeeCompare", this);
 	this.embedding = new embedding.embedding(assoEmbeddingId, this);
 	this.parallelCoords = new parallelCoords.parallelCoordinates(assoBrushingVisId, attributes, this);
     this.histograms = new hists.histograms(assoHistogramVisId, attributes, this);
+    this.histogramsTotalCupPoints = new hists.histograms(assoHistogramTotalVisId, ["totalCupPoints"], this, 350);
 
+
+    document.getElementById(this.histogramsTotalCupPoints.divId).style.display = 'block';
+    document.getElementById(this.histogramsTotalCupPoints.divId).style.width = '160px';
+        
+    this.histogramsTotalCupPoints.visible = true;
 }
 
 
@@ -71,6 +84,7 @@ coffeeCompareCombine.prototype.loadData = function(coffeeData) {
 	this.parallelCoords.initialParallelCoordinates(coffeeData);
     this.histograms.initialHistograms(coffeeData);
     this.embedding.initialEmbedding(coffeeData);
+    this.histogramsTotalCupPoints.initialHistograms(coffeeData);
 }
 
 
@@ -83,7 +97,7 @@ coffeeCompareCombine.prototype.togglePCandH = function() {
         this.histograms.visible = true;
 
     } else if (this.histograms.visible) {
-        document.getElementById(this.parallelCoords.divId).style.display = 'block';
+    	document.getElementById(this.parallelCoords.divId).style.display = 'block';
         this.parallelCoords.visible = true;
         document.getElementById(this.histograms.divId).style.display = 'none';
         this.histograms.visible = false;
@@ -98,6 +112,8 @@ coffeeCompareCombine.prototype.updateCountryClicked = function(countryClickedMap
 	this.parallelCoords.updateLineColorSelectedCountry(countryClickedMap);
     this.histograms.updateDotColorSelectedCountry(countryClickedMap);
     this.embedding.updateDotColorSelectedCountry(countryClickedMap);
+    this.histogramsTotalCupPoints.updateDotColorSelectedCountry(countryClickedMap);
+    
 };
 
 /* called from parallel coordinates and update other vis */
@@ -110,6 +126,7 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeParallel = function(selectedC
 	let assoCoffeeCompareCombine = this;
 	let parallelCoffeeShowSet;
 	let embeddingCoffeeShowSet;
+	let histCoffeeShowSet;
 
 	let countryCodeShow;
 	if (brushing) {  // there is brushing, although the selection might be empty
@@ -129,12 +146,14 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeParallel = function(selectedC
 		})
 		parallelCoffeeShowSet = coffeeSetJoined;
 		embeddingCoffeeShowSet = coffeeSetJoined;
+		histCoffeeShowSet = coffeeSetJoined;
 		/****** perform set join (current place holder) ********/
 
 	} else {
 		embeddingCoffeeShowSet = assoCoffeeCompareCombine.embedding.coffeeSelectSet;
 		parallelCoffeeShowSet = embeddingCoffeeShowSet;
-		
+		histCoffeeShowSet = embeddingCoffeeShowSet;
+
 		/* restore the map show */
 		countryCodeShow = d3.set();
 		embeddingCoffeeShowSet.each(function(d) {
@@ -144,6 +163,7 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeParallel = function(selectedC
 	}
 	this.worldMap.updateCoffeeSelectedSet(countryCodeShow);
 	this.parallelCoords.setShowCoffeeLineColor(parallelCoffeeShowSet);
+	this.histogramsTotalCupPoints.setShowCoffeeDotColor(histCoffeeShowSet);
 	this.embedding.setShowCoffeeDotColor(embeddingCoffeeShowSet);
 }
 
@@ -156,6 +176,7 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeHist = function(selectedCoffe
 
 	let assoCoffeeCompareCombine = this;
 	let histCoffeeShowSet;
+	let parallelCoffeeShowSet;
 	let embeddingCoffeeShowSet;
 
 	let countryCodeShow;
@@ -176,6 +197,7 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeHist = function(selectedCoffe
 				coffeeSetJoined.add(d);
 		})
 		histCoffeeShowSet = coffeeSetJoined;
+		parallelCoffeeShowSet = coffeeSetJoined;
 		embeddingCoffeeShowSet = coffeeSetJoined;
 		/****** perform set join (current place holder) ********/
 
@@ -183,6 +205,7 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeHist = function(selectedCoffe
 		/* restore the map show */
 		embeddingCoffeeShowSet = assoCoffeeCompareCombine.embedding.coffeeSelectSet;
 		histCoffeeShowSet = embeddingCoffeeShowSet;
+		parallelCoffeeShowSet = embeddingCoffeeShowSet;
 
 		/* restore the map show */
 		countryCodeShow = d3.set();
@@ -193,6 +216,10 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeHist = function(selectedCoffe
 	this.worldMap.updateCoffeeSelectedSet(countryCodeShow);
 	this.histograms.setShowCoffeeDotColor(histCoffeeShowSet);
 	this.embedding.setShowCoffeeDotColor(embeddingCoffeeShowSet);
+	this.histogramsTotalCupPoints.setShowCoffeeDotColor(histCoffeeShowSet);
+
+	this.parallelCoords.setShowCoffeeLineColor(parallelCoffeeShowSet);
+	
 }
 
 /* called from embedding and update other vis */
@@ -204,6 +231,7 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeEmbedding = function(selected
 
 	let assoCoffeeCompareCombine = this;
 	let embeddingCoffeeShowSet;
+	let coffeeShowSetTotal;
 	let histCoffeeShowSet;
 	let parallelCoffeeShowSet;
 
@@ -220,21 +248,31 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeEmbedding = function(selected
 		
 		/****** perform set join (current place holder) ********/
 		let coffeeSetToJoin;
+		let coffeeSetToJoinTotal;
 		if (flag) {
 			coffeeSetToJoin = assoCoffeeCompareCombine.histograms.coffeeSelectSet;
 		} else {
 			coffeeSetToJoin = assoCoffeeCompareCombine.parallelCoords.coffeeSelectSet;
 		}
+		coffeeSetToJoinTotal = assoCoffeeCompareCombine.histograms.coffeeSelectSet;
+
 		let coffeeSetJoined = d3.set();
+		let coffeeSetJoinedTotal = d3.set();
 		selectedCoffeeSet.each(function(d) {
 			if (coffeeSetToJoin.has(d))
 				coffeeSetJoined.add(d);
+		})
+		selectedCoffeeSet.each(function(d) {
+			if (coffeeSetToJoinTotal.has(d))
+				coffeeSetJoinedTotal.add(d);
 		})
 		if (flag) {
 			histCoffeeShowSet = coffeeSetJoined;
 		} else {
 			parallelCoffeeShowSet = coffeeSetJoined;
 		}
+		coffeeShowSetTotal = coffeeSetJoinedTotal;
+
 		embeddingCoffeeShowSet = coffeeSetJoined;
 		/****** perform set join (current place holder) ********/
 	} else {
@@ -244,6 +282,8 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeEmbedding = function(selected
 		} else {
 			parallelCoffeeShowSet = assoCoffeeCompareCombine.parallelCoords.coffeeSelectSet;
 		}
+		coffeeShowSetTotal = assoCoffeeCompareCombine.histograms.coffeeSelectSet;
+
 		embeddingCoffeeShowSet = assoCoffeeCompareCombine.histograms.visible? histCoffeeShowSet:parallelCoffeeShowSet;
 		
 		/* restore the map show */
@@ -255,8 +295,10 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeEmbedding = function(selected
 	this.worldMap.updateCoffeeSelectedSet(countryCodeShow);
 	if (flag) {
 		this.histograms.setShowCoffeeDotColor(histCoffeeShowSet);
+		this.histogramsTotalCupPoints.setShowCoffeeDotColor(coffeeShowSetTotal);
 	} else {
 		this.parallelCoords.setShowCoffeeLineColor(parallelCoffeeShowSet);
+		this.histogramsTotalCupPoints.setShowCoffeeDotColor(coffeeShowSetTotal);
 	}
 	this.embedding.setShowCoffeeDotColor(embeddingCoffeeShowSet);
 }

@@ -17,12 +17,14 @@ function parallelCoordinates (divId, attributes, parentVis=null) {
     var svgWidthParallelCoords = +this.svgParallelCoords.attr('width');
     var svgHeightParallelCoords = +this.svgParallelCoords.attr('height');
 
-    this.paddingParallelCoords = {t: 30, r: 40, b: 50, l: 60};
+    this.paddingParallelCoords = {t: 30, r: 40, b: 50, l: 60, totalCupPoints: 50};
 
     this.axes = attributes;
+    this.axes = this.axes.filter(function(v, idx, a) { return v !== "totalCupPoints"; })
+
     var chartWidthParallelCoords = svgWidthParallelCoords - this.paddingParallelCoords.l - this.paddingParallelCoords.r;
     var chartHeightParallelCoords = svgHeightParallelCoords - this.paddingParallelCoords.t - this.paddingParallelCoords.b;
-    this.axesSpacing = chartWidthParallelCoords / (this.axes.length);//-0.5);
+    this.axesSpacing = chartWidthParallelCoords / (this.axes.length+1);//-0.5);
     
     let assoParallel = this;
 
@@ -100,13 +102,16 @@ parallelCoordinates.prototype.initialParallelCoordinates = function(coffeeData) 
     let assoParallel = this;
     coffeeData.forEach(function(d) {
         d['flavorProfileLine'] = []
-        assoParallel.axes.forEach(function(axis, i) {
-            d['flavorProfileLine'].push([i*assoParallel.axesSpacing, assoParallel.paddingParallelCoords.t - 20 + assoParallel.yScaleParallelCoords(d[assoParallel.axes[i]])]); 
-        })
-
         d['flavorProfilePosition'] = []
+        
         assoParallel.axes.forEach(function(axis, i) {
-            d['flavorProfilePosition'].push([assoParallel.paddingParallelCoords.l + i*assoParallel.axesSpacing, 2*assoParallel.paddingParallelCoords.t - 20 + assoParallel.yScaleParallelCoords(d[assoParallel.axes[i]]) ]);
+            if (axis !== 'totalCupPoints') {
+        
+                d['flavorProfileLine'].push([i*assoParallel.axesSpacing, assoParallel.paddingParallelCoords.t - 20 + assoParallel.yScaleParallelCoords(d[assoParallel.axes[i]])]); 
+                
+
+                d['flavorProfilePosition'].push([assoParallel.paddingParallelCoords.l + i*assoParallel.axesSpacing, 2*assoParallel.paddingParallelCoords.t - 20 + assoParallel.yScaleParallelCoords(d[assoParallel.axes[i]]) ]);
+            };
 
         });
 
