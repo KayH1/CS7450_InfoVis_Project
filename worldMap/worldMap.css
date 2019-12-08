@@ -118,8 +118,9 @@
   }
 
   #complexVisbrushing svg.parallel-coords .y.label {
-    /*font-family: sans-serif;*/
+    font-family: 'HelveticaNeueBd', sans-serif; 
     font-size: 14px;
+    color: #362e28; 
     fill: #663300;
     text-anchor: middle;
   }
@@ -146,6 +147,20 @@
   }
 
 /********* Histograms ********/
+
+
+/********* Embedding ********/
+#complexVisembedding svg.embedding {
+  border: 1px solid black;
+}
+
+#complexVisembedding svg.embedding .embeddingTitle {
+    font-family: 'HelveticaNeueBd', sans-serif; 
+    font-size: 22px;
+    color: #362e28;
+    text-anchor: middle;
+}
+/********* Embedding ********/
 
 
 /********* d3-tip ********/

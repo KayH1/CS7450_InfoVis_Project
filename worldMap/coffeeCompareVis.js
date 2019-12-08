@@ -70,6 +70,7 @@ coffeeCompareCombine.prototype.loadData = function(coffeeData) {
 	);
 	this.parallelCoords.initialParallelCoordinates(coffeeData);
     this.histograms.initialHistograms(coffeeData);
+    this.embedding.initialEmbedding(coffeeData);
 }
 
 
@@ -95,6 +96,7 @@ coffeeCompareCombine.prototype.updateCountryClicked = function(countryClickedMap
 	/* call other vis to update based on the country and color in map */
 	this.parallelCoords.updateLineColorSelectedCountry(countryClickedMap);
     this.histograms.updateDotColorSelectedCountry(countryClickedMap);
+    this.embedding.updateDotColorSelectedCountry(countryClickedMap);
 };
 
 /* called from parallel coordinates and update other vis */
@@ -117,31 +119,31 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeParallel = function(selectedC
 		})
 		/* some treatment for embedding to show selected coffee set */
 		
-		
-		/****** perform set join (current place holder) ********/ 
-		
-		parallelCoffeeShowSet = selectedCoffeeSet;
-		embeddingCoffeeShowSet = selectedCoffeeSet;
-
+		/****** perform set join (current place holder) ********/
+		let coffeeSetToJoin = assoCoffeeCompareCombine.embedding.coffeeSelectSet;
+		let coffeeSetJoined = d3.set();
+		selectedCoffeeSet.each(function(d) {
+			if (coffeeSetToJoin.has(d))
+				coffeeSetJoined.add(d);
+		})
+		parallelCoffeeShowSet = coffeeSetJoined;
+		embeddingCoffeeShowSet = coffeeSetJoined;
 		/****** perform set join (current place holder) ********/
 
 	} else {
-		/* restore the map show all country */
-		countryCodeShow = d3.set(assoCoffeeCompareCombine.countryCode);
-		parallelCoffeeShowSet = selectedCoffeeSet;
+		embeddingCoffeeShowSet = assoCoffeeCompareCombine.embedding.coffeeSelectSet;
+		parallelCoffeeShowSet = embeddingCoffeeShowSet;
 		
-
-		/****** set embedding as its own filtered coffee show set ********/ 
-		embeddingCoffeeShowSet = selectedCoffeeSet;
-
+		/* restore the map show */
+		countryCodeShow = d3.set();
+		embeddingCoffeeShowSet.each(function(d) {
+			countryCodeShow.add(assoCoffeeCompareCombine.data[d][0]["ISOofOrigin"])
+		});
 		/****** set embedding as its own filtered coffee show set ********/ 
 	}
 	this.worldMap.updateCoffeeSelectedSet(countryCodeShow);
 	this.parallelCoords.setShowCoffeeLineColor(parallelCoffeeShowSet);
-	
-	/****** also update embedding ******/
-
-	/****** also update embedding ******/
+	this.embedding.setShowCoffeeDotColor(embeddingCoffeeShowSet);
 }
 
 /* called from brush hist and update other vis */
@@ -166,34 +168,96 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeHist = function(selectedCoffe
 		
 		
 		/****** perform set join (current place holder) ********/ 
-		
-		histCoffeeShowSet = selectedCoffeeSet;
-		embeddingCoffeeShowSet = selectedCoffeeSet;
-
+		let coffeeSetToJoin = assoCoffeeCompareCombine.embedding.coffeeSelectSet;
+		let coffeeSetJoined = d3.set();
+		selectedCoffeeSet.each(function(d) {
+			if (coffeeSetToJoin.has(d))
+				coffeeSetJoined.add(d);
+		})
+		histCoffeeShowSet = coffeeSetJoined;
+		embeddingCoffeeShowSet = coffeeSetJoined;
 		/****** perform set join (current place holder) ********/
 
 	} else {
-		/* restore the map show all country */
-		countryCodeShow = d3.set(assoCoffeeCompareCombine.countryCode);
-		histCoffeeShowSet = selectedCoffeeSet;
-		
+		/* restore the map show */
+		embeddingCoffeeShowSet = assoCoffeeCompareCombine.embedding.coffeeSelectSet;
+		histCoffeeShowSet = embeddingCoffeeShowSet;
 
-		/****** set embedding as its own filtered coffee show set ********/ 
-		embeddingCoffeeShowSet = selectedCoffeeSet;
-
-		/****** set embedding as its own filtered coffee show set ********/ 
+		/* restore the map show */
+		countryCodeShow = d3.set();
+		embeddingCoffeeShowSet.each(function(d) {
+			countryCodeShow.add(assoCoffeeCompareCombine.data[d][0]["ISOofOrigin"])
+		});
 	}
 	this.worldMap.updateCoffeeSelectedSet(countryCodeShow);
 	this.histograms.setShowCoffeeDotColor(histCoffeeShowSet);
-	
-	/****** also update embedding ******/
-
-	/****** also update embedding ******/
+	this.embedding.setShowCoffeeDotColor(embeddingCoffeeShowSet);
 }
 
 /* called from embedding and update other vis */
-coffeeCompareCombine.prototype.updateSelectedCoffeeEmbedding = function(selectedCoffeeSet) {
+coffeeCompareCombine.prototype.updateSelectedCoffeeEmbedding = function(selectedCoffeeSet, brushing) {
+	/* 
+		map do not have coffee data copy and selectedCoffeeSet is a d3.set with only Coffee Id,
+		some treatment need to do here to extract coffee country here for map 
+	*/
 
+	let assoCoffeeCompareCombine = this;
+	let embeddingCoffeeShowSet;
+	let histCoffeeShowSet;
+	let parallelCoffeeShowSet;
+
+	let flag = assoCoffeeCompareCombine.histograms.visible;
+
+	let countryCodeShow;
+	if (brushing) {  // there is brushing, although the selection might be empty
+		/* update based on the selected Coffee Set */
+		countryCodeShow = d3.set();
+		selectedCoffeeSet.each(function(d) {
+			countryCodeShow.add(assoCoffeeCompareCombine.data[d][0]["ISOofOrigin"])
+		})
+		/* some treatment for embedding to show selected coffee set */
+		
+		/****** perform set join (current place holder) ********/
+		let coffeeSetToJoin;
+		if (flag) {
+			coffeeSetToJoin = assoCoffeeCompareCombine.histograms.coffeeSelectSet;
+		} else {
+			coffeeSetToJoin = assoCoffeeCompareCombine.parallelCoords.coffeeSelectSet;
+		}
+		let coffeeSetJoined = d3.set();
+		selectedCoffeeSet.each(function(d) {
+			if (coffeeSetToJoin.has(d))
+				coffeeSetJoined.add(d);
+		})
+		if (flag) {
+			histCoffeeShowSet = coffeeSetJoined;
+		} else {
+			parallelCoffeeShowSet = coffeeSetJoined;
+		}
+		embeddingCoffeeShowSet = coffeeSetJoined;
+		/****** perform set join (current place holder) ********/
+	} else {
+		/* restore the map show all country */		
+		if (flag) {
+			histCoffeeShowSet = assoCoffeeCompareCombine.histograms.coffeeSelectSet;
+		} else {
+			parallelCoffeeShowSet = assoCoffeeCompareCombine.parallelCoords.coffeeSelectSet;
+		}
+		embeddingCoffeeShowSet = assoCoffeeCompareCombine.histograms.visible? histCoffeeShowSet:parallelCoffeeShowSet;
+		
+		/* restore the map show */
+		countryCodeShow = d3.set();
+		embeddingCoffeeShowSet.each(function(d) {
+			countryCodeShow.add(assoCoffeeCompareCombine.data[d][0]["ISOofOrigin"])
+		});
+	}
+	this.worldMap.updateCoffeeSelectedSet(countryCodeShow);
+	if (flag) {
+		this.histograms.setShowCoffeeDotColor(histCoffeeShowSet);
+	} else {
+		this.parallelCoords.setShowCoffeeLineColor(parallelCoffeeShowSet);
+	}
+	this.embedding.setShowCoffeeDotColor(embeddingCoffeeShowSet);
 }
 
 

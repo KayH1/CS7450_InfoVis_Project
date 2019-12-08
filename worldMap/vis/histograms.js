@@ -173,7 +173,7 @@ histograms.prototype.initialHistograms = function(coffeeData) {
         assoHist.dotEnterHistograms.append('circle') // append a circle to the g elements
             .attr('r', function(d) {
                 assoHist.coffeeDotMap[i].set(d["id"], this);
-                return 1;
+                return 2;
             })
             .attr('cy', function(d) { return d['flavorProfileDotPosition'][i][1]; })
             .attr('cx', function(d) { return d['flavorProfileDotPosition'][i][0]; })
@@ -217,7 +217,7 @@ histograms.prototype.setShowCoffeeDotColor = function(coffeeShowSet=null) {
                 if (assoHist.countryColorMap.has(coffee["ISOofOrigin"]) && assoHist.coffeeShowSet.has(coffee["id"])) {
                     assoHist.coffeeColorMap.set(coffee["id"], assoHist.countryColorMap.get(coffee["ISOofOrigin"]));
                     d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("fill", assoHist.countryColorMap.get(coffee["ISOofOrigin"]))
-                        .style('r',1).style("opacity", 1);
+                        .style('r',2).style("opacity", 1);
                 } else {
                         d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("fill", assoHist.coffeeColorMap.get(coffee["id"])).style('r',1)
                             .style('stroke-width', 1).style("opacity", 0.2);
@@ -284,10 +284,13 @@ function selectCoffeeWithinSelection() {
         }
     } else {
         /* there is no brush current, for other vis, show all datapoint, also call parentVis */
-        if (assoHist.parentVis != null) {
-            assoHist.parentVis.updateSelectedCoffeeHist(assoHist.coffeeAllSet, false);
+        assoHist.coffeeAllSet.each(function(d) {
+            assoHist.coffeeSelectSet.add(d);
+        })
+        if (assoHist.parentVis != null){
+            assoHist.parentVis.updateSelectedCoffeeEmbedding(assoHist.coffeeSelectSet, false);
         } else {
-            assoHist.setShowCoffeeLineColor(assoHist.coffeeAllSet);
+            assoHist.setShowCoffeeDotColor(assoHist.coffeeSelectSet);
         }
     }
 }

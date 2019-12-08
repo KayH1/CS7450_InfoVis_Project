@@ -307,10 +307,13 @@ function selectCoffeeWithinSelection() {
         }
     } else {
         /* there is no brush current, for other vis, show all datapoint, also call parentVis */
+        assoParallel.coffeeAllSet.each(function(d) {
+            assoParallel.coffeeSelectSet.add(d);
+        })
         if (assoParallel.parentVis != null){
-            assoParallel.parentVis.updateSelectedCoffeeParallel(assoParallel.coffeeAllSet, false);
+            assoParallel.parentVis.updateSelectedCoffeeEmbedding(assoParallel.coffeeSelectSet, false);
         } else {
-            assoParallel.setShowCoffeeLineColor(assoParallel.coffeeAllSet);
+            assoParallel.setShowCoffeeDotColor(assoParallel.coffeeSelectSet);
         }
     }
 }
