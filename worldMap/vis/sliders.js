@@ -16,7 +16,7 @@ function sliders(divId, selectedAttributes, assoPreferenceVis){
     }
 
     var illustration = d3.select("#" + this.divId).append("div").attr("class", "illustrationSliders").style('padding-left', '5px').style('width', '405px');
-    illustration.append("p").text("Move the sliders around to see your preffered coffee based on country!").style('font-size', "22px").style("font-weight", "bold");
+    illustration.append("p").text("Move the sliders around to see your preffered coffee based on country!").style('font-size', "22px").style("font-weight", "bold").style('margin-top', 0);
     illustration.append("p").text("**All your selections and the following information revolves around the 1312 Arabica coffee beans reviewed by Coffee Quality Institute's highly trained individuals.")
         .style('font-size', "12px");
 
