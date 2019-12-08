@@ -35,6 +35,10 @@ h4 { color: #5b0000 /*, 8e2921, 5b0000, 7B3A30*/; font-family: 'HelveticaNeue', 
 
 .para2 { color: #362e28; font-family: 'HelveticaNeue', sans-serif; font-size: 18px; font-weight: 100; line-height: 32px; margin: 0 0 72px; text-align: left; }
 
+.para2 strong {
+  font-weight: bold;
+}
+
 .question{ color: #362e28; font-family: 'HelveticaNeue', sans-serif; font-size: 18px; font-weight: bold; line-height: 32px; margin: 0 0 72px; text-align: left; }
 
 .para{
