@@ -173,7 +173,7 @@ histograms.prototype.initialHistograms = function(coffeeData) {
         assoHist.dotEnterHistograms.append('circle') // append a circle to the g elements
             .attr('r', function(d) {
                 assoHist.coffeeDotMap[i].set(d["id"], this);
-                return 1;
+                return 2;
             })
             .attr('cy', function(d) { return d['flavorProfileDotPosition'][i][1]; })
             .attr('cx', function(d) { return d['flavorProfileDotPosition'][i][0]; })
@@ -193,7 +193,7 @@ histograms.prototype.initialHistograms = function(coffeeData) {
 
 
     /* handle toggling between histograms and parallel coordinates */
-    d3.select("#complexVisSwitchMode").on('click', function() {
+    d3.select("#switchModeComplexVisSwitch").on('click', function() {
         if (assoHist.parentVis !== null) { assoHist.parentVis.togglePCandH(); }
     });
 }
@@ -217,9 +217,9 @@ histograms.prototype.setShowCoffeeDotColor = function(coffeeShowSet=null) {
                 if (assoHist.countryColorMap.has(coffee["ISOofOrigin"]) && assoHist.coffeeShowSet.has(coffee["id"])) {
                     assoHist.coffeeColorMap.set(coffee["id"], assoHist.countryColorMap.get(coffee["ISOofOrigin"]));
                     d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("fill", assoHist.countryColorMap.get(coffee["ISOofOrigin"]))
-                        .style('r',1).style("opacity", 1);
+                        .style('r',2).style("opacity", 1);
                 } else {
-                        d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("fill", assoHist.coffeeColorMap.get(coffee["id"])).style('r',1)
+                        d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("fill", assoHist.coffeeColorMap.get(coffee["id"])).style('r',2)
                             .style('stroke-width', 1).style("opacity", 0.2);
                 }
             })

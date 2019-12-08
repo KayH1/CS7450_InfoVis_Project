@@ -27,7 +27,7 @@ function sliders(divId, selectedAttributes, assoPreferenceVis){
 
         var divLabelWeight = divRow.append('div');
         divLabelWeight.attr('class', 'sliderTitle')
-            .style("width", "75px")
+            .style("width", "100px")
             .style("height", "30px");
         divLabelWeight.text(this.variableCatalogue[i]['variable-name'] + ': ')
 

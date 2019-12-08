@@ -18,6 +18,7 @@ function frequencyPlot(selection, transition_time, useYAxis, dotRadius, dotColor
     this.dotOpacitySelected = dotOpacitySelected;
 
     this.mode = 'd'; // either bnw (box&whisker) or d (density) - default
+    this.switchingMode = false; // indicates whether the mode is currently being switched
     this.labelOpacity = 1;
     this.sortMode = "overall"; // default is sorting by maximum value
     this.sortAttr = "flavor"; // default is sorting by flavor values
@@ -168,10 +169,21 @@ function frequencyPlot(selection, transition_time, useYAxis, dotRadius, dotColor
     this.xAxisG = this.chartG.append('g')
         .attr('class', 'x axis')
         .attr('transform', 'translate('+[0, this.chartHeight-10]+')');
+    
+    var freqPlot = this;
+
     this.xAxisLabel = this.chartG.append('text')
         .attr('class', 'x axisLabel')
         .attr('transform', 'translate('+((this.chartWidth-this.padding.x_r)/2)+','+(svgHeight-this.padding.b)+')')
-        .text(this.selection+" rating");
+        .text(function(d) {
+            var att = freqPlot.selection;
+            if (att === "cleanCup") { att = "Clean cup"; }
+            else if (att === "cupperPoints") { att = "Cupper points"; }
+            else if (att === "totalCupPoints") { att = "Total cup points"; }
+            var att = att[0].toUpperCase() + att.slice(1);
+
+            return att+" rating";
+        });
     this.yAxisLabel = this.chartG.append('text')
         .attr('class', 'y axisLabel')
         .attr('transform', 'translate('+((this.chartWidth-this.padding.x_r)/2)+',-25)')
@@ -394,10 +406,19 @@ frequencyPlot.prototype.updateChart = function(coffee_dataset) {
     /**********************
      Disable the country label toggle button is dots are moving
     **********************/
-    document.getElementById("countryLabelsToggle").disabled = true;
-    setTimeout(function() {document.getElementById("countryLabelsToggle").disabled = false;}, freqPlot.transition_time);
+    if (freqPlot.switchingMode !== true) {
+        document.getElementById("countryLabelsToggleSwitch").style.display = 'none';
+        document.getElementById("countryLabelsToggleCheckbox").disabled = true;
+        document.getElementById("disabledImg").style.display = 'block';
+        setTimeout(function() {
+            document.getElementById("countryLabelsToggleSwitch").style.display = 'block';
+            document.getElementById("countryLabelsToggleCheckbox").disabled = false;
+            document.getElementById("disabledImg").style.display = 'block';
+        
+        }, freqPlot.transition_time);
+    }
 
-
+    freqPlot.switchingMode = false;
 
 
     /*******************************
@@ -570,7 +591,15 @@ frequencyPlot.prototype.updateChart = function(coffee_dataset) {
         .attr('opacity', freqPlot.dotOpacity);
 
     var xAxisLabel = freqPlot.chartG.selectAll('.x.axisLabel')
-        .text(freqPlot.selection+" rating");
+        .text(function(d) {
+            var att = freqPlot.selection;
+            if (att === "cleanCup") { att = "Clean cup"; }
+            else if (att === "cupperPoints") { att = "Cupper points"; }
+            else if (att === "totalCupPoints") { att = "Total cup points"; }
+            var att = att[0].toUpperCase() + att.slice(1);
+
+            return att+" rating";
+        });
 
 
     /**********************
@@ -645,11 +674,17 @@ frequencyPlot.prototype.updateChart = function(coffee_dataset) {
      Handle button clicks
     **********************/
     // toggle whether country labels are on or off
-    d3.selectAll('button#countryLabelsToggle').on('click', function(d) { toggleCountryLabels(freqPlot, coffee); });
+    //d3.selectAll('button#countryLabelsToggle').on('click', function(d) { toggleCountryLabels(freqPlot, coffee); });
+    d3.selectAll('#countryLabelsToggleSwitch').on('click', function(d) {
+        console.log(document.getElementById('countryLabelsToggleSwitch'));
+        console.log(document.getElementById("countryLabelsToggleSwitch").style.display);
+        if (document.getElementById("countryLabelsToggleSwitch").style.display !== 'none') {toggleCountryLabels(freqPlot, coffee);
+        }
+        });
+    d3.selectAll('span#switchModeSwitch').on('click', function(d) { switchMode(freqPlot, coffee); });
     // reset (i.e., deselect all selected data points)
     d3.selectAll('button#reset').on('click', function(d) { resetSelections(freqPlot, coffee); });
-    d3.selectAll('button#switchMode').on('click', function(d) {
-        switchMode(freqPlot, coffee); });
+    //d3.selectAll('button#switchMode').on('click', function(d) { switchMode(freqPlot, coffee); });
 
 
     // Set up evet handlers for each radio button 
@@ -740,16 +775,20 @@ frequencyPlot.prototype.updateChart = function(coffee_dataset) {
 
 function toggleCountryLabels(freqPlot, dataset) {
     // Change the opacity of the country labels
-    freqPlot.labelOpacity = Math.abs(freqPlot.labelOpacity-1);
+
+    console.log(document.getElementById("countryLabelsToggleSwitch").style.display)
     
+    freqPlot.labelOpacity = Math.abs(freqPlot.labelOpacity-1);
+
     var countries = freqPlot.chartG.selectAll('.countries.y.label text')
         .transition()
         .duration(0)
-        .attr('opacity', freqPlot.labelOpacity);
+    .attr('opacity', freqPlot.labelOpacity);
+
 }
 
 function resetSelections(freqPlot, dataset) {
-    // go through each data point, ensure it is deselcted, and set it's fill, opacity, and radius to their default values
+    // go through each data point, ensure it is deselected, and set it's fill, opacity, and radius to their default values
     var dots = d3.selectAll('.dot circle')
     dots.style('fill', function(d) {
         d.selected = false;
@@ -801,8 +840,8 @@ function switchMode(freqPlot, dataset) {
         var bnw = d3.selectAll('rect');
         bnw.style('opacity', 0);
     }
+    freqPlot.switchingMode = true;
     freqPlot.updateChart(dataset);
 }
-
 
 export { frequencyPlot };

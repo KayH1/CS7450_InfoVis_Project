@@ -43,7 +43,7 @@ function preferenceCombine (divId) {
 
 	this.worldMap = new mapVis.worldMap(assoMapId, 4, "Explore Coffee Choice", "UserPreference");
 	this.worldMap.assoPreferenceVis = this;
-	let selectedAttributes = ['aroma', 'flavor', 'aftertaste', 'acidity', 'uniformity', 'sweetness'];
+	let selectedAttributes = ['aroma', 'flavor', 'aftertaste', 'sweetness',];//'acidity', 'uniformity', 'sweetness'];
 	this.sliders = new slider.sliders(assoSliderId, selectedAttributes, this);
 	this.sliders.assoPreferenceVis = this;
 }

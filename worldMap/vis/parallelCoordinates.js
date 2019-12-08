@@ -68,9 +68,16 @@ function parallelCoordinates (divId, attributes, parentVis=null) {
             return 'y label '+d;
         })
         .attr('transform', function(d,i) {
-            return 'translate('+(i*assoParallel.axesSpacing-10)+',-10) rotate(-20)';
+            return 'translate('+(i*assoParallel.axesSpacing)+',-10) rotate(-15)';
         })
-        .text(function(d) { return d; })
+        .text(function(d) { 
+            var att = d;
+            if (att === "cleanCup") { att = "Clean cup"; }
+            else if (att === "cupperPoints") { att = "Cupper points"; }
+            else if (att === "totalCupPoints") { att = "Total cup points"; }
+            var att = att[0].toUpperCase() + att.slice(1);
+
+            return att; })
         .style("font-weight", "bold");
 }
 

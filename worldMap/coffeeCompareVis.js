@@ -43,12 +43,12 @@ function coffeeCompareCombine (divId, attributes) {
 	/* for parallel coordinate or brushing hist */
 	let assoBrushingVisId = this.divId + "brushing"
 	d3.select("#" + divId).append("div").attr("id", assoBrushingVisId)
-		.style("margin-top", "30px");
+		.style("margin-top", "40px");
 
     /* for histograms */
     let assoHistogramVisId = this.divId + "histograms";
     d3.select("#" + divId).append("div").attr("id", assoHistogramVisId)
-        .style("margin-top", "30px");
+        .style("margin-top", "40px");
 
     
     this.worldMap = new mapVis.worldMap(assoMapId, 4, "Coffee World Map", "CoffeeCompare", this);

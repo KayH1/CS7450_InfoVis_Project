@@ -90,18 +90,17 @@
                 </h1></strong></div> </center><br></br>
 
  
-
-        
+   
       <div id="main">
         
 
         <div class="scrollytelling-text" style="margin-left:50px">
           <div class="special empty" id="st_flavor"></div>
           <div class="flavor">
-            <h2><strong>Flavor</strong></h2>
+            <h2>Flavor</h2>
             <p class="para"> 
 
-             Flavor is a combined impression with taste and smell. <br></br> </p>
+             Flavor is a combined impression with taste and smell. </p>
 
             <p class="para2"> 
 
@@ -391,15 +390,49 @@
             </tr>
             <tr>
               <td>
-                <div id="buttons">
-                  <button type="button" id="countryLabelsToggle">Toggle country labels</button>
-                  <button type="button" id="switchMode">Switch mode</button>
-<<<<<<< HEAD
+                <table cellpadding="0" class="toggleSwitchTable">
+                  <tr>
+                    <td>
+                      On&nbsp&nbsp
+                    </td>
+                    <td width="20px" align="center">
+                      <div class="countryLabelsToggleContainer">
+                        <div class="layer1">
+                          <img src="frequencyPlot/icons/disabledImg.png" alt="disabled" height="35px" width="62px" id="disabledImg" style="opacity: 0.5;">
+                        </div>
+                        <div class="layer2">
+                          <label class="switch">
+                            <input type="checkbox" id="countryLabelsToggleCheckbox">
+                            <span class="slider round" id="countryLabelsToggleSwitch"></span>
+                          </label>
+                        </div>
+                      </div> 
+                    </td>
+                    <td width="70px">
+                      &nbsp&nbspOff
+                    </td>
+                    <td width="200px" align="center">
+                      <img src="frequencyPlot/icons/dotPlot.png" alt="dot-plot" height="20" width="60">
+                      <label class="switch">
+                        <input type="checkbox" id="switchModeCheckbox">
+                        <span class="slider round" id="switchModeSwitch"></span>
+                      </label>
+                      <img src="frequencyPlot/icons/bNwPlot.png" alt="box-and-whisker-plot" height="20" width="42">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="left" valign="top" colspan=3>
+                      &nbsp&nbspCountry labels
+                    </td>
+                    <td align="center" valign="top">
+                      Mode
+                    </td>
+                  </tr>
+                </table>
+                
+              </td>
+              <td style="float:left;">
                   <button type="button" id="reset"><i class="fa fa-close"></i>Clear selections</button>
-=======
-                  <button type="button" id="reset">Clear selections</button>
->>>>>>> 06c5632381209f05a257a7748cf291cd2d40cb77
-                </div>
               </td>
             </tr>
           </table>
@@ -429,8 +462,8 @@
 
                   <center>   <div style="width: 1100px" align="left"><strong></strong><h1 style="font-size:150%;">
 
-              Clicking different countries in the visualization below shows a comparison between their projected (~20 years) temperature and rainfall - this is an important characteristic to compare coffee bean growing countries.
-            For example, Brazil and Columbia have similar patterns that are great for growing coffee! Click around to find out other countries that are similar! <br></br>
+              Clicking different countries in the visualization below shows a comparison between their projected temperature and rainfall (from 2020-2039) - this is an important characteristic to compare coffee bean growing countries.
+            For example, Brazil and Columbia have similar temperature patterns that are great for growing coffee! Click around to find out other countries that are similar! <br></br>
 
              <br><center>You can toggle between the parallel coordinates view and the historgram view and all views are interconnected. You may be surprised with what you find out! </center> </br>
              
@@ -440,9 +473,29 @@
 
 
 
+
       <!--  follow will change -->
+      <table style="position:relative;bottom:-620px;left:570px; background:white;">
+        <tr>
+
+          <td>
+
+            <img src="worldMap/icons/parallelCoordsIcon.png" alt="dot-plot" height="40" width="160">
+            &nbsp&nbsp&nbsp
+            <label class="switch">
+              <input type="checkbox" id="switchModeComplexVixCheckbox">
+              <span class="slider round" id="switchModeComplexVisSwitch"></span>
+            </label>
+            &nbsp&nbsp&nbsp
+            <img src="worldMap/icons/histogramIcon.png" alt="box-and-whisker-plot" height="40" width="160">
+
+            
+          </td>
+
+        </tr>
+      </table> 
+     
       <div id="complexVis"></div>
-      <button type="button" id="complexVisSwitchMode">Switch mode</button>
         
 
       <!--  above will change -->

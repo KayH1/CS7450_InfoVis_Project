@@ -71,7 +71,7 @@ h4 { color: #5b0000 /*, 8e2921, 5b0000, 7B3A30*/; font-family: 'HelveticaNeue', 
 }
 
 .special.empty {
-  height: 20px;
+  height: 120px;
   width: 400px;
   /*border: 3px solid green;*/
 }
@@ -96,8 +96,12 @@ div.sticky {
 
 div #freq-plot-sticky {
   /*border: 3px solid green;*/
-  padding: 50px 0px 0px 0px;
+  padding: 40px 0px 0px 0px;
 
+}
+
+table.toggleSwitchTable {
+  margin: 0px 0px 0px 190px;
 }
 
 button#countryLabelsToggle {
@@ -126,7 +130,7 @@ button#reset {
   cursor: pointer;
   position: sticky;
   top: 90%;
-  left: 80%;
+  left: 200%;
 }
 
 button#switchMode {
@@ -152,6 +156,119 @@ text-align:    center;
 
 }
 
+
+
+
+/**********************
+Toggle switches
+
+Credit: https://www.w3schools.com/howto/howto_css_switch.asp
+**********************/
+
+/* put disabled image of toggle switch and toggle switch on top of each other*/
+.countryLabelsToggleContainer{
+  display: grid;
+}
+
+.countryLabelsToggleContainer .layer1, .layer2 {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 32px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider (oval part)*/
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ffecc3;
+  -webkit-transition: .4s;
+  transition: 1s;
+  border: 2px solid #E7E7E7;
+}
+
+/* circle inside slider */
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: #bc8644;
+  -webkit-transition: .4s;
+
+  /*border: 2px solid #E7E7E7*/
+}
+
+
+/*.switchModeComplexVis .switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 16px;
+}
+
+.switchModeComplexVis .slider:before {
+  position: absolute;
+  content: "";
+  height: 10px;
+  width: 20px;
+  left: 4px;
+  bottom: 1px;
+  background-color: #bc8644;
+  -webkit-transition: .4s;
+
+  /*border: 2px solid #E7E7E7*/
+}*/
+
+
+/* default slider color (oval part), after turned on*/
+input:checked + .slider {
+  background-color: #ffecc3;
+  transition: .4s;
+  /*border: 2px solid #E7E7E7*/
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+  /*border: 2px solid #E7E7E7*/
+}
+
+/* circle inside slider after turned on */
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+  background-color: #bc8644;
+  /*border: 2px solid #E7E7E7*/
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
 
 /**********************
 Freq plot fixed sidebar
