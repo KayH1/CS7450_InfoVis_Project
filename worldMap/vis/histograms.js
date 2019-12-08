@@ -20,7 +20,7 @@ function histograms (divId, attributes, parentVis=null, maxWidth=null) {
     var svgWidthHistograms = +this.svgHistograms.attr('width');
     var svgHeightHistograms = +this.svgHistograms.attr('height');
 
-    this.paddingHistograms = {t: 30, r: 60, b: 60, l: 80, totalCupPoints: 20};
+    this.paddingHistograms = {t: 32, r: 60, b: 60, l: 80, totalCupPoints: 20};
 
     this.axes = attributes;
     this.numXAxesTicks = [5, 5, 5, 5, 5, 5, 3, 3, 3, 5, 5];
@@ -50,6 +50,12 @@ function histograms (divId, attributes, parentVis=null, maxWidth=null) {
     // create the y and x scales
     this.yScaleHistograms = [];
     this.xScaleHistograms = [];
+
+    this.svgHistograms.append("rect").attr("class", "specialForTotal")
+        .attr('x', 10*assoHist.axesSpacing - 35+ assoHist.paddingHistograms.l)
+        .attr('y', assoHist.paddingHistograms.t - 28)
+        .attr("width", 110).attr("height", 26).attr('fill-opacity',1).attr('fill', "#ffecc3")
+        .attr('stroke', '#ffecc3').attr('stroke-width', 5).attr('stroke-linecap', 'round');
 
     // Create a group element for appending chart elements
     this.chartGHistograms = this.svgHistograms.append('g')
@@ -82,7 +88,6 @@ function histograms (divId, attributes, parentVis=null, maxWidth=null) {
             return att;
         })
         .style("font-weight", "bold");
-        
 }
 
 var toolTipHistograms = d3.tip()

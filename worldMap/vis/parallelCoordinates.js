@@ -42,6 +42,12 @@ function parallelCoordinates (divId, attributes, parentVis=null) {
     // create the y scale
     this.yScaleParallelCoords = d3.scaleLinear().range([chartHeightParallelCoords,0]).domain([0,10]);
 
+    this.svgParallelCoords.append("rect").attr("class", "specialForTotal")
+        .attr('x', 10*assoParallel.axesSpacing - 55 + assoParallel.paddingParallelCoords.l)
+        .attr('y', assoParallel.paddingParallelCoords.t - 28)
+        .attr("width", 110).attr("height", 26).attr('fill-opacity',1).attr('fill', "#ffecc3")
+        .attr('stroke', '#ffecc3').attr('stroke-width', 5).attr('stroke-linecap', 'round');
+
     // Create a group element for appending chart elements
     this.chartGParallelCoords = this.svgParallelCoords.append('g')
         .attr('transform', 'translate('+[this.paddingParallelCoords.l, this.paddingParallelCoords.t]+')');
