@@ -59,6 +59,8 @@ preferenceCombine.prototype.updateVis = function() {
     this.worldMap.updateCoffeeSelectedSet(this.sliders.topCoffee);
     d3.select("#" + this.divId).selectAll(".coffeeIconUnderMap").data(this.sliders.topCoffee)
     	.selectAll("div").data(function(d) { return [d]; })
+    	.style("padding-top", "8px")
+    	.style("padding-left", "3px")
     	.html(function(d) {
     		let htmlContent = "No." + d.rank + " from ";
     		if (d.countryOfOrigin.length >= 10){
@@ -66,16 +68,18 @@ preferenceCombine.prototype.updateVis = function() {
     		} else {
     			htmlContent += d.countryOfOrigin;
     		}
-    		htmlContent += "<br>producer:<br>";
-    		if (d.producer === ""){
+    		htmlContent += "<br>Region:<br>";
+    		htmlContent += '<p style="font-size:14px;">'
+    		if (d.region === ""){
 				htmlContent += "NA";
     		} else {
-    			if (d.producer.length >= 8){
-	    			htmlContent += d.producer.substring(0, 8)
+    			if (d.region.length >= 8){
+	    			htmlContent += d.region.substring(0, 8)
 	    		} else {
-	    			htmlContent += d.producer;
+	    			htmlContent += d.region;
 	    		}
     		}
+    		htmlContent += "</p>"
     		return htmlContent;
     	});
 };

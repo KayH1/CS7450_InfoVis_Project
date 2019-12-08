@@ -57,13 +57,13 @@
 }
 
 .countryNameLabel {
-	background: rgba(255, 255, 255, 0.8);
-  	padding: 0px 5px;
+	background: rgba(255, 255, 255, 0.7);
+  	padding: 2px 5px;
   	border:0;
-  	border-radius:15px;
+  	border-radius:12px;
   	box-shadow: 1 0px 0px;
   	text-anchor: start;
-  	font-weight: 200;
+  	font-weight: 100;
   	/*font-family: pirates;*/
     font-family: 'HelveticaNeueBd', sans-serif; 
   	font-size: 12px;
@@ -79,9 +79,9 @@
     text-anchor: start;
     font-weight: 200;
     min-width: 135px;
-    /*font-family: pirates;*/
-    font-family: 'HelveticaNeue', sans-serif; 
-    font-size: 13px;
+    font-family: pirates;
+    /*font-family: 'HelveticaNeue', sans-serif; */
+    font-size: 14px;
 }
 
 .countryCompareInfo {
@@ -101,7 +101,7 @@
 .countryCompareInfo h3 {
   margin: 0 0 5px;
   color: #5b0000;
-  font-size: 20px;
+  font-size: 19px;
   /*color: rgb(217,95,2);*/
 }
 
@@ -118,8 +118,9 @@
   }
 
   #complexVisbrushing svg.parallel-coords .y.label {
-    /*font-family: sans-serif;*/
+    font-family: 'HelveticaNeueBd', sans-serif; 
     font-size: 14px;
+    color: #362e28; 
     fill: #663300;
     text-anchor: middle;
   }
@@ -146,6 +147,20 @@
   }
 
 /********* Histograms ********/
+
+
+/********* Embedding ********/
+#complexVisembedding svg.embedding {
+  border: 1px solid black;
+}
+
+#complexVisembedding svg.embedding .embeddingTitle {
+    font-family: 'HelveticaNeueBd', sans-serif; 
+    font-size: 22px;
+    color: #362e28;
+    text-anchor: middle;
+}
+/********* Embedding ********/
 
 
 /********* d3-tip ********/

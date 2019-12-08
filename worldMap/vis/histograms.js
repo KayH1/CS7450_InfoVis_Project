@@ -170,14 +170,19 @@ histograms.prototype.initialHistograms = function(coffeeData) {
         assoHist.dotEnterHistograms = assoHist.dotHistograms.enter()
             .append('g') // create a g element
             .attr('class', 'dotHist '+axis); // assign a class ID of dot to the element
-        assoHist.dotEnterHistograms.append('circle') // append a circle to the g elements
+        assoHist.dotEnterHistograms.selectAll('circle').data(function(d) {
+            return [d];
+        }).enter().append('circle') // append a circle to the g elements
             .attr('r', function(d) {
                 assoHist.coffeeDotMap[i].set(d["id"], this);
                 return 2;
             })
             .attr('cy', function(d) { return d['flavorProfileDotPosition'][i][1]; })
             .attr('cx', function(d) { return d['flavorProfileDotPosition'][i][0]; })
-            .style('opacity', 0.5);
+            .style('opacity', 0.5)
+            .attr('fill', function(d) {
+                return assoHist.coffeeColorMap.get(d["id"]);
+            });
 
     })
     
@@ -229,11 +234,11 @@ histograms.prototype.setShowCoffeeDotColor = function(coffeeShowSet=null) {
             assoHist.setColorMap(assoHist.coffeeDotStyle.ignoreColor);
             assoHist.axes.forEach(function(axis, i) {
                 assoHist.data.forEach(function(coffee) {
-                    if (assoHist.coffeeSelectSet.has(coffee["id"])) {
+                    if (assoHist.coffeeShowSet.has(coffee["id"])) {
                         assoHist.coffeeColorMap.set(coffee["id"], assoHist.coffeeDotStyle.defaultColor);
-                        d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("fill", assoHist.coffeeDotStyle.defaultColor).style("opacity", 0.3).style("stroke-width", 3);
+                        d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).attr("fill", assoHist.coffeeDotStyle.defaultColor).style("opacity", 0.3);
                     } else {
-                        d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("fill", assoHist.coffeeDotStyle.ignoreColor).style('stroke-width', 1).style("opacity", 0.1);
+                        d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).attr("fill", assoHist.coffeeDotStyle.ignoreColor).style("opacity", 0.1);
                     }
                 })
             })
@@ -241,7 +246,7 @@ histograms.prototype.setShowCoffeeDotColor = function(coffeeShowSet=null) {
             assoHist.setColorMap(assoHist.coffeeDotStyle.defaultColor);
             assoHist.axes.forEach(function(axis, i) {
                 assoHist.data.forEach(function(coffee) {
-                    d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).style("fill", assoHist.coffeeDotStyle.defaultColor).style("stroke-width", 1).style("opacity", 0.3);
+                    d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).attr("fill", assoHist.coffeeDotStyle.defaultColor).style("opacity", 0.3);
                 })
             })
         }
@@ -284,10 +289,13 @@ function selectCoffeeWithinSelection() {
         }
     } else {
         /* there is no brush current, for other vis, show all datapoint, also call parentVis */
-        if (assoHist.parentVis != null) {
-            assoHist.parentVis.updateSelectedCoffeeHist(assoHist.coffeeAllSet, false);
+        assoHist.coffeeAllSet.each(function(d) {
+            assoHist.coffeeSelectSet.add(d);
+        })
+        if (assoHist.parentVis != null){
+            assoHist.parentVis.updateSelectedCoffeeHist(assoHist.coffeeSelectSet, false);
         } else {
-            assoHist.setShowCoffeeLineColor(assoHist.coffeeAllSet);
+            assoHist.setShowCoffeeDotColor(assoHist.coffeeSelectSet);
         }
     }
 }

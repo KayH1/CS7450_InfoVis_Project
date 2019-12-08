@@ -2,7 +2,7 @@ var worldMapType = d3.map();
 worldMapType.set("UserPreference", 1);
 worldMapType.set("CoffeeCompare", 2);
 
-var coffeeIconPath = "../worldMap/icons/cup2.png";
+var coffeeIconPath = "../worldMap/icons/coffeeBeanTooltip.png";
 var countryFlagPath = "../data/country/flags/";
 
 /* if having parentVis and mapType is CoffeeCompare, 
@@ -155,10 +155,12 @@ function worldMap(divId, maxZoom, title, mapType, parentVis=null) {
 			.attr("width", 200)
 			.attr("height", 30);
 		appenddiv.append("h3")
-			.text("Country Comparison");
+			.text("Country Comparison")
+			.style("padding-left", "3px")
+			.style("padding-top", "3px");
 		this.climateXscale = d3.scaleBand()
 			.domain(["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"])
-			.range([20, 175])
+			.range([20, 190])
 			.padding(0.02);
 		L.DomUtil.setPosition(this.countryCompareInfo._div, L.point(-5, 5));
 	}
@@ -260,19 +262,19 @@ worldMap.prototype.showCoffeeGeo = function() {
 		.attr("transform", function(d) {
 			let countryInfo = associatedMap.data.countryInfoMap.get(d.key);
 			let iconPosition = associatedMap.map.latLngToLayerPoint(new L.LatLng(countryInfo["lat"], countryInfo["lng"]));
-			return "translate(" + (iconPosition.x-18) + "," + (iconPosition.y-18) + ")";
+			return "translate(" + (iconPosition.x-35) + "," + (iconPosition.y - 55) + ")";
 		}).selectAll("coffeeIcon").data(d=>d.values)
 		.enter().append("image").attr("class", "coffeeIcon")
 		.attr("pointer-events", "visible")
 		.attr("href", coffeeIconPath) // address tag
-		.style("height", "40px")
-		.style("width", "24px")
+		.style("height", "80px")
+		.style("width", "48px")
 		.attr("transform", function(d, i) {
 			/* check length of coffee data */
 			let transformText = "translate(" + i*25 + ",0)";
 			if (associatedMap.selectedCountryCoffeeInfoMap[d.ISOofOrigin].length > 1) {
 				let step = 30/(associatedMap.selectedCountryCoffeeInfoMap[d.ISOofOrigin].length - 1);
-				transformText += " rotate(" + (-15 + step*i) + ",12,20)"
+				transformText += " rotate(" + (-15 + step*i) + ",24,40)"
 			}
 			return transformText;
 		})
@@ -289,8 +291,8 @@ worldMap.prototype.showCoffeeGeo = function() {
 				.style("border-radius", "10px")
 				.style("border", "2px solid rgba(0,0,0,0)");
 			d3.select(this).transition()
-				.style("height", "80px")
-				.style("width", "48px")
+				.style("height", "120px")
+				.style("width", "72px")
 				.duration(400);
 		})
 		.on("mouseout", function(e) {
@@ -305,8 +307,8 @@ worldMap.prototype.showCoffeeGeo = function() {
 				.style("border-radius", "25px")
 				.style("border","2px solid #8da0cb");
 			d3.select(this).transition()
-				.style("height", "40px")
-				.style("width", "24px")
+				.style("height", "80px")
+				.style("width", "48px")
 				.duration(400);
 		});
 }
@@ -483,7 +485,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 			if (tempSVG.empty()){
 				tempSVG = appenddiv.append("svg")
 					.attr("id", this.divId + "tempDash")
-					.attr("width", 180)
+					.attr("width", 200)
 					.attr("height", 90)
 					.style("margin", 0);
 				tempSVG.selectAll("#temptitle")
@@ -511,7 +513,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 			if (prSVG.empty()){
 				prSVG = appenddiv.append("svg")
 					.attr("id", this.divId + "prDash")
-					.attr("width", 180)
+					.attr("width", 200)
 					.attr("height", 105)
 					.style("margin", 0);
 				prSVG.selectAll("#prtitle")
@@ -598,7 +600,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 				.attr("height", 15)
 				.merge(presentClimateLegend)
 				.attr("x", function(d, i){
-					return 3 + i * 45;
+					return 5 + i * 47;
 				})
 				.attr("y", 90)
 				.attr("fill", function(d, i){
@@ -615,7 +617,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 				.attr("height", 15)
 				.merge(presentClimateLegendText)
 				.attr("x", function(d, i){
-					return 21 + i * 45;
+					return 22 + i * 47;
 				})
 				.attr("y", 102)
 				.text(d=>d.CountryCode)
@@ -728,7 +730,7 @@ function updateMapZoom(e) {
 			.attr("transform", function(d) {
 				let countryInfo = associatedMap.data.countryInfoMap.get(d.key);
 				let iconPosition = associatedMap.map.latLngToLayerPoint(new L.LatLng(countryInfo["lat"], countryInfo["lng"]));
-				return "translate(" + (iconPosition.x-20) + "," + (iconPosition.y - 12) + ")";
+				return "translate(" + (iconPosition.x-24) + "," + (iconPosition.y - 40) + ")";
 			});
 	}
 }
