@@ -25,8 +25,8 @@ function embedding (divId, parentVis=null) {
 	/* add brush */
 	let assoEmbedding = this;
     this.brush = d3.brush().extent([
-            [this.paddingEmbeddings.l, this.paddingEmbeddings.t], 
-            [this.paddingEmbeddings.l + chartWidthEmbeddings, this.paddingEmbeddings.t + chartHeightEmbeddings]
+            [this.paddingEmbeddings.l - 20, this.paddingEmbeddings.t - 15], 
+            [this.paddingEmbeddings.l + chartWidthEmbeddings + 20, this.paddingEmbeddings.t + chartHeightEmbeddings + 15]
         ])
         .on("start brush", null)
         .on("end", selectCoffeeWithinSelection)
