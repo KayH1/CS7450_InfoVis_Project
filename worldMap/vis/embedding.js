@@ -22,10 +22,6 @@ function embedding (divId, parentVis=null) {
 	this.xScaleEmbeddings = d3.scaleLinear().range([0, chartWidthEmbeddings]);
 	this.yScaleEmbeddings = d3.scaleLinear().range([chartHeightEmbeddings, 0]);
 
-	// Create a group element for appending chart elements
-	this.chartGEmbeddings = this.svgEmbeddings.append('g')
-	    .attr('transform', 'translate('+[this.paddingEmbeddings.l, this.paddingEmbeddings.t]+')');
-
 	/* add brush */
 	let assoEmbedding = this;
     this.brush = d3.brush().extent([
@@ -39,6 +35,10 @@ function embedding (divId, parentVis=null) {
         this.assoEmbedding = assoEmbedding;
     })
     /* add brush */
+    
+	// Create a group element for appending chart elements
+	this.chartGEmbeddings = this.svgEmbeddings.append('g')
+	    .attr('transform', 'translate('+[this.paddingEmbeddings.l, this.paddingEmbeddings.t]+')');
 }
 
 embedding.prototype.coffeeDotStyle = {
