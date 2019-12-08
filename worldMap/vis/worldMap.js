@@ -155,10 +155,12 @@ function worldMap(divId, maxZoom, title, mapType, parentVis=null) {
 			.attr("width", 200)
 			.attr("height", 30);
 		appenddiv.append("h3")
-			.text("Country Comparison");
+			.text("Country Comparison")
+			.style("padding-left", "3px")
+			.style("padding-top", "3px");
 		this.climateXscale = d3.scaleBand()
 			.domain(["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"])
-			.range([20, 175])
+			.range([20, 190])
 			.padding(0.02);
 		L.DomUtil.setPosition(this.countryCompareInfo._div, L.point(-5, 5));
 	}
@@ -483,7 +485,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 			if (tempSVG.empty()){
 				tempSVG = appenddiv.append("svg")
 					.attr("id", this.divId + "tempDash")
-					.attr("width", 190)
+					.attr("width", 200)
 					.attr("height", 90)
 					.style("margin", 0);
 				tempSVG.selectAll("#temptitle")
@@ -511,7 +513,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 			if (prSVG.empty()){
 				prSVG = appenddiv.append("svg")
 					.attr("id", this.divId + "prDash")
-					.attr("width", 180)
+					.attr("width", 200)
 					.attr("height", 105)
 					.style("margin", 0);
 				prSVG.selectAll("#prtitle")
@@ -598,7 +600,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 				.attr("height", 15)
 				.merge(presentClimateLegend)
 				.attr("x", function(d, i){
-					return 2 + i * 46;
+					return 5 + i * 47;
 				})
 				.attr("y", 90)
 				.attr("fill", function(d, i){
@@ -615,7 +617,7 @@ worldMap.prototype.updateCountryInfoCompare = function() {
 				.attr("height", 15)
 				.merge(presentClimateLegendText)
 				.attr("x", function(d, i){
-					return 19 + i * 46;
+					return 22 + i * 47;
 				})
 				.attr("y", 102)
 				.text(d=>d.CountryCode)
