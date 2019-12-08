@@ -251,7 +251,6 @@ coffeeCompareCombine.prototype.updateSelectedCoffeeEmbedding = function(selected
 		} else {
 			coffeeSetToJoin = assoCoffeeCompareCombine.parallelCoords.coffeeSelectSet;
 		}
-		coffeeSetToJoinTotal = assoCoffeeCompareCombine.histograms.coffeeSelectSet;
 
 		let coffeeSetJoined = d3.set();
 		let coffeeSetJoinedTotal = d3.set();
