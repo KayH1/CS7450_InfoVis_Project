@@ -311,7 +311,7 @@ function selectCoffeeWithinSelection() {
             assoParallel.coffeeSelectSet.add(d);
         })
         if (assoParallel.parentVis != null){
-            assoParallel.parentVis.updateSelectedCoffeeEmbedding(assoParallel.coffeeSelectSet, false);
+            assoParallel.parentVis.updateSelectedCoffeeParallel(assoParallel.coffeeSelectSet, false);
         } else {
             assoParallel.setShowCoffeeDotColor(assoParallel.coffeeSelectSet);
         }

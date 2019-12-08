@@ -89,6 +89,7 @@ coffeeCompareCombine.prototype.togglePCandH = function() {
         this.histograms.visible = false;
         d3.select("#" + this.histograms.divId).select(".brush").call(this.histograms.brush.clear);
     }
+    d3.select("#" + this.embedding.divId).select(".brush").call(this.embedding.brush.clear);
 }
 
 /* called from map and update other vis */

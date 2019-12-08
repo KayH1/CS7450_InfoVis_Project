@@ -100,7 +100,7 @@ embedding.prototype.initialEmbedding = function(coffeeData) {
         .attr('fill', function(d) {
         	return assoEmbedding.coffeeColorMap.get(d["id"]);
         })
-        .style("opacity", 0.3)
+        .style("opacity", 0.4)
         .each(function(d) {
         	assoEmbedding.coffeeDotMap.set(d["id"], this);
         });
@@ -133,23 +133,23 @@ embedding.prototype.setShowCoffeeDotColor = function(coffeeShowSet=null) {
                     .style("opacity", 1);
             } else {
                 d3.select(assoEmbedding.coffeeDotMap.get(coffee["id"])).attr("fill", assoEmbedding.coffeeColorMap.get(coffee["id"]))
-                    .style("opacity", 0.2);
+                    .style("opacity", 0.3);
             }
         })
     } else {
         if (assoEmbedding.coffeeShowSet.size() == assoEmbedding.coffeeAllSet.size()) {
             assoEmbedding.setColorMap(assoEmbedding.coffeeDotStyle.defaultColor);
             this.data.forEach(function(coffee) {
-                d3.select(assoEmbedding.coffeeDotMap.get(coffee["id"])).attr("fill", assoEmbedding.coffeeDotStyle.defaultColor).style("opacity", 0.3);
+                d3.select(assoEmbedding.coffeeDotMap.get(coffee["id"])).attr("fill", assoEmbedding.coffeeDotStyle.defaultColor).style("opacity", 0.4);
             });
         } else {
             this.setColorMap(assoEmbedding.coffeeDotStyle.ignoreColor);
             this.data.forEach(function(coffee) {
                 if (assoEmbedding.coffeeShowSet.has(coffee["id"])) {
                     assoEmbedding.coffeeColorMap.set(coffee["id"], assoEmbedding.coffeeDotStyle.defaultColor);
-                    d3.select(assoEmbedding.coffeeDotMap.get(coffee["id"])).attr("fill", assoEmbedding.coffeeDotStyle.defaultColor).style("opacity", 0.3);
+                    d3.select(assoEmbedding.coffeeDotMap.get(coffee["id"])).attr("fill", assoEmbedding.coffeeDotStyle.defaultColor).style("opacity", 0.4);
                 } else {
-                    d3.select(assoEmbedding.coffeeDotMap.get(coffee["id"])).attr("fill", assoEmbedding.coffeeDotStyle.ignoreColor).style("opacity", 0.1);
+                    d3.select(assoEmbedding.coffeeDotMap.get(coffee["id"])).attr("fill", assoEmbedding.coffeeDotStyle.ignoreColor).style("opacity", 0.3);
                 }
             });
         }
