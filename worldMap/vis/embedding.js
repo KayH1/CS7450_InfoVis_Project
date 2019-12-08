@@ -35,7 +35,7 @@ function embedding (divId, parentVis=null) {
         this.assoEmbedding = assoEmbedding;
     })
     /* add brush */
-    
+
 	// Create a group element for appending chart elements
 	this.chartGEmbeddings = this.svgEmbeddings.append('g')
 	    .attr('transform', 'translate('+[this.paddingEmbeddings.l, this.paddingEmbeddings.t]+')');
@@ -94,7 +94,7 @@ embedding.prototype.initialEmbedding = function(coffeeData) {
     this.coffeeDotMap = d3.map();
     var dotsEnterEmbeddings = dotsEmbeddings.enter() // prepare placeholders for each data case
         .append('g') // create a g element
-        .attr('class', 'dot'); // assign a class ID of dot to the element
+        .attr('class', 'embeddingdot'); // assign a class ID of dot to the element
     dotsEnterEmbeddings.selectAll("circle").data(function(d) { return [d]; }).enter().append('circle') // append a circle to the g elements
         .attr('r', 2)
         .attr('fill', function(d) {
