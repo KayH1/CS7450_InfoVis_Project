@@ -15,6 +15,11 @@ function sliders(divId, selectedAttributes, assoPreferenceVis){
         );
     }
 
+    var illustration = d3.select("#" + this.divId).append("div").attr("class", "illustrationSliders").style('padding-left', '5px').style('width', '405px');
+    illustration.append("p").text("Move the sliders around to see your preffered coffee based on country!").style('font-size', "22px").style("font-weight", "bold");
+    illustration.append("p").text("**All your selections and the following information revolves around the 1312 Arabica coffee beans reviewed by Coffee Quality Institute's highly trained individuals.")
+        .style('font-size', "12px");
+
     let associatedSlider = this;
     this.sliderHolder = []; 
     for (let i in this.variableCatalogue) {
@@ -67,10 +72,11 @@ function sliders(divId, selectedAttributes, assoPreferenceVis){
         d3.select('p#' + this.variableCatalogue[i]['weight-id']).text(d3.format('.0%')(this.variableCatalogue[i]['weight']));
     }
 
-    var illustration = d3.select("#" + this.divId).append("div").attr("class", "illustrationSliders").style('width', '405px').style("font-weight", "bold").style('padding-left', '5px');
-    illustration.append("p").text("Move the sliders around to see your preffered coffee based on country!").style('font-size', "22px");
-    illustration.append("p").text("**All your selections and the following information revolves around the 1312 Arabica coffee beans reviewed by Coffee Quality Institute's highly trained individuals.").style('font-size', "12px");
-}
+    illustration = d3.select("#" + this.divId).append("div").attr("class", "illustrationSliders").style('width', '405px').style('padding-left', '10px');
+    illustration.append("p").text("FUN FACT:").style("display", "inline-block").style("font-weight", "bold");
+    illustration.append("p").style("display", "inline-block").html("&nbsp;it is interesting to see Ethiopia stand out!").style('font-size', "15px");
+
+    }
 
 sliders.prototype.updateRanks = function() {
     let associatedSlider = this;
