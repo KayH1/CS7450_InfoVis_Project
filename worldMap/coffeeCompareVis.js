@@ -44,12 +44,12 @@ function coffeeCompareCombine (divId, attributes) {
 	/* for parallel coordinate or brushing hist */
 	let assoBrushingVisId = this.divId + "brushing"
 	d3.select("#" + divId).append("div").attr("id", assoBrushingVisId)
-		.style("margin-top", "10px");
+		.style("margin-top", "45px");
 
     /* for histograms */
     let assoHistogramVisId = this.divId + "histograms";
     d3.select("#" + divId).append("div").attr("id", assoHistogramVisId)
-        .style("margin-top", "10px");
+        .style("margin-top", "45px");
 
     /*
     let assoHistogramTotalVisId = this.divId + "histogramsTotal";

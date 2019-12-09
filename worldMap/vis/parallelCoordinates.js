@@ -15,14 +15,15 @@ function parallelCoordinates (divId, attributes, parentVis=null) {
     var svgWidthParallelCoords = +this.svgParallelCoords.attr('width');
     var svgHeightParallelCoords = +this.svgParallelCoords.attr('height');
 
-    this.paddingParallelCoords = {t: 30, r: 60, b: 50, l: 95, totalCupPoints: 50};
+    this.paddingParallelCoords = {t: 30, r: 60, b: 50, l: 95, totalCupPoints: 20};
 
     this.axes = attributes;
     this.axes = this.axes; //.filter(function(v, idx, a) { return v !== "totalCupPoints"; })
 
     var chartWidthParallelCoords = svgWidthParallelCoords - this.paddingParallelCoords.l - this.paddingParallelCoords.r;
     var chartHeightParallelCoords = svgHeightParallelCoords - this.paddingParallelCoords.t - this.paddingParallelCoords.b;
-    this.axesSpacing = chartWidthParallelCoords / (this.axes.length-1) - 5;//-0.5);
+    console.log("pc ",this.axes.length);
+    this.axesSpacing = chartWidthParallelCoords / (this.axes.length);//-0.5);
     
     let assoParallel = this;
 
@@ -43,7 +44,7 @@ function parallelCoordinates (divId, attributes, parentVis=null) {
     this.yScaleParallelCoords = d3.scaleLinear().range([chartHeightParallelCoords,0]).domain([0,10]);
 
     this.svgParallelCoords.append("rect").attr("class", "specialForTotal")
-        .attr('x', 10*assoParallel.axesSpacing - 55 + assoParallel.paddingParallelCoords.l)
+        .attr('x', 10*assoParallel.axesSpacing - 55+ assoParallel.paddingParallelCoords.l + assoParallel.paddingParallelCoords.totalCupPoints)
         .attr('y', assoParallel.paddingParallelCoords.t - 28)
         .attr("width", 110).attr("height", 26).attr('fill-opacity',1).attr('fill', "#ffecc3")
         .attr('stroke', '#ffecc3').attr('stroke-width', 5).attr('stroke-linecap', 'round');
@@ -83,11 +84,13 @@ function parallelCoordinates (divId, attributes, parentVis=null) {
             return 'y label '+d;
         })
         .attr('transform', function(d,i) {
+            var add_spacing = 0;
             let rot = -15;
             if (d === "totalCupPoints") {
+                add_spacing = assoParallel.paddingParallelCoords.totalCupPoints;
                 rot = 0;
             }
-            return 'translate('+(i*assoParallel.axesSpacing)+',-10) rotate(' + rot + ')';
+            return 'translate('+(i*assoParallel.axesSpacing+add_spacing)+',-10) rotate(' + rot + ')';
         })
         .text(function(d) { 
             var att = d;

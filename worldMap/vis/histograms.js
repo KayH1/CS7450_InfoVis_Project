@@ -20,7 +20,7 @@ function histograms (divId, attributes, parentVis=null, maxWidth=null) {
     var svgWidthHistograms = +this.svgHistograms.attr('width');
     var svgHeightHistograms = +this.svgHistograms.attr('height');
 
-    this.paddingHistograms = {t: 32, r: 60, b: 60, l: 80, totalCupPoints: 20};
+    this.paddingHistograms = {t: 30, r: 60, b: 50, l: 95, totalCupPoints: 20};
 
     this.axes = attributes;
     this.numXAxesTicks = [5, 5, 5, 5, 5, 5, 3, 3, 3, 5, 5];
@@ -30,6 +30,8 @@ function histograms (divId, attributes, parentVis=null, maxWidth=null) {
     //if (this.axes.length > 1) { len = len+1; }
     this.chartWidthHistograms = svgWidthHistograms - this.paddingHistograms.l - this.paddingHistograms.r;
     this.chartHeightHistograms = svgHeightHistograms - this.paddingHistograms.t - this.paddingHistograms.b;
+
+    console.log("Hists ",len);
     this.axesSpacing = this.chartWidthHistograms / (len);
     
     let assoHist = this;
@@ -52,7 +54,7 @@ function histograms (divId, attributes, parentVis=null, maxWidth=null) {
     this.xScaleHistograms = [];
 
     this.svgHistograms.append("rect").attr("class", "specialForTotal")
-        .attr('x', 10*assoHist.axesSpacing - 35+ assoHist.paddingHistograms.l)
+        .attr('x', 10*assoHist.axesSpacing - 55+ assoHist.paddingHistograms.l + assoHist.paddingHistograms.totalCupPoints)
         .attr('y', assoHist.paddingHistograms.t - 28)
         .attr("width", 110).attr("height", 26).attr('fill-opacity',1).attr('fill', "#ffecc3")
         .attr('stroke', '#ffecc3').attr('stroke-width', 5).attr('stroke-linecap', 'round');
@@ -71,7 +73,7 @@ function histograms (divId, attributes, parentVis=null, maxWidth=null) {
             return 'y label '+d;
         })
         .attr('transform', function(d,i) {
-            var add_spacing = 15;
+            var add_spacing = 0;
             var rot = -15;
             if (d === "totalCupPoints") {
                 add_spacing = assoHist.paddingHistograms.totalCupPoints;
@@ -124,7 +126,7 @@ histograms.prototype.initialHistograms = function(coffeeData) {
             .attr('transform', function(d, idx) {
                 var add_spacing = 20;
                 if (axis === "totalCupPoints") { add_spacing = assoHist.paddingHistograms.totalCupPoints; }
-                return 'translate('+(i*assoHist.axesSpacing+add_spacing)+','+(assoHist.paddingHistograms.t-20)+')';
+                return 'translate('+(i*assoHist.axesSpacing)+','+(assoHist.paddingHistograms.t-20)+')';
             })
             .call(d3.axisLeft(assoHist.yScaleHistograms[i]).ticks(assoHist.numYAxesTicks[i]))
             .selectAll("text").style("font-size", "12px").style("font-weight", 500);
@@ -140,7 +142,7 @@ histograms.prototype.initialHistograms = function(coffeeData) {
             }).attr('transform', function(d,idx) {
                 var add_spacing = 20;
                 if (axis === "totalCupPoints") { add_spacing = assoHist.paddingHistograms.totalCupPoints; }
-                return 'translate('+(i*assoHist.axesSpacing+add_spacing)+','+(assoHist.chartHeightHistograms+10)+')';
+                return 'translate('+(i*assoHist.axesSpacing)+','+(assoHist.chartHeightHistograms+10)+')';
             })
             .call(d3.axisBottom(assoHist.xScaleHistograms[i]).ticks(assoHist.numXAxesTicks[i]))
             .selectAll("text").style("font-size", "12px").style("font-weight", 500);
@@ -154,7 +156,7 @@ histograms.prototype.initialHistograms = function(coffeeData) {
                 return 'x label';
             })
             .attr('transform', function(d,i) {
-                return 'translate('+(i*assoHist.axesSpacing + assoHist.chartWidthHistograms/(2*assoHist.axes.length))+','+(assoHist.chartHeightHistograms+ assoHist.paddingHistograms.t + 10)+')';
+                return 'translate('+(i*assoHist.axesSpacing + assoHist.chartWidthHistograms/(2*assoHist.axes.length)-20)+','+(assoHist.chartHeightHistograms+ assoHist.paddingHistograms.t + 10)+')';
             })
             .text("frequency")
             .style("font-weight", "bold");
@@ -209,7 +211,7 @@ histograms.prototype.initialHistograms = function(coffeeData) {
             .attr('cx', function(d) { 
                 var add_spacing = 20;
                 if (axis === 'totalCupPoints') { add_spacing = assoHist.paddingHistograms.totalCupPoints; }
-                return d['flavorProfileDotPosition'][i][0] + add_spacing; })
+                return d['flavorProfileDotPosition'][i][0]; })
             .style('opacity', 0.5)
             .attr('fill', function(d) {
                 return assoHist.coffeeColorMap.get(d["id"]);
