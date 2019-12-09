@@ -2,8 +2,8 @@ var worldMapType = d3.map();
 worldMapType.set("UserPreference", 1);
 worldMapType.set("CoffeeCompare", 2);
 
-var coffeeIconPath = "../worldMap/icons/coffeeBeanTooltip.png";
-var countryFlagPath = "../data/country/flags/";
+var coffeeIconPath = "./worldMap/icons/coffeeBeanTooltip.png";
+var countryFlagPath = "./data/country/flags/";
 
 /* if having parentVis and mapType is CoffeeCompare, 
 parentVis method will be called in "updateCountryInfoCompare" to
