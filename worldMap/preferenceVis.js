@@ -1,7 +1,7 @@
 import * as slider from "./vis/sliders.js"
 import * as mapVis from "./vis/worldMap.js"
 
-var coffeeBeanPath = "../worldMap/icons/coffeeBeanIcon.png";
+var coffeeBeanPath = "./worldMap/icons/coffeeBeanIcon.png";
 var variableList = ['aroma', 'flavor', 'aftertaste', 'acidity', 'body', 'balance', 'uniformity', 'cleanCup', 'sweetness', 'cupperPoints'];
 
 function preferenceCombine (divId) {
