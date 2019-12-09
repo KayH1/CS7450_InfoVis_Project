@@ -5,7 +5,7 @@ Coffee bean data visualization for CS7450 2019 Fall at Georgia Tech.
 ---------------------------------------------------------
 ## Coffee Bean Selection Based on Personal Preference
 - Move sliders to indicate your preference and see best coffee beans for you from the map and the list at bottom
-![Program Screenshot](/screenshots/sliders-&-maps.png)
+![Program Screenshot](/screenshots/sliders-_-maps.png)
 
 - Hover over a bean to see detailed info
 ![Program Screenshot](/screenshots/hover-over-bean.png)
