@@ -662,8 +662,6 @@ frequencyPlot.prototype.updateChart = function(coffee_dataset) {
 
     dotsEnter.on('mouseover', toolTip.show)
         .on('mouseout', toolTip.hide);
-    // hide the tooltip if the user scrolls
-    window.onscroll = function() {  toolTip.hide(); };
 
 
    
