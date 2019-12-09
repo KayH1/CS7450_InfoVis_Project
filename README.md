@@ -1,5 +1,5 @@
 # CS7450_InfoVis_Project
-Coffee bean data visualization for CS7450 2019 Fall at Georgia Tech.
+Coffee bean data visualization for CS7450 2019 Fall at Georgia Tech.  
 Website: https://kayh1.github.io/CS7450_InfoVis_Project/
 
 ---------------------------------------------------------
