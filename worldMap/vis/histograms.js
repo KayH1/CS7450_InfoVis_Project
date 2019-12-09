@@ -308,7 +308,7 @@ function selectCoffeeWithinSelection() {
                 assoHist.data.forEach(function(d) {
                     let position = d["flavorProfileDotPosition"][i];
                     // add extra 20 for spacing, as above
-                    if ((position[0]+assoHist.paddingHistograms.l + 20 >= x0 && position[0]+assoHist.paddingHistograms.l + 20 <= x1) && (position[1]+assoHist.paddingHistograms.t >= y0 && position[1]+assoHist.paddingHistograms.t <= y1)) {
+                    if ((position[0]+assoHist.paddingHistograms.l >= x0 && position[0]+assoHist.paddingHistograms.l <= x1) && (position[1]+assoHist.paddingHistograms.t >= y0 && position[1]+assoHist.paddingHistograms.t <= y1)) {
                         assoHist.coffeeSelectSet.add(d["id"]);
                     }
                 });

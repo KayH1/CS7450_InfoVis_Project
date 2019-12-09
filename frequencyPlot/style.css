@@ -36,7 +36,13 @@ h4 { color: #5b0000 /*, 8e2921, 5b0000, 7B3A30*/; font-family: 'HelveticaNeue', 
 .para2 { color: #362e28; font-family: 'HelveticaNeue', sans-serif; font-size: 18px; font-weight: 100; line-height: 32px; margin: 0 0 72px; text-align: left; }
 
 .para2 strong {
+  font-family: 'HelveticaNeueBd', sans-serif;
   font-weight: bold;
+}
+
+.makeBold {
+  font-weight: bold;
+  display: inline;
 }
 
 .question{ color: #362e28; font-family: 'HelveticaNeue', sans-serif; font-size: 18px; font-weight: bold; line-height: 32px; margin: 0 0 72px; text-align: left; }
@@ -82,11 +88,11 @@ h4 { color: #5b0000 /*, 8e2921, 5b0000, 7B3A30*/; font-family: 'HelveticaNeue', 
 
 
 .scrollytelling-text {
-  max-width: 440px;
+  max-width: 480px;
   /*border: 3px solid #663300;*/
   word-wrap: break-word;
   margin: 10px;
-  padding: 40px 20px 40px 20px; /* top, right, bottom, left */
+  padding: 40px 10px 40px 0px; /* top, right, bottom, left */
 }
 
 svg.freq-plot {

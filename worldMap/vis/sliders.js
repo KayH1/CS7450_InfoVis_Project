@@ -73,7 +73,7 @@ function sliders(divId, selectedAttributes, assoPreferenceVis){
     }
 
     illustration = d3.select("#" + this.divId).append("div").attr("class", "illustrationSliders").style('width', '405px').style('padding-left', '10px');
-    illustration.append("p").text("FUN FACT:").style("display", "inline-block").style("font-weight", "bold");
+    illustration.append("p").text("Fun Fact:").style("display", "inline-block").style("font-weight", "bold");
     illustration.append("p").style("display", "inline-block").html("&nbsp;it is interesting to see Ethiopia stand out!").style('font-size', "15px");
 
     }
