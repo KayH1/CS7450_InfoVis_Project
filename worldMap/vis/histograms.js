@@ -220,14 +220,38 @@ histograms.prototype.initialHistograms = function(coffeeData) {
     })
     
     assoHist.dotEnterHistograms = assoHist.chartGHistograms.selectAll('.dotHist');
+    assoHist.dotEnterHistograms.each(function(d) {
+        this.assoHist = assoHist;
+    })
     
     /**********************
      Create tooltip
     **********************/
     assoHist.svgHistograms.call(toolTipHistograms);
 
-    assoHist.dotEnterHistograms.on('mouseover', toolTipHistograms.show)
-        .on('mouseout', toolTipHistograms.hide);
+    assoHist.dotEnterHistograms.on('mouseenter', function(d) {
+        let assoHist = this.assoHist;
+        let hoverGroup = d3.select(this);
+        toolTipHistograms.show(d, hoverGroup.node());
+        this.previousOpacity = hoverGroup.select("circle").style("opacity");
+        assoHist.coffeeDotMap.forEach(function(dotMap) {
+            d3.select(dotMap.get(d["id"]))
+                .attr("fill", assoHist.coffeeDotStyle.mouseHoverColor)
+                .attr("r", 6)
+                .style("opacity", 1);
+        });
+    })
+    .on('mouseout', function(d) {
+        let assoHist = this.assoHist;
+        let hoverGroup = this;
+        assoHist.coffeeDotMap.forEach(function(dotMap) {
+            d3.select(dotMap.get(d["id"]))
+                .attr("fill", assoHist.coffeeColorMap.get(d["id"]))
+                .attr("r", 2)
+                .style("opacity", hoverGroup.previousOpacity);
+        });
+        toolTipHistograms.hide();
+    });
 
 
     /* handle toggling between histograms and parallel coordinates */
