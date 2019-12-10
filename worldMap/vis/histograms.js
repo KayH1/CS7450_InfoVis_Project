@@ -279,10 +279,10 @@ histograms.prototype.setShowCoffeeDotColor = function(coffeeShowSet=null) {
                 if (assoHist.countryColorMap.has(coffee["ISOofOrigin"]) && assoHist.coffeeShowSet.has(coffee["id"])) {
                     assoHist.coffeeColorMap.set(coffee["id"], assoHist.countryColorMap.get(coffee["ISOofOrigin"]));
                     d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).attr("fill", assoHist.countryColorMap.get(coffee["ISOofOrigin"]))
-                        .style('r',2).style("opacity", 1);
+                        .style("opacity", 1);
                 } else {
-                        d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).attr("fill", assoHist.coffeeColorMap.get(coffee["id"])).style('r',2)
-                            .style("opacity", 0.2);
+                    d3.select(assoHist.coffeeDotMap[i].get(coffee["id"])).attr("fill", assoHist.coffeeColorMap.get(coffee["id"]))
+                        .style("opacity", 0.2);
                 }
             })
         })
