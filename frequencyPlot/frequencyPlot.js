@@ -821,7 +821,7 @@ function switchMode(freqPlot, dataset) {
         // make the box and whiskers visible
         var bnwMedians = d3.selectAll('.medians');
         bnwMedians.style('opacity', 1);
-        var bnw = d3.selectAll('rect');
+        var bnw = d3.selectAll('.bnw rect');
         bnw.style('opacity', 1);
     }
     else {
@@ -837,7 +837,7 @@ function switchMode(freqPlot, dataset) {
             .style('r', freqPlot.dotRadius);
 
         //make the box and whiskers invisible
-        var bnw = d3.selectAll('rect');
+        var bnw = d3.selectAll('.bnw rect');
         bnw.style('opacity', 0);
     }
     freqPlot.switchingMode = true;
