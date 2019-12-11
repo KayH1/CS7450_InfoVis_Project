@@ -104,13 +104,35 @@ embedding.prototype.initialEmbedding = function(coffeeData) {
         .each(function(d) {
         	assoEmbedding.coffeeDotMap.set(d["id"], this);
         });
+    dotsEnterEmbeddings.each(function(d) {
+        this.assoEmbedding = assoEmbedding;
+    })
 
     this.svgEmbeddings.call(toolTipEmbeddings);
 
-    dotsEnterEmbeddings.on('mouseover', function(d) {
+    dotsEnterEmbeddings.on('mouseenter', function(d) {
     	toolTipEmbeddings.show(d, d3.select(this).node());
+        let assoEmbedding = this.assoEmbedding;
+
+        /* following will also called when hovering on data point in other vis */
+            this.previousOpacity = d3.select(this).select('circle').style('opacity');
+            d3.select(this).select('circle')
+                .style('opacity', 1)
+                .attr('r', 6)
+                .attr('fill', assoEmbedding.coffeeDotStyle.mouseHoverColor);
+        /* following will also called when hovering on data point in other vis */
     })
-    .on('mouseout', toolTipEmbeddings.hide);
+    .on('mouseout', function(d) {
+        toolTipEmbeddings.hide();
+        let assoEmbedding = this.assoEmbedding;
+
+        /* following will also called when hovering on data point in other vis */
+            d3.select(this).select('circle')
+                .style('opacity', this.previousOpacity)
+                .attr('r', 2)
+                .attr('fill', assoEmbedding.coffeeColorMap.get(d['id']));
+        /* following will also called when hovering on data point in other vis */
+    });
 
     dotsEmbeddings.merge(dotsEnterEmbeddings) // combine enter and update selections
         .attr('transform', function(d) {

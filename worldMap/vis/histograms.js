@@ -233,24 +233,30 @@ histograms.prototype.initialHistograms = function(coffeeData) {
         let assoHist = this.assoHist;
         let hoverGroup = d3.select(this);
         toolTipHistograms.show(d, hoverGroup.node());
-        this.previousOpacity = hoverGroup.select("circle").style("opacity");
-        assoHist.coffeeDotMap.forEach(function(dotMap) {
-            d3.select(dotMap.get(d["id"]))
-                .attr("fill", assoHist.coffeeDotStyle.mouseHoverColor)
-                .attr("r", 6)
-                .style("opacity", 1);
-        });
+
+        /* following will also called when hovering on data point in other vis */
+            this.previousOpacity = hoverGroup.select("circle").style("opacity");
+            assoHist.coffeeDotMap.forEach(function(dotMap) {
+                d3.select(dotMap.get(d["id"]))
+                    .attr("fill", assoHist.coffeeDotStyle.mouseHoverColor)
+                    .attr("r", 6)
+                    .style("opacity", 1);
+            });
+        /* following will also called when hovering on data point in other vis */
     })
     .on('mouseout', function(d) {
         let assoHist = this.assoHist;
         let hoverGroup = this;
-        assoHist.coffeeDotMap.forEach(function(dotMap) {
-            d3.select(dotMap.get(d["id"]))
-                .attr("fill", assoHist.coffeeColorMap.get(d["id"]))
-                .attr("r", 2)
-                .style("opacity", hoverGroup.previousOpacity);
-        });
         toolTipHistograms.hide();
+        
+        /* following will also called when hovering on data point in other vis */
+            assoHist.coffeeDotMap.forEach(function(dotMap) {
+                d3.select(dotMap.get(d["id"]))
+                    .attr("fill", assoHist.coffeeColorMap.get(d["id"]))
+                    .attr("r", 2)
+                    .style("opacity", hoverGroup.previousOpacity);
+            });
+        /* following will also called when hovering on data point in other vis */
     });
 
 

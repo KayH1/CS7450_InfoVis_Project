@@ -208,38 +208,43 @@ parallelCoordinates.prototype.initialParallelCoordinates = function(coffeeData) 
                 .node();
         toolTipParallelCoords.show(d, target)
 
-        this.previousOpacity = d3.select(this).select('path').style("opacity");
-        this.previousStrokeWidth = d3.select(this).select('path').style("stroke-width");
-        
-        d3.select(this)
-          .select('path')
-          .style('stroke', function(d) {
-            return assoParallel.coffeeLineStyle.mouseHoverColor;
-          })
-          .style('opacity', function(){
-            return 1;
-          })
-          .style('stroke-width', function(){
-            return 5;
-          });
+        /* following will also called when hovering on data point in other vis */
+            this.previousOpacity = d3.select(this).select('path').style("opacity");
+            this.previousStrokeWidth = d3.select(this).select('path').style("stroke-width");
+            
+            d3.select(this)
+              .select('path')
+              .style('stroke', function(d) {
+                return assoParallel.coffeeLineStyle.mouseHoverColor;
+              })
+              .style('opacity', function(){
+                return 1;
+              })
+              .style('stroke-width', function(){
+                return 5;
+              });
+        /* above will also called when hovering on data point in other vis */
     })
     .on('mouseout', function(d) {
         let assoParallel = this.assoParallel;
         if (assoParallel.coffeeColorMap.get(d["id"]) === assoParallel.coffeeLineStyle.ignoreColor)
             return;
-        let group = this;
-        d3.select(this)
-          .select('path')
-          .style('stroke', function(d) {
-            return assoParallel.coffeeColorMap.get(d["id"]);
-          })
-          .style('opacity', function(){
-            return group.previousOpacity;
-          })
-          .style('stroke-width', function(){
-            return group.previousStrokeWidth;
-          });
-          toolTipParallelCoords.hide();
+        toolTipParallelCoords.hide();
+        
+        /* following will also called when hovering on data point in other vis */
+            let group = this;
+            d3.select(this)
+              .select('path')
+              .style('stroke', function(d) {
+                return assoParallel.coffeeColorMap.get(d["id"]);
+              })
+              .style('opacity', function(){
+                return group.previousOpacity;
+              })
+              .style('stroke-width', function(){
+                return group.previousStrokeWidth;
+              });
+        /* above will also called when hovering on data point in other vis */
     });
     /* not work 
     .on('mousedown', function() {
@@ -307,6 +312,7 @@ parallelCoordinates.prototype.updateLineColorSelectedCountry = function(countryC
     assoParallel.countryColorMap = countryColorMap;
     assoParallel.setShowCoffeeLineColor();
 }
+
 
 /* for brush event */
 function selectCoffeeWithinSelection() {

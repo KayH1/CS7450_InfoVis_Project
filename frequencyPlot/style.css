@@ -98,6 +98,7 @@ h4 { color: #5b0000 /*, 8e2921, 5b0000, 7B3A30*/; font-family: 'HelveticaNeue', 
 svg.freq-plot {
     position: sticky;
 }
+
 div.sticky {
   position: -webkit-sticky;
   position: sticky;
