@@ -223,6 +223,15 @@ parallelCoordinates.prototype.initialParallelCoordinates = function(coffeeData) 
               .style('stroke-width', function(){
                 return 5;
               });
+
+            if (assoParallel.parentVis != null) {
+                let assoEmbedding = assoParallel.parentVis.embedding;
+                let linkedDot = d3.select(assoEmbedding.coffeeDotMap.get(d["id"]));
+                this.hoverUpdateEmbeddingOpacity = linkedDot.style('opacity');
+                linkedDot.style('opacity', 1)
+                    .attr('r', 6)
+                    .attr('fill', assoEmbedding.coffeeDotStyle.mouseHoverColor);
+            }
         /* above will also called when hovering on data point in other vis */
     })
     .on('mouseout', function(d) {
@@ -244,6 +253,14 @@ parallelCoordinates.prototype.initialParallelCoordinates = function(coffeeData) 
               .style('stroke-width', function(){
                 return group.previousStrokeWidth;
               });
+
+            if (assoParallel.parentVis != null) {
+                let assoEmbedding = assoParallel.parentVis.embedding;
+                let linkedDot = d3.select(assoEmbedding.coffeeDotMap.get(d["id"]));
+                linkedDot.style('opacity', this.hoverUpdateEmbeddingOpacity)
+                    .attr('r', 2)
+                    .attr('fill', assoEmbedding.coffeeColorMap.get(d['id']));
+            }
         /* above will also called when hovering on data point in other vis */
     });
     /* not work 

@@ -231,6 +231,9 @@ histograms.prototype.initialHistograms = function(coffeeData) {
 
     assoHist.dotEnterHistograms.on('mouseenter', function(d) {
         let assoHist = this.assoHist;
+        if (assoHist.coffeeColorMap.get(d["id"]) === assoHist.coffeeDotStyle.ignoreColor)
+            return;
+
         let hoverGroup = d3.select(this);
         toolTipHistograms.show(d, hoverGroup.node());
 
@@ -242,13 +245,25 @@ histograms.prototype.initialHistograms = function(coffeeData) {
                     .attr("r", 6)
                     .style("opacity", 1);
             });
+
+            if (assoHist.parentVis != null) {
+                let assoEmbedding = assoHist.parentVis.embedding;
+                let linkedDot = d3.select(assoEmbedding.coffeeDotMap.get(d["id"]));
+                this.hoverUpdateEmbeddingOpacity = linkedDot.style('opacity');
+                linkedDot.style('opacity', 1)
+                    .attr('r', 6)
+                    .attr('fill', assoEmbedding.coffeeDotStyle.mouseHoverColor);
+            }
         /* following will also called when hovering on data point in other vis */
     })
     .on('mouseout', function(d) {
         let assoHist = this.assoHist;
-        let hoverGroup = this;
+        if (assoHist.coffeeColorMap.get(d["id"]) === assoHist.coffeeDotStyle.ignoreColor)
+            return;
+
         toolTipHistograms.hide();
         
+        let hoverGroup = this;
         /* following will also called when hovering on data point in other vis */
             assoHist.coffeeDotMap.forEach(function(dotMap) {
                 d3.select(dotMap.get(d["id"]))
@@ -256,6 +271,14 @@ histograms.prototype.initialHistograms = function(coffeeData) {
                     .attr("r", 2)
                     .style("opacity", hoverGroup.previousOpacity);
             });
+
+            if (assoHist.parentVis != null) {
+                let assoEmbedding = assoHist.parentVis.embedding;
+                let linkedDot = d3.select(assoEmbedding.coffeeDotMap.get(d["id"]));
+                linkedDot.style('opacity', this.hoverUpdateEmbeddingOpacity)
+                    .attr('r', 2)
+                    .attr('fill', assoEmbedding.coffeeColorMap.get(d['id']));
+            }
         /* following will also called when hovering on data point in other vis */
     });
 

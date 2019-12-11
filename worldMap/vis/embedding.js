@@ -111,8 +111,10 @@ embedding.prototype.initialEmbedding = function(coffeeData) {
     this.svgEmbeddings.call(toolTipEmbeddings);
 
     dotsEnterEmbeddings.on('mouseenter', function(d) {
-    	toolTipEmbeddings.show(d, d3.select(this).node());
         let assoEmbedding = this.assoEmbedding;
+        if (assoEmbedding.coffeeColorMap.get(d["id"]) === assoEmbedding.coffeeDotStyle.ignoreColor)
+            return;
+        toolTipEmbeddings.show(d, d3.select(this).node());
 
         /* following will also called when hovering on data point in other vis */
             this.previousOpacity = d3.select(this).select('circle').style('opacity');
@@ -120,17 +122,67 @@ embedding.prototype.initialEmbedding = function(coffeeData) {
                 .style('opacity', 1)
                 .attr('r', 6)
                 .attr('fill', assoEmbedding.coffeeDotStyle.mouseHoverColor);
+            
+            if (assoEmbedding.parentVis != null) {
+                if (assoEmbedding.parentVis.parallelCoords.visible) {
+
+                    let assoParallel = assoEmbedding.parentVis.parallelCoords;
+                    let linkedPath = d3.select(assoParallel.coffeeLineMap.get(d['id']));
+                    this.hoverUpdateParallelOpacity = linkedPath.style('opacity');
+                    this.hoverUpdateParallelStrokeWidth = linkedPath.style('stroke-width');
+                    linkedPath.style('stroke', assoParallel.coffeeLineStyle.mouseHoverColor)
+                        .style('opacity', 1)
+                        .style('stroke-width', 5);
+
+                } else if (assoEmbedding.parentVis.histograms.visible) {
+                    
+                    let assoHist = assoEmbedding.parentVis.histograms;
+                    let linkedDot = d3.select(assoHist.coffeeDotMap[0].get(d['id']));
+                    this.hoverUpdateHistOpacity = linkedDot.style("opacity");
+                    assoHist.coffeeDotMap.forEach(function(dotMap) {
+                        d3.select(dotMap.get(d["id"]))
+                            .attr("fill", assoHist.coffeeDotStyle.mouseHoverColor)
+                            .attr("r", 6)
+                            .style("opacity", 1);
+                    });
+
+                }
+            }
         /* following will also called when hovering on data point in other vis */
     })
     .on('mouseout', function(d) {
-        toolTipEmbeddings.hide();
         let assoEmbedding = this.assoEmbedding;
-
+        if (assoEmbedding.coffeeColorMap.get(d["id"]) === assoEmbedding.coffeeDotStyle.ignoreColor)
+            return;
+        toolTipEmbeddings.hide();
+        
         /* following will also called when hovering on data point in other vis */
             d3.select(this).select('circle')
                 .style('opacity', this.previousOpacity)
                 .attr('r', 2)
                 .attr('fill', assoEmbedding.coffeeColorMap.get(d['id']));
+
+            if (assoEmbedding.parentVis != null) {
+                if (assoEmbedding.parentVis.parallelCoords.visible) {
+
+                    let assoParallel = assoEmbedding.parentVis.parallelCoords;
+                    let linkedPath = d3.select(assoParallel.coffeeLineMap.get(d['id']));
+                    linkedPath.style('stroke', assoParallel.coffeeColorMap.get(d['id']))
+                        .style('opacity', this.hoverUpdateParallelOpacity)
+                        .style('stroke-width', this.hoverUpdateParallelStrokeWidth);
+
+                } else if (assoEmbedding.parentVis.histograms.visible) {
+                    let currentHover = this;
+                    let assoHist = assoEmbedding.parentVis.histograms;
+                    assoHist.coffeeDotMap.forEach(function(dotMap) {
+                        d3.select(dotMap.get(d["id"]))
+                            .attr("fill", assoHist.coffeeColorMap.get(d["id"]))
+                            .attr("r", 2)
+                            .style("opacity", currentHover.hoverUpdateHistOpacity);
+                    });
+                
+                }
+            }
         /* following will also called when hovering on data point in other vis */
     });
 
